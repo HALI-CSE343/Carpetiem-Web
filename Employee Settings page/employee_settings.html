@@ -21,10 +21,11 @@
         <div id="nav-placeholder"></div>
 
         <h>Eleman Listesi</h>
-        <button type="button1">Yeni Eleman Ekle</button>
+        <button type="button1" onclick="addRows()">Yeni Eleman Ekle</button>
         <script src="employee_settings.js"></script>
         
-        <table>
+        
+        <table id = "emptbl">
             <tr>
                 <th>Name</th>
                 <th>Tel no</th>
@@ -34,12 +35,12 @@
                 <th>ADD/EDIT</th>
             </tr>
             <tr>
-                <td>Fatih</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td><button type="button2">Düzenle</button><button id="button_1" type="button3">Kaldır</button></td>
+                <td id="col0">Fatih</td>
+                <td id="col1"></td>
+                <td id="col2"></td>
+                <td id="col3"></td>
+                <td id="col4"></td>
+                <td id="col5"><button type="button2">Düzenle</button><button id="button_1" type="button3">Kaldır</button></td>
             </tr>
             <tr>
                 <td>Tuğkan</td>
@@ -90,12 +91,11 @@
                 <td></td>
             </tr>
         </table>
+         
         
-
-
-        <!--  ilerisi için dynamic table -->
+        <!--
         <form action="#" method="post">    
-            <table type = "dynamic_table" id="emptbl">
+            <table id="emptbl">
                 <tr>
                     <th>Employee Name</th>
                     <th>Phone</th>
@@ -118,16 +118,11 @@
                     <input type="radio" name="gender[1]" value="female" />Female 
                         </td> 
                 </tr>  
-            </table> 
-            <table> 
-                <tr> 
-                    <td><input type="button" value="Add Row" onclick="addRows()" /></td> 
-                    <td><input type="button" value="Delete Row" onclick="deleteRows()" /></td> 
-                    <td><input type="submit" value="Submit" /></td> 
-                </tr>  
-            </table> 
-         </form>
-        
+            </table>
+         </form> 
+        -->
+
+
 
     </div>
 
