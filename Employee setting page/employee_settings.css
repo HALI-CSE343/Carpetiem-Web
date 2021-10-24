@@ -8,8 +8,8 @@
     
 }
 body {
-    margin: 0 auto;
-    padding: 1em;
+    margin: 0 0;
+    padding: 0em;
     min-height: 100vh;
     max-width: 100vw;
     display: flex;
@@ -69,6 +69,12 @@ tr:nth-child(odd){
 .text-left {
     text-align: left;
 }
+
+input[id = "dltBttn"] {
+    margin-right: 1em;
+    
+}
+
 @media screen and (max-width: 750px){
     article, body {
         padding: 0;
@@ -113,3 +119,5 @@ tr:nth-child(odd){
     }
 	
 }
+
+

@@ -38,6 +38,7 @@ function addRow(tableID,btnId) {
     element6.type = "button";  
     var btnName = "button" + (rowCount + 1);  
     element6.name = btnName;  
+    element6.id = "dltBttn";
     element6.className = "btn btn-danger";
     element6.setAttribute('value', 'Delete'); // or element7.value = "button";  
     element6.onclick = function() {  
@@ -59,39 +60,6 @@ function addRow(tableID,btnId) {
     
     
 }  
-
-function removeRow(btnName) {  
-    try {  
-        var table = document.getElementById('dataTable');  
-        var rowCount = table.rows.length;  
-        for (var i = 0; i < rowCount; i++) {  
-            var row = table.rows[i];  
-            var rowObj = row.cells[5].childNodes[0];  
-            if (rowObj.name == btnName) {  
-                table.deleteRow(i);  
-                rowCount--;  
-            }  
-        }  
-    } catch (e) {  
-        alert(e);  
-    }  
-} 
-
-function readRow(btnName) {  
-    try {  
-        var table = document.getElementById('dataTable');  
-        var rowCount = table.rows.length;  
-        for (var i = 0; i < rowCount; i++) {  
-            var row = table.rows[i];  
-            var rowObj = row.cells[5].childNodes[0];  
-            if (rowObj.name == btnName) {  
-                console.log(row.cells[0].childNodes[0]);
-            }  
-        }  
-    } catch (e) {  
-        alert(e);  
-    }  
-} 
 
 //buton isimleri silip eklerken aynı olabilir ona sonra önlem al
 function newRow(tableID,name,mail){
@@ -130,16 +98,25 @@ function newRow(tableID,name,mail){
     element5.type = "text";
     cell5.appendChild(element5);
     //Column 6
+    
     var cell6 = row.insertCell(5);  
     var element6 = document.createElement("input");  
     element6.type = "button";  
     var btnName = "button" + (rowCount + 1);  
     element6.name = btnName;
+    element6.id = "dltBttn";
     element6.className = "btn btn-danger"; 
+    
     element6.setAttribute('value', 'Delete'); // or element1.value = "button";  
-    element6.onclick = function() {  
-        removeRow(btnName);  
+    element6.onclick = function() {   
+        //document.getElementById("popupopener").click()          //MODAL
+        var start = confirm("Bu elemanı gerçekten kaldırmak istiyor musunuz ?");
+        if(start){
+            removeRow(btnName); 
+        }
+    
     }  
+    
     cell6.appendChild(element6);
     
     
@@ -155,9 +132,60 @@ function newRow(tableID,name,mail){
     cell6.appendChild(element7);
 }
 
+function getUnique(btnName){
+    try { 
+        
+    } catch (e) {  
+        alert(e);  
+    } 
+}
+
+function removeRow(btnName) {  
+    try { 
+        var table = document.getElementById('dataTable');  
+        var rowCount = table.rows.length;  
+        for (var i = 0; i < rowCount; i++) {  
+            var row = table.rows[i];  
+            var rowObj = row.cells[5].childNodes[0];  
+            if (rowObj.name == btnName) {  
+                table.deleteRow(i);  
+                rowCount--;  
+            }  
+        }  
+    } catch (e) {  
+        alert(e);  
+    }  
+} 
+
+function readRow(btnName) {  
+    try {  
+        
+        var table = document.getElementById('dataTable');  
+        var rowCount = table.rows.length;  
+        for (var i = 0; i < rowCount; i++) {  
+            var row = table.rows[i];  
+            var rowObj = row.cells[5].childNodes[0];  
+            if (rowObj.name == btnName) {  
+                console.log(rowObj.name);
+            }  
+        }  
+    } catch (e) {  
+        alert(e);  
+    }  
+} 
+
+
 function startTable(tableID){
     
     for(i = 0 ; i< 4 ; i++){
         newRow(tableID,"haluk"+i, "dsfg@gmail.com");
     }
 }
+
+
+
+
+
+
+
+
