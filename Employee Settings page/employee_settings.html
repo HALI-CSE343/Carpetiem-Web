@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eleman Düzenleme Sayfası</title>
+    <link rel="stylesheet" href="employee_settings.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(function () {
+            $("#nav-placeholder").load("/navbar/navbar.html");
+        });
+    </script>
+    
+</head>
+
+<body>
+    <div class="general-container">
+        <div id="nav-placeholder"></div>
+
+        <h>Eleman Listesi</h>
+        <button type="button1">Yeni Eleman Ekle</button>
+        <script src="employee_settings.js"></script>
+        
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Tel no</th>
+                <th>E-posta</th>
+                <th>Adres</th>
+                <th>Password</th>
+                <th>ADD/EDIT</th>
+            </tr>
+            <tr>
+                <td>Fatih</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><button type="button2">Düzenle</button><button id="button_1" type="button3">Kaldır</button></td>
+            </tr>
+            <tr>
+                <td>Tuğkan</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><button type="button2">Düzenle</button><button id = "button_1" type="button3">Kaldır</button></td>
+            </tr>
+            <tr>
+                <td>Burak</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><button type="button2">Düzenle</button><button id = "button_1" type="button3">Kaldır</button></td>
+            </tr>
+            <tr>
+                <td>Rian</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><button type="button2">Düzenle</button><button id = "button_1" type="button3">Kaldır</button></td>
+            </tr>
+            <tr>
+                <td>Boş</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Boş</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Boş</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+        
+
+
+        <!--  ilerisi için dynamic table -->
+        <form action="#" method="post">    
+            <table type = "dynamic_table" id="emptbl">
+                <tr>
+                    <th>Employee Name</th>
+                    <th>Phone</th>
+                    <th>Department</th> 
+                    <th>Gender</th> 
+                </tr> 
+                <tr> 
+                    <td id="col0"><input type="text" name="empname[]" value="" /></td> 
+                    <td id="col1"><input type="text" name="phone[]" value="" /></td> 
+                    <td id="col2"> 
+                    <select name="department[]" id="dept"> 
+                    <option value="0">Select Department</option> 
+                    <option value="1">Sales</option>
+                    <option value="2">IT</option>
+                    <option value="3">Warehouse</option>
+                    </select> 
+                        </td> 
+                        <td id="col3"> 
+                    <input type="radio" name="gender[0]" value="male" />Male 
+                    <input type="radio" name="gender[1]" value="female" />Female 
+                        </td> 
+                </tr>  
+            </table> 
+            <table> 
+                <tr> 
+                    <td><input type="button" value="Add Row" onclick="addRows()" /></td> 
+                    <td><input type="button" value="Delete Row" onclick="deleteRows()" /></td> 
+                    <td><input type="submit" value="Submit" /></td> 
+                </tr>  
+            </table> 
+         </form>
+        
+
+    </div>
+
+</body>
+
+</html>

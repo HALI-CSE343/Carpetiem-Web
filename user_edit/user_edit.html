@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+        <title> Profile Settings  </title>
+    </head>
+    <body>
+        <p id="ccc"> AAAAAAAAAAAAAAAAAAAAA </p>
+
+        <div class = "form-inline">
+            <input id = "usr_name" placeholder="Yeni İsim" type="tel" maxlength="14" autocomplete="off" >
+            <input id = "usr_btn" onclick="save()" type="button" value="Save">  
+            
+            <input type="password" name="password" id="password" placeholder="Yeni Şifre" />
+            <i class="bi bi-eye-slash"  id="togglePassword"></i>
+        </div>
+
+        <script>
+            const togglePassword = document.getElementById("togglePassword");
+            const password = document.getElementById("password");
+
+            togglePassword.addEventListener('click', function () {
+                // toggle the type attribute
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+                // toggle the eye / eye slash icon
+                const eye = togglePassword.getAttribute('class') === 'bi bi-eye-slash' ? 'bi-eye' : 'bi bi-eye-slash'; 
+                togglePassword.setAttribute('class' , eye);
+            });
+            
+            function save(){
+                let x = document.getElementById("usr_name").value;
+                document.getElementById("ccc").innerHTML = x;
+                alert("Saved.");
+            }
+        </script>
+    </body>
+</html>

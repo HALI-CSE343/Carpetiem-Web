@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css?family=Bangers&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Share+Tech&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* #logo {
+    font-family: 'Bebas Neue', cursive;
+    color: white;
+    font-size: 48px;
+    padding: 10px;
+    cursor: default;
+}
+
+#contact {
+    padding: 10px 20px;
+    background-color: rgba(120, 150, 120, 1);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+}
+
+#contact:hover {
+    background-color: rgba(120, 150, 120, 0.7);
+}
+
+li, a, button {
+    text-decoration: none;
+    font-family: 'Share Tech', sans-serif;
+    font-size: 20px;
+    color: #edf0f1;
+}
+
+header {
+    background-color: #24252A;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 10%;
+    position: sticky;
+    top: 0;
+}
+
+.navbar li{
+    list-style: none;
+    display: inline-block;
+    padding: 0px 20px;
+}
+
+.navbar li a {
+    transition: all 0.3s ease 0s;
+}
+
+.navbar li a:hover {
+    color: rgb(120, 150, 120);
+} */
