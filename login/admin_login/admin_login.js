@@ -62,5 +62,4 @@ function fade(element, value){
         element.style.visibility = "visible";
         element.style.opacity = "1";
     }
-    
 }

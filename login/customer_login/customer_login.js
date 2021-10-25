@@ -1,7 +1,11 @@
-const phone_button = document.getElementById("btn-1");
+/*const phone_button = document.getElementById("btn-1");
 const phone_input = document.getElementById("phone");
 const pwd_button = document.getElementById("btn-2");
-const pwd_input = document.getElementById("password");
+const pwd_input = document.getElementById("password");*/
+const phone_button = document.getElementsByClassName("user-definer-button")[0];
+const phone_input = document.getElementsByClassName("user-definer-input")[0];
+const pwd_button = document.getElementsByClassName("user-password-button")[0];
+const pwd_input = document.getElementsByClassName("user-password-input")[0];
 const signinError = document.getElementsByClassName("signin-error")[0];
 
 const isNumericInput = (event) => {
@@ -33,9 +37,6 @@ const enforceFormat = (event) => {
 const formatToPhone = (event) => {
     if(isModifierKey(event)) {
         if(event.keyCode == 8){
-            /*phone_button.disabled = true;
-            phone_button.style.color = "#aaa";
-            phone_button.style.cursor = "default";*/
             disableButton(phone_button, true);
         }
         return;
@@ -46,9 +47,6 @@ const formatToPhone = (event) => {
     const middle = input.substring(3,6);
     const last = input.substring(6,10);
 
-    /*phone_button.disabled = (input.length == 10) ? false : true;
-    phone_button.style.color = (input.length == 10) ? "rgb(120, 150, 120)" : "#aaa";
-    phone_button.style.cursor = (input.length == 10) ? "pointer" : "default";*/
     (input.length == 10) ? disableButton(phone_button, false) : disableButton(phone_button, true);
 
     if(input.length > 6){event.target.value = `(${areaCode}) ${middle} ${last}`;}
@@ -61,69 +59,35 @@ phone_input.addEventListener('keyup',formatToPhone);
 
 phone_input.addEventListener("input", (e) => {
     if(phone_button.style.visibility == "hidden"){
-        /*phone_button.style.visibility = "visible";
-        phone_button.style.opacity = "1";
-        pwd_input.style.opacity = "0";
-        pwd_button.style.opacity = "0";*/
         fade(phone_button, 1);
         fade(pwd_input, 0);
         fade(pwd_button, 0);
         pwd_input.value = "";
-        /*pwd_button.disabled = true;
-        pwd_button.style.color = "#aaa";
-        pwd_button.style.cursor = "default";*/
         disableButton(pwd_button, true);
         if(signinError.style.visibility = "visible") fade(signinError, 0);
-        /*pwd_input.style.visibility = "hidden";
-        pwd_button.style.visibility = "hidden";*/
     }
 });
 
 pwd_input.addEventListener("keyup", (e) => {
     (e.currentTarget.value === "") ? disableButton(pwd_button, true) : disableButton(pwd_button, false);
-    /*const value = e.currentTarget.value;
-    if(value === ""){
-        pwd_button.disabled = true;
-        pwd_button.style.color = "#aaa";
-        pwd_button.style.cursor = "default";
-    }
-    else{
-        pwd_button.disabled = false;
-        pwd_button.style.color = "rgb(120, 150, 120)";
-        pwd_button.style.cursor = "pointer";
-    }*/
 });
 
 pwd_input.addEventListener("input", (e) => {
     if(pwd_button.style.visibility == "hidden"){
-        /*pwd_button.style.visibility = "visible";
-        pwd_button.style.opacity = "1";
-        signinError.style.visibility = "hidden";
-        signinError.style.opacity = "0";*/
         fade(pwd_button, 1);
         fade(signinError, 0);
     }
 });
 
 function showPasswordField() {
-    /*phone_button.style.opacity = "0";
-    phone_button.style.visibility = "hidden";
-    pwd_input.style.visibility = "visible";
-    pwd_input.style.opacity = "1";*/
     fade(phone_button, 0);
     fade(pwd_input, 1);
     pwd_input.style.marginTop = "5%";
-    /*pwd_button.style.visibility = "visible";
-    pwd_button.style.opacity = "1";*/
     fade(pwd_button, 1);
     pwd_button.style.top = "58%";
 }
 
 function showSignInError(){
-    /*pwd_button.style.opacity = "0";
-    pwd_button.style.visibility = "hidden";
-    signinError.style.visibility = "visible";
-    signinError.style.opacity = "1";*/
     fade(pwd_button, 0);
     fade(signinError, 1);
 }
