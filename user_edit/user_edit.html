@@ -7,34 +7,45 @@
         <title> Profile Settings  </title>
     </head>
     <body>
-        <p id="ccc"> AAAAAAAAAAAAAAAAAAAAA </p>
 
-        <div class = "form-inline">
-            <input id = "usr_name" placeholder="Yeni İsim" type="tel" maxlength="14" autocomplete="off" >
-            <input id = "usr_btn" onclick="save()" type="button" value="Save">  
+        <form>
+            <div class="for-name">
+                <label for="usr_name">İsim: </label> 
+                <input id = "usr_name" placeholder="Yeni İsim" type="text">             
+            </div>
+
+            <div class="for-pwd">
+                <label for="usr_curr_pwd">Mevcut Şifre:</label>
+                <input id="usr_curr_pwd" type="password" placeholder="Mevcut Şifre" />
+                <i class="bi bi-eye-slash"  id="togglePassword"></i>
+                
+                <label for="usr_newpwd">Yeni Şifre:</label>
+                <input id="usr_newpwd" type="password" placeholder="Yeni Şifre" />
+                <i class="bi bi-eye-slash"  id="togglePassword2"></i>
+
+                <label for="usr_pwd_check">Tekrar Yeni Şifre:</label>
+                <input id="usr_pwd_check" type="password" placeholder="Tekrar Yeni Şifre" />
+                <i class="bi bi-eye-slash"  id="togglePassword3"></i>
+
+            </div>
+
+            <div class = "for-email">
+                <label for="usr_email">Email:</label>
+                <input type="text" id="usr_email" placeholder="Yeni Email">
+            </div>
             
-            <input type="password" name="password" id="password" placeholder="Yeni Şifre" />
-            <i class="bi bi-eye-slash"  id="togglePassword"></i>
-        </div>
+            <div class = "for-adress">
+                <label for="usr_adress">Adres:</label>
+                <input type="text" id="usr_adress" placeholder="Yeni Adres">
+            </div>
 
-        <script>
-            const togglePassword = document.getElementById("togglePassword");
-            const password = document.getElementById("password");
-
-            togglePassword.addEventListener('click', function () {
-                // toggle the type attribute
-                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-                password.setAttribute('type', type);
-                // toggle the eye / eye slash icon
-                const eye = togglePassword.getAttribute('class') === 'bi bi-eye-slash' ? 'bi-eye' : 'bi bi-eye-slash'; 
-                togglePassword.setAttribute('class' , eye);
-            });
+            <div class = "for-phone">
+                <label for="usr_phone">Tel. Numarası:</label>
+                <input type="text" id="usr_phone" placeholder="Yeni Numara +90 " maxlength="10">
+            </div>
+        </form>   
             
-            function save(){
-                let x = document.getElementById("usr_name").value;
-                document.getElementById("ccc").innerHTML = x;
-                alert("Saved.");
-            }
-        </script>
+
+        <script src = "app.js"></script>
     </body>
 </html>
