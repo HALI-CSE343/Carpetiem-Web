@@ -112,3 +112,36 @@ input[id = "dltBttn"] {
 }
 
 
+
+
+
+
+
+/*pop up içi form sonu*/
+
+form{
+    padding: 5% ;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    
+}
+label{
+    width: 100px;
+    display: inline-block;
+    text-align: center;
+}
+.for-pwd label , input{
+    vertical-align: middle;
+}
+.for-pwd{
+    border-style: groove;
+}
+.bi-eye-slash{
+    margin-left: 40px;
+}
+.bi-eye{
+    margin-left: 40px;
+}
+
+/*pop up içi form sonu*/

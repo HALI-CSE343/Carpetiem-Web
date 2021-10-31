@@ -65,12 +65,17 @@
                         </thead>
                         <tbody>
                             <tr v-for="employee in employees" >
-                                <td class="listElement"> <p class = "empText"></p>{{employee.name}}</td>
-                                <td class="listElement"> <p class = "empText"></p>{{employee.tel_no}}</p></td>
-                                <td class="listElement"> <p class = "empText"></p>{{employee.e_mail}}</p></td>
-                                <td class="listElement"> <p class = "empText"></p>{{employee.adress}}</p></td>
-                                <td class="listElement"> <p class = "empText"></p>{{employee.password}}</p></td>
-                                <td class="listElement"> <p class = "empText"></p><button class = "btn btn-warning">Edit</button> </td>
+                                <td class="listElement" v-if = "employee.isExist"> <p class = "empText"></p>{{employee.name}}</td>
+                                <td class="listElement" v-if = "employee.isExist"> <p class = "empText"></p>{{employee.tel_no}}</p></td>
+                                <td class="listElement" v-if = "employee.isExist"> <p class = "empText"></p>{{employee.e_mail}}</p></td>
+                                <td class="listElement" v-if = "employee.isExist"> <p class = "empText"></p>{{employee.adress}}</p></td>
+                                <td class="listElement" v-if = "employee.isExist"> <p class = "empText"></p>{{employee.password}}</p></td>
+                                <td class="listElement" v-if = "employee.isExist"> 
+                                    <p class = "empText"></p>
+                                    <button class = "btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Edit</button> 
+                                    <button class = "btn btn-danger" v-on:click = "removeRow(employee)">Remove</button> 
+                                </td>
+
                             </tr>
                         </tbody>
                     </table>
@@ -79,8 +84,65 @@
                 </div>
 
 
+
+
+                <!-- Moruk burası Pop-up tarafı -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Eleman bilgilerini düzenle</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="for-name">
+                                    <label for="usr_name">İsim: </label> 
+                                    <input id = "usr_name" placeholder="Yeni İsim" type="text">             
+                                </div>
+                    
+                                <div class="for-pwd">
+                                    <label for="usr_curr_pwd">Admin Şifresi (onay için):</label>
+                                    <input id="usr_curr_pwd" type="password" placeholder="Admin Şifresi" />
+                                    <i class="bi bi-eye-slash"  id="togglePassword"></i>
+                                    <p></p>
+                                    <label for="usr_newpwd">Yeni Şifre:</label>
+                                    <input id="usr_newpwd" type="password" placeholder="Yeni Şifre (Eleman)" />
+                                    <i class="bi bi-eye-slash"  id="togglePassword2"></i>
+                                    <p></p>
+                                    <label for="usr_pwd_check">Tekrar Yeni Şifre:</label>
+                                    <input id="usr_pwd_check" type="password" placeholder="Tekrar Yeni Şifre (Eleman)" />
+                                    <i class="bi bi-eye-slash"  id="togglePassword3"></i>
+                    
+                                </div>
+                    
+                                <div class = "for-email">
+                                    <label for="usr_email">Email:</label>
+                                    <input type="text" id="usr_email" placeholder="Yeni Email">
+                                </div>
+                                
+                                <div class = "for-adress">
+                                    <label for="usr_adress">Adres:</label>
+                                    <input type="text" id="usr_adress" placeholder="Yeni Adres">
+                                </div>
+                    
+                                <div class = "for-phone">
+                                    <label for="usr_phone">Tel. Numarası:</label>
+                                    <input type="text" id="usr_phone" placeholder="Yeni Numara +90 " maxlength="10">
+                                </div>
+                            </form>
+                        </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Kaydet</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Pop-up sonu -->
+
                 
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Open modal for @mdo</button>
+               
                 
                  
             </div>
