@@ -1,0 +1,189 @@
+/*@import url('https://fonts.googleapis.com/css?family=Share+Tech&display=swap');*/
+
+a{
+    text-decoration: none;
+    color: rgb(120, 150, 120);
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.hidden {
+    visibility: hidden;
+    opacity: 0;
+}
+.signin-error::before{
+    top: 55%;
+    width: 15px;
+    height: 15px;
+    background-color: #fae9a3;
+    content: "";
+    position: absolute;
+    left: 47.2%;
+    transform: rotate(
+    135deg) skewX(
+    5deg) skewY(
+    5deg);
+    top: -8px;
+    border-left: 1px solid rgba(185,149,1,.47);
+    border-bottom: 1px solid rgba(185,149,1,.47);
+    box-shadow: -1px 1px 2px -1px rgb(185 149 1 / 47%);
+}
+
+.signin-error {
+    visibility: hidden;
+    transition: opacity .3s ease 0s;
+    text-align: center;
+    top: 105%;
+    background-color: #fae9a3;
+    position: absolute;
+    width: 100%;
+    margin-left: -50%;
+    border-radius: 5px;
+    left: 50%;
+    border: 1px solid rgba(185,149,1,.47);
+    box-shadow: 0 5px 10px 2px rgb(0 0 0 / 10%);
+    margin-top: 5px;
+    padding: 11px;
+    opacity: 0;
+}
+
+input[type=tel], input[type=password] {
+    width: 300px;
+    height: 45px;
+    border-radius: 5px;
+    border: 3px solid rgba(0, 0, 0, .3);
+    outline: none;
+    font-size: large;
+    color: black;
+
+}
+
+input[type=tel]:focus, input[type=password]:focus {
+    border-color: rgb(120, 150, 120);
+}
+
+input[type=tel]::placeholder, input[type=password]::placeholder {
+    color: black;
+    opacity: 0.5;
+    font-size: large;
+}
+
+.input{
+    position: relative;
+}
+
+.input #btn-1, #btn-2 {
+    position: absolute;
+    right: 0;
+    background-color: transparent;
+    border: none;
+}
+
+.input #btn-1 {
+    transition: color .5s,
+                opacity .5s,
+                visibility .5s,
+                padding 0s,
+                right 0s ease;
+}
+
+.input #btn-2 {
+    right: 0;
+    transition: color .5s,
+                opacity .5s,
+                visibility .5s,
+                top .5s ease;
+}
+
+.input #password{
+    transition: border-color .4s,
+                opacity .5s,
+                margin-top .5s ease;
+}
+
+.input i {
+    padding: 3px 5px;
+}
+
+.input #phone {
+    transition: border-color .4s ease;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.login {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+#forgot-link {
+    margin-top: 100px;
+}
+
+#register-text {
+    padding-top: 5px;
+}
+
+#login-text {
+    /*font-family: 'Share Tech', sans-serif;*/
+    font-size: 24px;
+    padding-bottom: 10px;
+    opacity: 0.8;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.checkbox-container label {
+    cursor: pointer;
+    font-size: larger;
+    display: flex;
+    /*font-family: 'Share Tech', sans-serif;*/
+}
+
+.checkbox-container input[type="checkbox"] {
+    cursor: pointer;
+    opacity: 0;
+    position: absolute;
+}
+
+.checkbox-container label::before {
+    content: "";
+    width: 1em;
+    height: 1em;
+    border: .05em solid black;
+    border-radius: .15em;
+    margin-right: .5em;
+}
+
+.checkbox-container input[type="checkbox"]:focus + label::before {
+    outline: 3px solid rgba(120, 150, 120, .5);
+    outline-offset: 0px;
+}
+
+.checkbox-container input[type="checkbox"]:checked + label::before {
+    content: "\002714";
+    background-color: rgba(120, 150, 120, 1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}

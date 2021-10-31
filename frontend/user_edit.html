@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="./styles/user_edit.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+        <title> Profile Settings  </title>
+    </head>
+    <body>
+
+        <form>
+            <div class="for-name">
+                <label for="usr_name">İsim: </label> 
+                <input id = "usr_name" placeholder="Yeni İsim" type="text">             
+            </div>
+
+            <div class="for-pwd">
+                <label for="usr_curr_pwd">Mevcut Şifre:</label>
+                <input id="usr_curr_pwd" type="password" placeholder="Mevcut Şifre" />
+                <i class="bi bi-eye-slash"  id="togglePassword"></i>
+                
+                <label for="usr_newpwd">Yeni Şifre:</label>
+                <input id="usr_newpwd" type="password" placeholder="Yeni Şifre" />
+                <i class="bi bi-eye-slash"  id="togglePassword2"></i>
+
+                <label for="usr_pwd_check">Tekrar Yeni Şifre:</label>
+                <input id="usr_pwd_check" type="password" placeholder="Tekrar Yeni Şifre" />
+                <i class="bi bi-eye-slash"  id="togglePassword3"></i>
+
+            </div>
+
+            <div class = "for-email">
+                <label for="usr_email">Email:</label>
+                <input type="text" id="usr_email" placeholder="Yeni Email">
+            </div>
+            
+            <div class = "for-adress">
+                <label for="usr_adress">Adres:</label>
+                <input type="text" id="usr_adress" placeholder="Yeni Adres">
+            </div>
+
+            <div class = "for-phone">
+                <label for="usr_phone">Tel. Numarası:</label>
+                <input type="text" id="usr_phone" placeholder="Yeni Numara +90 " maxlength="10">
+            </div>
+        </form>   
+            
+        <script src = "./scripts/user_edit.js"></script>
+    </body>
+</html>

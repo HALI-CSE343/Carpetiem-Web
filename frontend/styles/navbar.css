@@ -1,0 +1,191 @@
+@import url('https://fonts.googleapis.com/css?family=Share+Tech&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.navbar a {
+    text-decoration: none;
+}
+
+.navbar {
+    display: grid;
+    background-color: #24252A;
+    padding: 10px 10%;
+    position: sticky;
+    top: 0;
+    grid-template-columns: 20% 45% 20%;
+    grid-column-gap: 7.5%;
+    grid-template-areas: "logo links contact";
+}
+
+.brand-name {
+    grid-area: logo;
+    align-self: center;
+    justify-self: start;
+    font-family: 'Bebas Neue', cursive;
+    color: #edf0f1;
+    font-size: 48px;
+    padding: 5px 10px;
+    cursor: default;
+}
+
+.navbar-links {
+    grid-area: links;
+    align-self: center;
+}
+
+.navbar-links ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+}
+
+.navbar-links li a {
+    font-size: 22px;
+    transition: color .3s ease 0s;
+}
+
+.navbar-links li a:hover {
+    color: rgb(120, 150, 120);
+}
+
+.navbar-links li a, #contact {
+    font-family: 'Share Tech', sans-serif;
+    color: #edf0f1;
+}
+
+#contact {
+    font-size: 20px;
+    padding: 10px 20px;
+    background-color: rgba(120, 150, 120, 1);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color .3s ease 0s;
+}
+
+#contact:hover {
+    background-color: rgba(120, 150, 120, 0.7);
+}
+
+.contact-container {
+    grid-area: contact;
+    align-self: center;
+    justify-self: end;
+}
+
+#drop-down-menu i{
+    background-color: #24252A;
+    color: #edf0f1;
+    padding-left: 10px;
+    transition: color .3s ease 0s;
+}
+
+#drop-down-menu i:hover {
+    color: rgb(120, 150, 120);
+}
+
+#drop-down-menu {
+    border: none;
+}
+
+.drop-down-container {
+    grid-area: drop-down;
+    align-self: center;
+    justify-self: start;
+    display: none;
+}
+
+@media (max-width: 650px) {
+    .navbar {
+        padding: 10px 5% 10px 0%;
+        position: relative;
+        grid-template-areas:
+            "drop-down logo contact"
+            "links links links";
+    }
+
+    .navbar-links {
+        position: relative;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .navbar-links ul {
+        flex-direction: column;
+        position: absolute;
+        margin-top: 10px;
+        width: 100vw;
+        background: rgba(36, 37, 42, 0.8);
+    }
+
+    .navbar-links li {
+        text-align: center;
+        padding: 7px 10%;
+    }
+
+    .navbar-links.fade-in {
+        pointer-events: auto;
+        animation-name: fade-in;
+        animation-duration: .5s;
+        animation-delay: 0s;
+        animation-fill-mode: forwards;
+        animation-timing-function: ease-in-out;
+    }
+
+    .navbar-links.fade-out {
+        pointer-events: none;
+        animation-name: fade-out;
+        animation-duration: .5s;
+        animation-delay: 0s;
+        animation-fill-mode: forwards;
+        animation-timing-function: ease-in-out;
+    }
+
+    .drop-down-container {
+        display: block;
+        justify-self: end;
+    }
+
+    #drop-down-menu {
+        cursor: pointer;
+    }
+
+    #drop-down-menu i {
+        padding-left: 0px;
+    }
+
+    .brand-name {
+        justify-self: center;
+        font-size: 200%;
+        padding: 0;
+        margin-left: 10%;
+    }
+
+    #contact {
+        font-size: 90%;
+        transition: opacity .5s, visibility .5s;
+    }
+}
+
+@keyframes fade-in {
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+@keyframes fade-out {
+    0%{
+        opacity: 1;
+    }
+    100%{
+        opacity: 0;
+    }
+}
