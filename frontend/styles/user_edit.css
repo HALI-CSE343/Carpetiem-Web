@@ -1,4 +1,5 @@
 form{
+    background-color: grey;
     padding: 20% ;
     display: flex;
     flex-direction: column;
@@ -12,9 +13,6 @@ label{
 }
 .for-pwd label , input{
     vertical-align: middle;
-}
-.for-pwd{
-    border-style: groove;
 }
 .bi-eye-slash{
     margin-left: -20px;
