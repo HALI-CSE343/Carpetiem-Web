@@ -71,10 +71,7 @@
                     </router-link>
                   </li>
                   <li v-if="!isLogin">
-                    <router-link
-                      class="dropdown-item"
-                      :to="{ name: 'CustomerLogin' }"
-                    >
+                    <router-link class="dropdown-item" :to="{ name: 'Login' }">
                       Login
                     </router-link>
                   </li>
@@ -95,16 +92,26 @@
 </template>
 
 <script>
+import { ref } from "@vue/reactivity";
+import db from "./firebase";
 export default {
   name: "App",
-  data() {
-    return {
-      isLogin: false,
-      isDropdown: true,
-    };
+  setup() {
+    const isLogin = ref(false);
+    const isDropdown = ref(true);
+    /*db.collection("deneme")
+      .where("name", "==", "name1")
+      .get()
+      .then((snapshot) => {
+        snapshot.forEach((doc) => {
+          console.log(doc.id, "=>", doc.data());
+        });
+      })
+      .catch((error) => {
+        console.log("Error: ", error);
+      });*/
+    return { isLogin, isDropdown };
   },
-  methods: {},
-  components: {},
 };
 </script>
 
