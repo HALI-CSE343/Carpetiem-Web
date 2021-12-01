@@ -1,0 +1,66 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="./styles/user_edit.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <title> Profile Settings  </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue@3.0.2"></script>
+        <script>
+            jQuery(document).ready(function(){
+            jQuery('#nav-placeholder').load('navbar.html', null, function(responseText, textStatus, xhr) {
+              //alert(textStatus);  
+            });
+        });
+        </script>
+    </head>
+    <body>
+        <div id="nav-placeholder"></div>
+        <div id = "app">
+            <form>
+                <div class="for-name">
+                    <label for="usr_name">İsim: </label> 
+                    <input id = "usr_name" placeholder="Yeni İsim" type="text">             
+                </div>
+                <br>
+                <div class="for-pwd">
+                    <label for="usr_curr_pwd">Mevcut Şifre:</label>
+                    <input id="usr_curr_pwd" :type="type" placeholder="Mevcut Şifre" />
+                </div>
+                <br>
+                <div class= "for-newPwd">
+                    <label for="usr_newpwd">Yeni Şifre:</label>
+                    <input id="usr_new_pwd" :type="type" placeholder="Yeni Şifre" />
+                </div>
+                <br>
+                <div class = "for-rePwd">
+                    <label for="usr_pwd_check">Tekrar Yeni Şifre:</label>
+                    <input id="usr_new_pwd_2" :type="type" placeholder="Tekrar Yeni Şifre" />
+                    <button @click="toggleEyeSlash" type="button" :class="eye"  id="togglePassword"></button>
+                </div>
+
+                <br>
+                <div class = "for-email">
+                    <label for="usr_email">Email:</label>
+                    <input type="text" id="usr_email" placeholder="Yeni Email">
+                </div>
+                <br>
+                <div class = "for-adress">
+                    <label for="usr_adress">Adres:</label>
+                    <input type="text" id="usr_adress" placeholder="Yeni Adres">
+                </div>
+                <br>
+                <div class = "for-phone">
+                    <label for="usr_phone">Tel. Numarası:</label>
+                    <input type="text" id="usr_phone" placeholder="Yeni Numara +90 " maxlength="10">
+                </div>
+                <br>
+                <button @click="save" type="button" style="height: 25px; width: 50px; background-color: black; color: white;">Save</button>
+            </form>   
+        </div>
+
+        <script src = "./scripts/user_edit.js"></script>
+    </body>
+</html>
