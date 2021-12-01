@@ -2,9 +2,9 @@
   <h4 class="text-center mb-3">{{ header }}</h4>
   <form novalidate>
     <div class="row justify-content-center mb-3">
-      <div class="col-md-12 col-lg-12">
+      <div class="col-md-12">
         <label for="email" class="form-label">Email</label>
-        <div class="input-group">
+        <div class="input-group has-validation">
           <span class="input-group-text">
             <i class="bi bi-envelope-fill"></i>
           </span>
@@ -25,9 +25,9 @@
       </div>
     </div>
     <div class="row justify-content-center mb-3">
-      <div class="col-md-12 col-lg-12">
+      <div class="col-md-12">
         <label for="password" class="form-label">Password</label>
-        <div class="input-group">
+        <div class="input-group has-validation">
           <span class="input-group-text">
             <i class="bi bi-lock-fill"></i>
           </span>
@@ -46,7 +46,7 @@
       </div>
     </div>
     <div class="row mb-5">
-      <div class="d-grid col-md-12 col-lg-12 mx-auto">
+      <div class="d-grid col-md-12 mx-auto">
         <button
           class="btn btn-primary"
           type="button"
@@ -81,7 +81,7 @@
     <div class="row">
       <div class="col-md-auto mx-auto">
         Hesabınız yok mu?
-        <router-link to="#" style="text-decoration: none">
+        <router-link :to="{ name: 'Register' }" style="text-decoration: none">
           Şimdi oluşturun <i class="bi bi-box-arrow-up-right"></i>
         </router-link>
       </div>

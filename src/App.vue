@@ -76,7 +76,10 @@
                     </router-link>
                   </li>
                   <li v-if="!isLogin">
-                    <router-link class="dropdown-item" to="#">
+                    <router-link
+                      class="dropdown-item"
+                      :to="{ name: 'Register' }"
+                    >
                       Register
                     </router-link>
                   </li>
