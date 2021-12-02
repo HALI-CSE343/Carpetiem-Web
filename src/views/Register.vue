@@ -1,41 +1,26 @@
 <template>
-  <div
-    class="container d-flex flex-column justify-content-center flex-grow-1"
-  ></div>
+  <div class="container d-flex flex-column justify-content-center flex-grow-1">
+    <div class="row mt-3 mt-md-0">
+      <div class="col-md-5">
+        <RegisterForm header="Firm Register" />
+      </div>
+
+      <div class="col-md-2 text-center">
+        <div class="vr d-none d-md-inline-block" style="height: 100%"></div>
+        <hr class="d-block d-md-none" />
+      </div>
+
+      <div class="col-md-5">
+        <RegisterForm header="Customer Register" />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import db from "../firebase";
+import RegisterForm from "../components/RegisterForm.vue";
 export default {
-  setup() {
-    /*db.collection("cities")
-      .get()
-      .then((snapshot) => {
-        snapshot.forEach((doc) => {
-          db.collection("cities").doc(doc.id).delete();
-        });
-      });*/
-    //cities.sort();
-    /*cities.forEach((city) => {
-      city.districts.forEach((district) => {
-        district.neighborhoods.sort((a, b) => (a > b ? 1 : b > a ? -1 : 0));
-      });
-      db.collection("cities").add(city);
-    });*/
-    /*db.collection("cities")
-      .where("name", "==", "AFYONKARAHİSAR")
-      .get()
-      .then((snapshot) => {
-        snapshot.forEach((doc) => {
-          console.log(
-            doc.data().districts.find((element) => element === "ŞUHUT")
-          );
-        });
-      })
-      .catch((error) => {
-        console.log("Error: ", error);
-      });*/
-  },
+  components: { RegisterForm },
 };
 </script>
 
