@@ -3,6 +3,7 @@ import Home from "../views/Home.vue";
 import About from "../views/About.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
+import EmployeeSettings from "../views/EmployeeSettings.vue";
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: "/register",
     name: "Register",
     component: Register,
+  },
+  {
+    path: "/employeesettings",
+    name: "EmployeeSettings",
+    component: EmployeeSettings,
   },
 ];
 
