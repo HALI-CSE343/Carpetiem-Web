@@ -1,7 +1,7 @@
 <template>
   <h4 class="text-center mb-3">{{ header }}</h4>
   <form novalidate>
-    <div class="row justify-content-center mb-3">
+    <div class="row mb-3">
       <div class="col-md-12">
         <label for="email" class="form-label">Email</label>
         <div class="input-group has-validation">
@@ -24,7 +24,7 @@
         </div>
       </div>
     </div>
-    <div class="row justify-content-center mb-3">
+    <div class="row mb-3">
       <div class="col-md-12">
         <label for="password" class="form-label">Password</label>
         <div class="input-group has-validation">
