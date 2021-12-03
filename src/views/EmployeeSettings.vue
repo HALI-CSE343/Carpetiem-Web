@@ -53,7 +53,8 @@
                     </div>
 
                     <div class="modal-body">
-                        <div id = "app">
+                        <RegisterForm/>
+                        <!-- <div id = "app"> 
                             <form>
                                 <div class="for-name">
                                     <label for="usr_name">İsim: </label> 
@@ -94,11 +95,7 @@
                                 
                             </form>   
                         </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Kaydet</button>
+                        -->
                     </div>
 
                 </div>
@@ -107,30 +104,27 @@
         <!-- Pop-up sonu -->
 
 
-
+        <!-- ikinci Pop-up -->
          <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
 
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Eleman bilgilerini düzenle</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Eleman Ekle</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
                     <div class="modal-body">
+                        <RegisterForm/>
+                        <!-- 
                         <div id = "app">
                             <form>
                                 <div class="for-name">
                                     <label for="usr_name">İsim: </label> 
                                     <input v-model= "userName"  id = "usr_name" placeholder="Yeni İsim" >             
                                 </div>
-                                <br>
-                                <div class="for-pwd">
-                                    <label for="usr_curr_pwd">Mevcut Şifre:</label>
-                                    <input v-model= "password" id="usr_curr_pwd"  placeholder="Mevcut Şifre" />
-                                </div>
-                                <br>
                                 <div class= "for-newPwd">
+                                    <p></p>
                                     <label for="usr_newpwd">Yeni Şifre:</label>
                                     <input id="usr_new_pwd"  placeholder="Yeni Şifre" />
                                 </div>
@@ -159,17 +153,13 @@
                                 
                             </form>   
                         </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Kaydet</button>
+                         -->
                     </div>
 
                 </div>
             </div>
         </div>
-
+        <!-- ikinci Pop-up sonu -->
    
                  
             </div>   
@@ -179,10 +169,11 @@
 
 <script>
     import PopUp from "../components/PopUp.vue";
+    import RegisterForm from "../components/RegisterForm.vue";
     
     export default {
         name: "EmployeeSettings",
-        components: {PopUp},
+        components: {PopUp, RegisterForm},
         data() {
             return {
                 userName : "",
