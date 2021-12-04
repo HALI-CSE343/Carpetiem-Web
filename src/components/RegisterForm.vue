@@ -3,86 +3,128 @@
   <form novalidate>
     <div class="row g-2">
       <div class="col-md-12">
-        <label for="name" class="form-label">Name</label>
+        <label :for="user_type + '-name'" class="form-label">
+          <span style="color: red">*</span> Name
+        </label>
         <div class="input-group has-validation">
           <input
+            v-model="name"
             type="text"
             class="form-control"
-            id="name"
-            ref="name"
-            @keyup="is_name_valid = name.value.length != 0"
-            @blur="validate"
+            :id="user_type + '-name'"
+            autocomplete="off"
+            @keyup="is_name_valid = name.length != 0"
+            :class="{
+              '': is_name_valid === '',
+              'is-valid': is_name_valid,
+              'is-invalid': is_name_valid === false,
+            }"
           />
           <div class="invalid-feedback">Name is required</div>
         </div>
       </div>
       <div class="col-md-12">
-        <label for="phone" class="form-label">Phone Number</label>
+        <label :for="user_type + '-phone'" class="form-label">
+          <span style="color: red">*</span> Phone Number
+        </label>
         <div class="input-group has-validation">
           <input
-            ref="phone"
+            v-model="phone"
             type="tel"
             class="form-control"
             autocomplete="off"
             maxlength="14"
-            id="phone"
+            :id="user_type + '-phone'"
             @keydown="enforceFormat"
             @keyup="
               formatToPhone($event);
-              is_phone_valid = phone.value.length == 14;
+              is_phone_valid = phone.length == 14;
             "
-            @blur="validate"
+            :class="{
+              '': is_phone_valid === '',
+              'is-valid': is_phone_valid,
+              'is-invalid': is_phone_valid === false,
+            }"
           />
           <div class="invalid-feedback">Valid phone number is required</div>
         </div>
       </div>
       <div class="col-md-12">
-        <label for="email" class="form-label">Email</label>
+        <label :for="user_type + '-email'" class="form-label">
+          <span style="color: red">*</span> Email
+        </label>
         <div class="input-group has-validation">
           <input
-            ref="email"
+            v-model="email"
             type="email"
             class="form-control"
-            id="email"
+            :id="user_type + '-email'"
             autocomplete="off"
+            placeholder="example@example.com"
             @keyup="
-              is_email_valid = /^([a-z][a-z0-9_-]*@[a-z]+\.[a-z]+)$/.test(
-                email.value
-              )
+              is_email_valid = /^([a-z][a-z0-9_-]*@[a-z]+\.[a-z]+)$/.test(email)
             "
-            @blur="validate"
+            :class="{
+              '': is_email_valid === '',
+              'is-valid': is_email_valid,
+              'is-invalid': is_email_valid === false,
+            }"
           />
           <div class="invalid-feedback">Valid email is required</div>
         </div>
       </div>
       <div class="col-md-12">
-        <label for="password" class="form-label">Password</label>
+        <label :for="user_type + '-password'" class="form-label">
+          <span style="color: red">*</span> Password
+        </label>
         <div class="input-group has-validation">
           <input
-            ref="pwd"
-            type="password"
+            v-model="pwd"
+            :type="is_pwd ? 'password' : 'text'"
             class="form-control border-end-0"
-            id="password"
+            :id="user_type + '-password'"
             autocomplete="off"
-            @keyup="is_pwd_valid = pwd.value.length != 0"
-            @blur="validate"
+            @keyup="is_pwd_valid = pwd.length >= 6"
+            :class="{
+              '': is_pwd_valid === '',
+              'is-valid': is_pwd_valid,
+              'is-invalid': is_pwd_valid === false,
+            }"
           />
-          <span class="input-group-text bg-transparent" @click="showPassword">
-            <i class="bi bi-eye-slash"></i>
+          <span
+            class="input-group-text bg-transparent"
+            @click="is_pwd = !is_pwd"
+            :class="{
+              '': is_pwd_valid === '',
+              'border-success': is_pwd_valid,
+              'border-danger': is_pwd_valid === false,
+            }"
+          >
+            <i
+              class="bi"
+              :class="{ 'bi-eye-slash': is_pwd, 'bi-eye': !is_pwd }"
+            ></i>
           </span>
-          <div class="invalid-feedback">Password is required</div>
+          <div class="invalid-feedback">
+            Password must be at least 6 characters long
+          </div>
         </div>
       </div>
       <div class="col-md-6">
-        <label for="city-select" class="form-label">City</label>
+        <label :for="user_type + '-city-select'" class="form-label">
+          <span style="color: red">*</span> City
+        </label>
         <div class="input-group has-validation">
           <select
-            ref="city"
             class="form-select"
-            v-model="selected_city"
+            v-model="city"
             @change="onCityChange"
-            id="city-select"
-            @blur="validate"
+            :id="user_type + '-city-select'"
+            :class="{
+              '': is_city_valid === '',
+              'is-valid': is_city_valid,
+              'is-invalid': is_city_valid === false,
+            }"
           >
             <option value="default">Select your city</option>
             <option v-for="city in cities" :key="city" :value="city">
@@ -93,16 +135,21 @@
         </div>
       </div>
       <div class="col-md-6">
-        <label for="district-select" class="form-label">District</label>
+        <label :for="user_type + '-district-select'" class="form-label">
+          <span style="color: red">*</span> District
+        </label>
         <div class="input-group has-validation">
           <select
-            ref="dist"
             class="form-select"
-            v-model="selected_district"
+            v-model="dist"
             @change="onDistrictChange"
             :disabled="!is_city_valid"
-            id="district-select"
-            @blur="validate"
+            :id="user_type + '-district-select'"
+            :class="{
+              '': is_dist_valid === '',
+              'is-valid': is_dist_valid,
+              'is-invalid': is_dist_valid === false,
+            }"
           >
             <option value="default">Select your district</option>
             <option
@@ -117,16 +164,21 @@
         </div>
       </div>
       <div class="col-md-12">
-        <label for="neighborhood-select" class="form-label">Neighborhood</label>
+        <label :for="user_type + '-neighborhood-select'" class="form-label">
+          <span style="color: red">*</span> Neighborhood
+        </label>
         <div class="input-group has-validation">
           <select
-            ref="nbhd"
             class="form-select"
-            v-model="selected_neighborhood"
-            :disabled="!is_district_valid || !is_city_valid"
-            id="neighborhood-select"
-            @change="is_neighborhood_valid = selected_neighborhood != 'default'"
-            @blur="validate"
+            v-model="nbhd"
+            :disabled="!is_dist_valid || !is_city_valid"
+            :id="user_type + '-neighborhood-select'"
+            @change="is_nbhd_valid = nbhd != 'default'"
+            :class="{
+              '': is_nbhd_valid === '',
+              'is-valid': is_nbhd_valid,
+              'is-invalid': is_nbhd_valid === false,
+            }"
           >
             <option value="default">Select your neighborhood</option>
             <option
@@ -141,29 +193,54 @@
         </div>
       </div>
       <div class="col-md-12">
-        <label for="address" class="form-label">Address</label>
+        <label :for="user_type + '-address'" class="form-label">
+          <span style="color: red">*</span> Address
+        </label>
         <div class="input-group has-validation">
           <textarea
+            v-model="addr"
             class="form-control"
-            id="address"
+            :id="user_type + '-address'"
             rows="2"
-            ref="addr"
             style="resize: none"
             autocomplete="off"
-            @keyup="is_addr_valid = addr.value.length != 0"
-            @blur="validate"
+            @keyup="is_addr_valid = addr.length != 0"
+            :class="{
+              '': is_addr_valid === '',
+              'is-valid': is_addr_valid,
+              'is-invalid': is_addr_valid === false,
+            }"
           ></textarea>
           <div class="invalid-feedback">Address is required</div>
         </div>
       </div>
+      <div
+        class="alert alert-danger d-flex align-items-center alert-dismissible"
+        role="alert"
+        v-if="error"
+      >
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <div class="text-wrap">
+          Bu e-posta başka bir kullanıcı tarafından kullanılmaktadır. Lütfen
+          başka bir e-posta girin
+        </div>
+        <button
+          type="button"
+          class="btn-close"
+          data-hide="alert"
+          aria-label="Close"
+          @click="error = false"
+        ></button>
+      </div>
       <div class="d-grid col-md-12 mx-auto mb-4">
         <button
           class="btn btn-primary"
+          @click="register"
           type="button"
           :disabled="
             !is_city_valid ||
-            !is_district_valid ||
-            !is_neighborhood_valid ||
+            !is_dist_valid ||
+            !is_nbhd_valid ||
             !is_name_valid ||
             !is_phone_valid ||
             !is_email_valid ||
@@ -174,7 +251,7 @@
           Register
         </button>
       </div>
-      <div class="col-md-auto mx-auto">
+      <div class="col-md-auto mx-auto" v-if="user_type != 'employee'">
         Hesabınız var mı?
         <router-link :to="{ name: 'Login' }" style="text-decoration: none">
           Giriş yapın <i class="bi bi-box-arrow-up-right"></i>
@@ -187,32 +264,33 @@
 <script>
 import { ref } from "@vue/reactivity";
 import db from "../firebase";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
 export default {
   name: "RegisterForm",
-  props: ["header"],
+  props: ["header", "user_type"],
   setup() {
-    const selected_city = ref("default");
-    const selected_district = ref("default");
-    const selected_neighborhood = ref("default");
-    const cities = ref([]);
-    const districts = ref([]);
-    const neighborhoods = ref([]);
-    const is_city_valid = ref(false);
-    const is_district_valid = ref(false);
-    const is_neighborhood_valid = ref(false);
-    const is_name_valid = ref(false);
-    const is_phone_valid = ref(false);
-    const is_email_valid = ref(false);
-    const is_pwd_valid = ref(false);
-    const is_addr_valid = ref(false);
+    const city = ref("default");
+    const dist = ref("default");
+    const nbhd = ref("default");
     const name = ref("");
     const phone = ref("");
     const email = ref("");
     const pwd = ref("");
     const addr = ref("");
-    const city = ref("");
-    const dist = ref("");
-    const nbhd = ref("");
+    const cities = ref([]);
+    const districts = ref([]);
+    const neighborhoods = ref([]);
+    const is_city_valid = ref("");
+    const is_dist_valid = ref("");
+    const is_nbhd_valid = ref("");
+    const is_name_valid = ref("");
+    const is_phone_valid = ref("");
+    const is_email_valid = ref("");
+    const is_pwd_valid = ref("");
+    const is_addr_valid = ref("");
+    const is_pwd = ref(true);
+    const error = ref(false);
 
     db.collection("cities")
       .get()
@@ -228,7 +306,7 @@ export default {
 
       let snap = await db
         .collection("cities")
-        .where("name", "==", selected_city.value)
+        .where("name", "==", city.value)
         .get();
 
       snap.forEach((doc) => {
@@ -238,24 +316,24 @@ export default {
       });
 
       districts.value.sort(new Intl.Collator("de").compare);
-      selected_district.value = "default";
-      selected_neighborhood.value = "default";
-      is_district_valid.value = false;
-      is_city_valid.value = selected_city.value == "default" ? false : true;
+      dist.value = "default";
+      nbhd.value = "default";
+      is_dist_valid.value = null;
+      is_nbhd_valid.value = null;
+      is_city_valid.value = city.value != "default";
     };
 
     const onDistrictChange = async () => {
       neighborhoods.value = [];
-      let count = 0;
 
       let snap = await db
         .collection("cities")
-        .where("name", "==", selected_city.value)
+        .where("name", "==", city.value)
         .get();
 
       snap.forEach((doc) => {
         doc.data().districts.some((district) => {
-          if (district.name === selected_district.value) {
+          if (district.name === dist.value) {
             district.neighborhoods.forEach((neighborhood) => {
               neighborhoods.value.push(neighborhood);
             });
@@ -265,12 +343,10 @@ export default {
       });
 
       neighborhoods.value.sort(new Intl.Collator("de").compare);
-      selected_neighborhood.value = "default";
-      is_district_valid.value =
-        selected_district.value == "default" ? false : true;
+      nbhd.value = "default";
+      is_nbhd_valid.value = null;
+      is_dist_valid.value = dist.value != "default";
     };
-
-    const showPassword = () => {};
 
     const isNumericInput = (event) => {
       const key = event.keyCode;
@@ -328,74 +404,75 @@ export default {
       }
     };
 
-    const validate = (event) => {
-      var element;
-      var is_valid;
+    const register = () => {
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(email.value, pwd.value)
+        .then((cred) => {
+          db.collection(user_type + "s")
+            .doc(cred.user.uid)
+            .set({
+              name: name.value,
+              phone: phone.value.replace(/\D/g, "").substring(0, 10),
+              email: email.value,
+              password: pwd.value,
+              address: addr.value,
+              city: city.value,
+              district: dist.value,
+              neighborhood: nbhd.value,
+            });
+          console.log("registered successfully");
+        })
+        .catch((err) => {
+          error.value = true;
+          email.value = "";
+          is_email_valid.value = "";
+        });
 
-      if (event.target.id === "name") {
-        element = name.value;
-        is_valid = is_name_valid.value;
-      } else if (event.target.id === "phone") {
-        element = phone.value;
-        is_valid = is_phone_valid.value;
-      } else if (event.target.id === "email") {
-        element = email.value;
-        is_valid = is_email_valid.value;
-      } else if (event.target.id === "password") {
-        element = pwd.value;
-        is_valid = is_pwd_valid.value;
-      } else if (event.target.id === "city-select") {
-        element = city.value;
-        is_valid = is_city_valid.value;
-      } else if (event.target.id === "district-select") {
-        element = dist.value;
-        is_valid = is_district_valid.value;
-      } else if (event.target.id === "neighborhood-select") {
-        element = nbhd.value;
-        is_valid = is_neighborhood_valid.value;
-      } else {
-        element = addr.value;
-        is_valid = is_addr_valid.value;
-      }
-
-      if (is_valid) {
-        element.classList.remove("is-invalid");
-        element.classList.add("is-valid");
-      } else {
-        element.classList.remove("is-valid");
-        element.classList.add("is-invalid");
-      }
+      /*createUserWithEmailAndPassword(auth, email.value, pwd.value)
+        .then((cred) => {
+          return db.collection("customers").doc(cred.user.uid).set({
+            name: name.value,
+            phone: phone.value,
+            email: email.value,
+            password: pwd.value,
+            address: addr.value,
+            city: city.value,
+            district: dist.value,
+            neighborhood: nbhd.value,
+          });
+        })
+        .then(console.log("registered successfully"))
+        .catch((err) => console.log(err.message));*/
     };
 
     return {
-      selected_city,
-      selected_district,
-      selected_neighborhood,
-      cities,
-      districts,
-      neighborhoods,
-      is_city_valid,
-      is_district_valid,
-      is_neighborhood_valid,
-      is_name_valid,
-      is_phone_valid,
-      is_email_valid,
-      is_pwd_valid,
-      is_addr_valid,
+      city,
+      dist,
+      nbhd,
       name,
       phone,
       email,
       pwd,
       addr,
-      city,
-      dist,
-      nbhd,
+      cities,
+      districts,
+      neighborhoods,
+      is_city_valid,
+      is_dist_valid,
+      is_nbhd_valid,
+      is_name_valid,
+      is_phone_valid,
+      is_email_valid,
+      is_pwd_valid,
+      is_addr_valid,
+      is_pwd,
       onCityChange,
       onDistrictChange,
-      showPassword,
       enforceFormat,
       formatToPhone,
-      validate,
+      register,
+      error,
     };
   },
 };
