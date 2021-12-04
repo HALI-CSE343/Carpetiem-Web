@@ -2,7 +2,11 @@
   <div class="container d-flex flex-column justify-content-center flex-grow-1">
     <div class="row mt-3 mt-md-0">
       <div class="col-md-5">
-        <LoginForm header="Admin Login" placeholder="admin@admin.com" />
+        <LoginForm
+          header="Admin Login"
+          placeholder="admin@admin.com"
+          user_type="firm"
+        />
       </div>
 
       <div class="col-md-2 text-center">
@@ -11,7 +15,11 @@
       </div>
 
       <div class="col-md-5">
-        <LoginForm header="Customer Login" placeholder="example@example.com" />
+        <LoginForm
+          header="Customer Login"
+          placeholder="example@example.com"
+          user_type="customer"
+        />
       </div>
     </div>
   </div>
