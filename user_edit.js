@@ -4,6 +4,11 @@ const app = Vue.createApp({
         return{
             type : 'password',
             eye : 'bi bi-eye-slash',
+            userName : "",
+            telNo : "",
+            email : "",
+            adress: "",
+            password: "",
         }
     },
 
