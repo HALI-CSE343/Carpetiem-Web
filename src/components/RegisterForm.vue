@@ -268,8 +268,9 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 export default {
   name: "RegisterForm",
-  props: ["header", "user_type"],
+
   setup() {
+    const props = ref(["header", "user_type"]);
     const city = ref("default");
     const dist = ref("default");
     const nbhd = ref("default");

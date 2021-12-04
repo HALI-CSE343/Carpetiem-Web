@@ -4,21 +4,21 @@
       class="navbar navbar-expand-md navbar-dark"
       style="background-color: #24252a"
     >
-      <div class="container-fluid mx-5">
+      <div class="container-fluid mx-md-5">
         <button
           class="navbar-toggler"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navmenu"
-          @click="isDropdown = !isDropdown"
+          @click="show_buttons = !show_buttons"
         >
           <span class="navbar-toggler-icon"></span>
         </button>
         <router-link :to="{ name: 'Home' }" class="navbar-brand">
           Carpetiem
         </router-link>
-        <div class="collapse navbar-collapse" id="navmenu">
-          <ul class="navbar-nav m-auto">
+        <div class="collapse navbar-collapse ms-5" id="navmenu">
+          <ul class="navbar-nav mx-auto">
             <li class="nav-item">
               <router-link :to="{ name: 'EmployeeSettings' }" class="nav-link">
                 Employee Settings
@@ -29,20 +29,14 @@
                 About
               </router-link>
             </li>
-            <li class="nav-item">
-              <router-link :to="{ name: 'About' }" class="nav-link">
-                About
-              </router-link>
-            </li>
           </ul>
         </div>
         <transition name="fade">
-          <div class="dropdown-container" v-if="isDropdown">
-            <ul class="navbar-nav">
-              <li class="nav-item dropdown">
+          <div :class="{ 'me-5': logged_in }" v-if="show_buttons">
+            <ul class="navbar-nav list-group d-flex flex-row">
+              <li class="nav-item dropdown mx-2" v-if="logged_in">
                 <button
                   class="btn dropdown-toggle"
-                  href="#"
                   id="user-dropdown"
                   role="button"
                   data-bs-toggle="dropdown"
@@ -55,35 +49,36 @@
                   class="dropdown-menu dropdown-menu-dark position-absolute"
                   aria-labelledby="user-dropdown"
                 >
-                  <li v-if="isLogin">
+                  <li>
                     <router-link class="dropdown-item" to="#">
-                      Action
+                      My Orders
                     </router-link>
                   </li>
-                  <li v-if="isLogin">
+                  <li>
                     <router-link class="dropdown-item" to="#">
-                      Another action
+                      Profile Settings
                     </router-link>
                   </li>
-                  <li v-if="isLogin">
-                    <router-link class="dropdown-item" to="#">
-                      Something else here
-                    </router-link>
-                  </li>
-                  <li v-if="!isLogin">
-                    <router-link class="dropdown-item" :to="{ name: 'Login' }">
-                      Login
-                    </router-link>
-                  </li>
-                  <li v-if="!isLogin">
-                    <router-link
+                  <li>
+                    <div
                       class="dropdown-item"
-                      :to="{ name: 'Register' }"
+                      @click="logout"
+                      style="cursor: pointer"
                     >
-                      Register
-                    </router-link>
+                      Logout
+                    </div>
                   </li>
                 </ul>
+              </li>
+              <li class="nav-item mx-2 d-none d-sm-block" v-if="!logged_in">
+                <router-link class="btn" :to="{ name: 'Login' }">
+                  Login
+                </router-link>
+              </li>
+              <li class="nav-item mx-2 d-none d-sm-block" v-if="!logged_in">
+                <router-link class="btn" :to="{ name: 'Register' }">
+                  Register
+                </router-link>
               </li>
             </ul>
           </div>
@@ -96,30 +91,43 @@
 
 <script>
 import { ref } from "@vue/reactivity";
-import db from "./firebase";
+import { useRouter, useRoute } from "vue-router";
+import { onBeforeMount } from "@vue/runtime-core";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
 export default {
   name: "App",
   setup() {
-    const isLogin = ref(false);
-    const isDropdown = ref(true);
-    /*db.collection("deneme")
-      .where("name", "==", "name1")
-      .get()
-      .then((snapshot) => {
-        snapshot.forEach((doc) => {
-          console.log(doc.id, "=>", doc.data());
-        });
-      })
-      .catch((error) => {
-        console.log("Error: ", error);
-      });*/
-    return { isLogin, isDropdown };
+    const logged_in = ref(false);
+    const show_buttons = ref(true);
+    const router = useRouter();
+    const route = useRoute();
+
+    onBeforeMount(() => {
+      firebase.auth().onAuthStateChanged((user) => {
+        if (!user) {
+          if (route.path != "/register") {
+            router.replace("/login");
+          }
+          logged_in.value = false;
+        } else if (route.path == "/login" || route.path == "/register") {
+          router.replace("/");
+          logged_in.value = true;
+        }
+      });
+    });
+
+    const logout = () => {
+      firebase.auth().signOut();
+    };
+
+    return { logged_in, show_buttons, logout };
   },
 };
 </script>
 
 <style scoped>
-.dropdown-container {
+.button-container {
   flex-grow: 0.1;
 }
 

@@ -16,12 +16,6 @@ const firebaseConfig = {
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 const timestamp = firebase.firestore.FieldValue.serverTimestamp;
 const db = firebaseApp.firestore();
-/*const customers = db.collection("customers");
-const firms = db.collection("firms");
-const employees = db.collection("employees");*/
 
 export { timestamp };
-/*export default customers;
-export default firms;
-export default employees;*/
 export default db;
