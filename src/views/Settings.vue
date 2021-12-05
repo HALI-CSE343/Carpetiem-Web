@@ -10,17 +10,18 @@
                 <br>
                 <div class="for-pwd">
                     <label for="usr_curr_pwd">Mevcut Şifre:</label>
-                    <input v-model= "password" id="usr_curr_pwd"  placeholder="Mevcut Şifre" />
+                    <input v-model= "password" :type="type" id="usr_curr_pwd"  placeholder="Mevcut Şifre" />
                 </div>
                 <br>
                 <div class= "for-newPwd">
                     <label for="usr_newpwd">Yeni Şifre:</label>
-                    <input id="usr_new_pwd"  placeholder="Yeni Şifre" />
+                     <input id="usr_new_pwd" :type="type" placeholder="Yeni Şifre" />
                 </div>
                 <br>
                 <div class = "for-rePwd">
                     <label for="usr_pwd_check">Tekrar Yeni Şifre:</label>
-                    <input id="usr_new_pwd_2" placeholder="Tekrar Yeni Şifre" />
+                    <input id="usr_new_pwd_2" :type="type" placeholder="Tekrar Yeni Şifre" />
+                    <button @click="toggleEyeSlash" type="button" :class="eye"  id="togglePassword"></button>
                 </div>
 
                 <br>
@@ -39,27 +40,65 @@
                     <input v-model= "telNo" id="usr_phone" placeholder="Yeni Numara +90 " maxlength="10">
                 </div>
                 <br>
-                
+                <button @click="save" type="button" class="btn btn-secondary" style="background-color: #24252A">Save</button>
+
             </form>      
         </div>
     </body>
 </template>
 
 <script>
+import { ref } from "@vue/reactivity";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import db from "../firebase";
+
+/*db.collection("customers").where("name", "==", "burak" )
+    .get()
+    .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data().email);
+        });
+    })
+    .catch((error) => {
+        console.log("Error getting documents: ", error);
+    });*/
 
 export default {
   name: "App",
 
-    data(){
+    setup(){
+        const userName = ref("");
+        const telNo = ref("");
+        const email = ref("");
+        const adress = ref("");
+        const password = ref("");
+        const type = ref("password");
+        const eye = ref("bi bi-eye-slash");
+
+        db.collection("customers")
+        .doc(firebase.auth().currentUser.uid)
+        .get()
+        .then( (doc) => {
+            if(doc.exists){
+                userName.value = doc.data().name;
+                telNo.value = doc.data().phone;
+                email.value = doc.data().email;
+                adress.value = doc.data().address;
+                userName.value = doc.data().name;
+            }
+            });
+
         return{
-            type : 'password',
-            eye : 'bi bi-eye-slash',
-            userName : "",
-            telNo : "",
-            email : "",
-            adress: "",
-            password: "",
-        }
+            userName,
+            telNo,
+            email,
+            adress,
+            password,
+            type,
+            eye,
+        };
     },
 
     methods: {
@@ -72,12 +111,13 @@ export default {
         },
     }
 }
+
 </script>
 
 <style scoped>
     form{
         background-color: grey;
-        padding: 20% ;
+        padding: 9.5% ;
         display: flex;
         flex-direction: column;
         align-items: center; 
