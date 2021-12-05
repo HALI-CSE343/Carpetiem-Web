@@ -90,48 +90,6 @@
 
               <div class="modal-body">
                 <RegisterForm user_type="employee" />
-                <!-- <div id = "app"> 
-                            <form>
-                                <div class="for-name">
-                                    <label for="usr_name">İsim: </label> 
-                                    <input v-model= "userName"  id = "usr_name" placeholder="Yeni İsim" >             
-                                </div>
-                                <br>
-                                <div class="for-pwd">
-                                    <label for="usr_curr_pwd">Mevcut Şifre:</label>
-                                    <input v-model= "password" id="usr_curr_pwd"  placeholder="Mevcut Şifre" />
-                                </div>
-                                <br>
-                                <div class= "for-newPwd">
-                                    <label for="usr_newpwd">Yeni Şifre:</label>
-                                    <input id="usr_new_pwd"  placeholder="Yeni Şifre" />
-                                </div>
-                                <br>
-                                <div class = "for-rePwd">
-                                    <label for="usr_pwd_check">Tekrar Yeni Şifre:</label>
-                                    <input id="usr_new_pwd_2" placeholder="Tekrar Yeni Şifre" />
-                                </div>
-
-                                <br>
-                                <div class = "for-email">
-                                    <label for="usr_email">Email:</label>
-                                    <input v-model= "email"  id="usr_email" placeholder="Yeni Email">
-                                </div>
-                                <br>
-                                <div class = "for-adress">
-                                    <label for="usr_adress">Adres:</label>
-                                    <input v-model= "adress" id="usr_adress" placeholder="Yeni Adres">
-                                </div>
-                                <br>
-                                <div class = "for-phone">
-                                    <label for="usr_phone">Tel. Numarası:</label>
-                                    <input v-model= "telNo" id="usr_phone" placeholder="Yeni Numara +90 " maxlength="10">
-                                </div>
-                                <br>
-                                
-                            </form>   
-                        </div>
-                        -->
               </div>
             </div>
           </div>
@@ -160,44 +118,6 @@
 
               <div class="modal-body">
                 <RegisterForm user_type="employee" />
-                <!-- 
-                        <div id = "app">
-                            <form>
-                                <div class="for-name">
-                                    <label for="usr_name">İsim: </label> 
-                                    <input v-model= "userName"  id = "usr_name" placeholder="Yeni İsim" >             
-                                </div>
-                                <div class= "for-newPwd">
-                                    <p></p>
-                                    <label for="usr_newpwd">Yeni Şifre:</label>
-                                    <input id="usr_new_pwd"  placeholder="Yeni Şifre" />
-                                </div>
-                                <br>
-                                <div class = "for-rePwd">
-                                    <label for="usr_pwd_check">Tekrar Yeni Şifre:</label>
-                                    <input id="usr_new_pwd_2" placeholder="Tekrar Yeni Şifre" />
-                                </div>
-
-                                <br>
-                                <div class = "for-email">
-                                    <label for="usr_email">Email:</label>
-                                    <input v-model= "email"  id="usr_email" placeholder="Yeni Email">
-                                </div>
-                                <br>
-                                <div class = "for-adress">
-                                    <label for="usr_adress">Adres:</label>
-                                    <input v-model= "adress" id="usr_adress" placeholder="Yeni Adres">
-                                </div>
-                                <br>
-                                <div class = "for-phone">
-                                    <label for="usr_phone">Tel. Numarası:</label>
-                                    <input v-model= "telNo" id="usr_phone" placeholder="Yeni Numara +90 " maxlength="10">
-                                </div>
-                                <br>
-                                
-                            </form>   
-                        </div>
-                         -->
               </div>
             </div>
           </div>
@@ -269,6 +189,7 @@ export default {
         });
 
       employees.value = [];
+
       db.collection("employees")
         .get()
         .then((snap) => {
@@ -277,7 +198,7 @@ export default {
           });
           employees.value.sort(new Intl.Collator("de").compare);
         });
-      //window.location.reload();
+
       //e.isExist = false;
     };
     return {
