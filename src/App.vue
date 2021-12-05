@@ -20,8 +20,8 @@
         <div class="collapse navbar-collapse ms-5" id="navmenu">
           <ul class="navbar-nav mx-auto">
             <li class="nav-item">
-              <router-link :to="{ name: 'About' }" class="nav-link">
-                About
+              <router-link :to="{ name: 'EmployeeSettings' }" class="nav-link">
+                Employee Settings
               </router-link>
             </li>
             <li class="nav-item">
