@@ -53,18 +53,6 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import db from "../firebase";
 
-/*db.collection("customers").where("name", "==", "burak" )
-    .get()
-    .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            console.log(doc.id, " => ", doc.data().email);
-        });
-    })
-    .catch((error) => {
-        console.log("Error getting documents: ", error);
-    });*/
-
 export default {
   name: "App",
 
@@ -76,19 +64,26 @@ export default {
         const password = ref("");
         const type = ref("password");
         const eye = ref("bi bi-eye-slash");
+        const vrfy = ref("1");
 
-        db.collection("customers")
-        .doc(firebase.auth().currentUser.uid)
-        .get()
-        .then( (doc) => {
-            if(doc.exists){
-                userName.value = doc.data().name;
-                telNo.value = doc.data().phone;
-                email.value = doc.data().email;
-                adress.value = doc.data().address;
-                userName.value = doc.data().name;
-            }
-            });
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                // User is signed in.
+                db.collection("customers")
+                .doc(firebase.auth().currentUser.uid)
+                .get()
+                .then( (doc) => {
+                    if(doc.exists){
+                        userName.value = doc.data().name;
+                        telNo.value = doc.data().phone;
+                        email.value = doc.data().email;
+                        adress.value = doc.data().address;
+                        userName.value = doc.data().name;
+                    }
+                    });
+            }});
+
+        
 
         return{
             userName,
@@ -98,6 +93,7 @@ export default {
             password,
             type,
             eye,
+            vrfy,
         };
     },
 
@@ -107,8 +103,29 @@ export default {
             this.eye = this.eye === 'bi bi-eye-slash' ? 'bi-eye' : 'bi bi-eye-slash'
         },
         save(){
-            
+            this.verify(this.password);
+            console.log(vrfy.value);
+
         },
+
+        verify(providedPassword){
+            
+            var user = firebase.auth().currentUser;
+            var credential = firebase.auth.EmailAuthProvider.credential(
+            firebase.auth().currentUser.email,
+            providedPassword
+            );
+
+            // Prompt the user to re-provide their sign-in credentials
+            
+
+            user.reauthenticateWithCredential(credential).then(function() {
+                vrfy.value = "2";
+                
+            }).catch(function(error) {
+                //catched.
+            });
+        }
     }
 }
 
