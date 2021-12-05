@@ -43,7 +43,7 @@
                   aria-expanded="false"
                   type="button"
                 >
-                  User
+                  {{ user_type }}
                 </button>
                 <ul
                   class="dropdown-menu dropdown-menu-dark position-absolute"
@@ -98,10 +98,15 @@ import "firebase/compat/auth";
 export default {
   name: "App",
   setup() {
-    const logged_in = ref(false);
+    const logged_in = ref(firebase.auth().currentUser ? true : false);
     const show_buttons = ref(true);
     const router = useRouter();
     const route = useRoute();
+    const user_type = ref(
+      firebase.auth().currentUser
+        ? firebase.auth().currentUser.displayName
+        : "none"
+    );
 
     onBeforeMount(() => {
       firebase.auth().onAuthStateChanged((user) => {
@@ -110,9 +115,12 @@ export default {
             router.replace("/login");
           }
           logged_in.value = false;
+          user_type.value = "none";
         } else if (route.path == "/login" || route.path == "/register") {
           router.replace("/");
           logged_in.value = true;
+          user_type.value = user.displayName;
+          //console.log(user.displayName);
         }
       });
     });
@@ -121,7 +129,12 @@ export default {
       firebase.auth().signOut();
     };
 
-    return { logged_in, show_buttons, logout };
+    return {
+      logged_in,
+      show_buttons,
+      logout,
+      user_type,
+    };
   },
 };
 </script>

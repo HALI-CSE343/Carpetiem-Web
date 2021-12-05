@@ -269,7 +269,7 @@ import "firebase/compat/auth";
 export default {
   name: "RegisterForm",
   props: ["header", "user_type"],
-  setup() {
+  setup(props) {
     const city = ref("default");
     const dist = ref("default");
     const nbhd = ref("default");
@@ -405,15 +405,19 @@ export default {
     };
 
     const register = () => {
+      /*firebase.auth.OAuthProvider.prototype.credential({
+        displayName: props.user_type,
+      });*/
+
       firebase
         .auth()
         .createUserWithEmailAndPassword(email.value, pwd.value)
         .then((cred) => {
-          db.collection(user_type + "s")
+          db.collection(props.user_type + "s")
             .doc(cred.user.uid)
             .set({
               name: name.value,
-              phone: phone.value.replace(/\D/g, "").substring(0, 10),
+              phone: phone.value,
               email: email.value,
               password: pwd.value,
               address: addr.value,
@@ -421,7 +425,14 @@ export default {
               district: dist.value,
               neighborhood: nbhd.value,
             });
-          console.log("registered successfully");
+
+          //console.log(cred.credential);
+          cred.user
+            .updateProfile({
+              displayName: props.user_type,
+            })
+            .then(console.log("asdasda"));
+          /*console.log(cred.user.displayName);*/
         })
         .catch((err) => {
           error.value = true;

@@ -134,11 +134,15 @@
 import { ref } from "@vue/reactivity";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-//import db from "../firebase"
+import db from "../firebase";
 export default {
   name: "LoginForm",
-  props: ["header", "placeholder", "user_type"],
-  setup() {
+  props: {
+    header: String,
+    placeholder: String,
+    user_type: String,
+  },
+  setup(props) {
     const email = ref("");
     const password = ref("");
     const is_email_valid = ref("");
@@ -146,10 +150,48 @@ export default {
     const error = ref(false);
     const is_pwd = ref(true);
 
+    //console.log(firebase.auth.OAuthProvider.prototype.credential.toString());
+
     const login = () => {
-      firebase
+      /*firebase
         .auth()
         .signInWithEmailAndPassword(email.value, password.value)
+        .then((cred) => {
+          return db
+            .collection(props.user_type + "s")
+            .doc(cred.user.uid)
+            .get();
+        })
+        .then((doc) => {
+          console.log(doc.exists, props.user_type);
+          if (!doc.exists) {
+            firebase.auth().signOut();
+            throw "not in the collection";
+          }
+        })
+        .catch((err) => {
+          console.log("error");
+          error.value = true;
+          email.value = "";
+          password.value = "";
+          is_email_valid.value = "";
+          is_pwd_valid.value = "";
+        });*/
+      db.collection(props.user_type + "s")
+        .where("email", "==", email.value)
+        .get()
+        .then((snap) => {
+          if (snap.size == 0) {
+            throw "not in collection";
+          } else {
+            return firebase
+              .auth()
+              .signInWithEmailAndPassword(email.value, password.value);
+          }
+        })
+        .then((user) => {
+          console.log(user.user);
+        })
         .catch((err) => {
           error.value = true;
           email.value = "";
