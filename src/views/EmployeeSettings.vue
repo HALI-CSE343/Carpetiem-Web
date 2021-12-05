@@ -28,7 +28,7 @@
                   <p class="empText">{{ employee.phone }}</p>
                 </td>
                 <td class="listElement">
-                  <p class="empText">{{ employee.email }}</p>
+                  <p class="empText">{{ employee.mail }}</p>
                 </td>
                 <td class="listElement">
                   <p class="empText">{{ employee.address }}</p>
