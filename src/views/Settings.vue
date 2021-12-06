@@ -2,7 +2,7 @@
     <body>
         <div id="nav-placeholder"></div>
         <div id = "app">
-            <form>
+            <form id="settings">
                 <div class="for-name">
                     <label for="usr_name">İsim: </label> 
                     <input v-model= "userName"  id = "usr_name" placeholder="Yeni İsim" >             
@@ -12,19 +12,23 @@
                     <label for="usr_curr_pwd">Mevcut Şifre:</label>
                     <input v-model= "password" :type="is_pwd ? 'password' : 'text'"  placeholder="Mevcut Şifre" />
                 </div>
+
+                <p id = "error" style="color: #AD270A; margin-left: 40px;"></p>
+
                 <br>
                 <div class= "for-newPwd">
                     <label for="usr_newpwd">Yeni Şifre:</label>
-                     <input id="usr_new_pwd" :type="is_pwd ? 'password' : 'text'" placeholder="Yeni Şifre" />
+                     <input v-model="new_pwd" :type="is_pwd ? 'password' : 'text'" placeholder="Yeni Şifre" />
                 </div>
                 <br>
                 <div class = "for-rePwd">
                     <label for="usr_pwd_check">Tekrar Yeni Şifre:</label>
-                    <input id="usr_new_pwd_2" :type="is_pwd ? 'password' : 'text'" placeholder="Tekrar Yeni Şifre" />
+                    <input v-model="re_pwd" :type="is_pwd ? 'password' : 'text'" placeholder="Tekrar Yeni Şifre" />
                     <button @click="is_pwd = !is_pwd;" type="button" :class=" is_pwd ? 'bi-eye-slash' : 'bi-eye'"   id="togglePassword"></button>
                 </div>
-
                 <br>
+                
+                <p id = "error2" style="color: #AD270A; margin-left: 40px;"></p>
                 <div class = "for-email">
                     <label for="usr_email">Email:</label>
                     <input v-model= "email"  id="usr_email" placeholder="Yeni Email">
@@ -37,7 +41,22 @@
                 <br>
                 <div class = "for-phone">
                     <label for="usr_phone">Tel. Numarası:</label>
-                    <input v-model= "telNo" id="usr_phone" placeholder="Yeni Numara +90 " maxlength="10">
+                    <input v-model= "telNo" id="usr_phone" placeholder="Yeni Numara +90 " maxlength="14">
+                </div>
+                <br>
+                <div class = "for-city">
+                    <label for="usr_city">Şehir:</label>
+                    <input v-model= "city" id="usr_city" placeholder="Yeni Şehir ">
+                </div>
+                <br>
+                <div class = "for-district">
+                    <label for="usr_district">Semt:</label>
+                    <input v-model= "district" id="usr_district" placeholder="Yeni Semt ">
+                </div>
+                <br>
+                <div class = "for-neighborhood">
+                    <label for="usr_neighborhood">Mahalle:</label>
+                    <input v-model= "neighborhood" id="usr_neighborhood" placeholder="Yeni Mahalle">
                 </div>
                 <br>
                 <button @click="save" type="button" class="btn btn-secondary" style="background-color: #24252A">Save</button>
@@ -62,6 +81,11 @@ export default {
         const email = ref("");
         const adress = ref("");
         const password = ref("");
+        const new_pwd = ref("");
+        const re_pwd = ref("");
+        const city = ref("");
+        const district = ref("");
+        const neighborhood = ref("");
         const is_pwd = ref(true);
 
         firebase.auth().onAuthStateChanged(function(user) {
@@ -76,34 +100,76 @@ export default {
                         telNo.value = doc.data().phone;
                         email.value = doc.data().email;
                         adress.value = doc.data().address;
-                        userName.value = doc.data().name;
+                        city.value = doc.data().city;
+                        district.value = doc.data().district;
+                        neighborhood.value = doc.data().neighborhood;
                     }
                     });
+            }
+            else{
+                console.log("USER GİRMEDİ");
             }});
 
-        const verify = (providedPassword) => {
+        const save = () => {
             
-            var user = firebase.auth().currentUser;
-            var credential = firebase.auth.EmailAuthProvider.credential(
-            firebase.auth().currentUser.email,
-            providedPassword
-            );
+            verify(password).then( (result) => {
+                if(result == false){
+                    document.getElementById("error").innerHTML = "Geçersiz şifre. En az 6 karakter olmalı";
+                    return;
+                }
+                else{
 
-            // Prompt the user to re-provide their sign-in credentials
-            
+                    if(re_pwd.value == new_pwd.value && re_pwd.value != ""){
+                        password.value = re_pwd.value;
 
-            user.reauthenticateWithCredential(credential).then(function() {
-                console.log("okey");
-                
-            }).catch(function(error) {
-                //catched.
-                console.log(" not okey");
+                        var user = firebase.auth().currentUser;
+                        user.updatePassword(password.value).then(() => {
+                        console.log("Password updated!");
+                        }).catch((error) => { console.log(error); });
+                    }
+                    else{
+                        document.getElementById("error2").innerHTML = "Şifreler aynı değil";
+                    }
+
+                    db.collection("customers")
+                    .doc(firebase.auth().currentUser.uid)
+                    .update({
+                        "name": userName.value,
+                        "phone" : telNo.value,
+                        "email" : email.value,
+                        "address" : adress.value,
+                        "city" : city.value,
+                        "district" : district.value,
+                        "neighborhood" : neighborhood.value,
+                    });
+
+                    
+                }
+
+                document.getElementById("error").innerHTML = "";
             });
         }
+        const save_credential = () => {
 
-        const save = () => {
-            verify(password);
-        }   
+        }
+
+        function verify (providedPassword){
+
+            const user = firebase.auth().currentUser;
+            var credential = firebase.auth.EmailAuthProvider.credential(
+                user.email, 
+                 providedPassword.value
+             );
+            
+            return user.reauthenticateWithCredential(credential).then( () => { // Signed in
+                return true;
+            })
+            .catch(err => {
+                document.getElementById("error").innerHTML = "Invalid Password";
+                return false;
+            });
+            
+        }
 
         return{
             userName,
@@ -111,8 +177,14 @@ export default {
             email,
             adress,
             password,
+            new_pwd,
+            re_pwd,
             is_pwd,
+            city,
+            district,
+            neighborhood,
             save,
+            verify,
         };
     },
 }
