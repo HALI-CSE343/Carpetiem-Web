@@ -10,18 +10,18 @@
                 <br>
                 <div class="for-pwd">
                     <label for="usr_curr_pwd">Mevcut Şifre:</label>
-                    <input v-model= "password" :type="type" id="usr_curr_pwd"  placeholder="Mevcut Şifre" />
+                    <input v-model= "password" :type="is_pwd ? 'password' : 'text'"  placeholder="Mevcut Şifre" />
                 </div>
                 <br>
                 <div class= "for-newPwd">
                     <label for="usr_newpwd">Yeni Şifre:</label>
-                     <input id="usr_new_pwd" :type="type" placeholder="Yeni Şifre" />
+                     <input id="usr_new_pwd" :type="is_pwd ? 'password' : 'text'" placeholder="Yeni Şifre" />
                 </div>
                 <br>
                 <div class = "for-rePwd">
                     <label for="usr_pwd_check">Tekrar Yeni Şifre:</label>
-                    <input id="usr_new_pwd_2" :type="type" placeholder="Tekrar Yeni Şifre" />
-                    <button @click="toggleEyeSlash" type="button" :class="eye"  id="togglePassword"></button>
+                    <input id="usr_new_pwd_2" :type="is_pwd ? 'password' : 'text'" placeholder="Tekrar Yeni Şifre" />
+                    <button @click="is_pwd = !is_pwd;" type="button" :class=" is_pwd ? 'bi-eye-slash' : 'bi-eye'"   id="togglePassword"></button>
                 </div>
 
                 <br>
@@ -62,9 +62,7 @@ export default {
         const email = ref("");
         const adress = ref("");
         const password = ref("");
-        const type = ref("password");
-        const eye = ref("bi bi-eye-slash");
-        const vrfy = ref("1");
+        const is_pwd = ref(true);
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
@@ -83,32 +81,7 @@ export default {
                     });
             }});
 
-        
-
-        return{
-            userName,
-            telNo,
-            email,
-            adress,
-            password,
-            type,
-            eye,
-            vrfy,
-        };
-    },
-
-    methods: {
-        toggleEyeSlash(){
-            this.type = this.type === 'password' ? 'text' : 'password'
-            this.eye = this.eye === 'bi bi-eye-slash' ? 'bi-eye' : 'bi bi-eye-slash'
-        },
-        save(){
-            this.verify(this.password);
-            console.log(vrfy.value);
-
-        },
-
-        verify(providedPassword){
+        const verify = (providedPassword) => {
             
             var user = firebase.auth().currentUser;
             var credential = firebase.auth.EmailAuthProvider.credential(
@@ -120,13 +93,28 @@ export default {
             
 
             user.reauthenticateWithCredential(credential).then(function() {
-                vrfy.value = "2";
+                console.log("okey");
                 
             }).catch(function(error) {
                 //catched.
+                console.log(" not okey");
             });
         }
-    }
+
+        const save = () => {
+            verify(password);
+        }   
+
+        return{
+            userName,
+            telNo,
+            email,
+            adress,
+            password,
+            is_pwd,
+            save,
+        };
+    },
 }
 
 </script>
