@@ -266,6 +266,8 @@ import { ref } from "@vue/reactivity";
 import db from "../firebase";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
+import { useRouter } from "vue-router";
+import { registeredType } from "../App.vue";
 export default {
   name: "RegisterForm",
   props: ["header", "user_type"],
@@ -291,6 +293,7 @@ export default {
     const is_addr_valid = ref("");
     const is_pwd = ref(true);
     const error = ref(false);
+    const router = useRouter();
 
     db.collection("cities")
       .get()
@@ -405,10 +408,7 @@ export default {
     };
 
     const register = () => {
-      /*firebase.auth.OAuthProvider.prototype.credential({
-        displayName: props.user_type,
-      });*/
-
+      registeredType(props.user_type);
       firebase
         .auth()
         .createUserWithEmailAndPassword(email.value, pwd.value)
@@ -426,35 +426,18 @@ export default {
               neighborhood: nbhd.value,
             });
 
-          //console.log(cred.credential);
-          cred.user
-            .updateProfile({
-              displayName: props.user_type,
-            })
-            .then(console.log("asdasda"));
-          /*console.log(cred.user.displayName);*/
+          cred.user.updateProfile({
+            displayName: props.user_type,
+          });
+          registeredType("none");
+          router.replace("/");
         })
         .catch((err) => {
           error.value = true;
           email.value = "";
           is_email_valid.value = "";
+          registeredType("none");
         });
-
-      /*createUserWithEmailAndPassword(auth, email.value, pwd.value)
-        .then((cred) => {
-          return db.collection("customers").doc(cred.user.uid).set({
-            name: name.value,
-            phone: phone.value,
-            email: email.value,
-            password: pwd.value,
-            address: addr.value,
-            city: city.value,
-            district: dist.value,
-            neighborhood: nbhd.value,
-          });
-        })
-        .then(console.log("registered successfully"))
-        .catch((err) => console.log(err.message));*/
     };
 
     return {

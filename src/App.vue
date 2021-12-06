@@ -90,43 +90,106 @@
 </template>
 
 <script>
-import { ref } from "@vue/reactivity";
+import { computed, ref } from "@vue/reactivity";
 import { useRouter, useRoute } from "vue-router";
-import { onBeforeMount } from "@vue/runtime-core";
+import { onBeforeMount, watch, watchEffect } from "@vue/runtime-core";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
+import { getUserState, useAuthState } from "./firebase";
+import db from "./firebase";
+const registered = ref("none");
+
+export const registeredType = (type) => {
+  registered.value = type;
+};
+
 export default {
   name: "App",
   setup() {
-    const logged_in = ref(firebase.auth().currentUser ? true : false);
     const show_buttons = ref(true);
     const router = useRouter();
-    const route = useRoute();
-    const user_type = ref(
-      firebase.auth().currentUser
-        ? firebase.auth().currentUser.displayName
-        : "none"
-    );
+    //const route = useRoute();
+    /*const state = computed(() => useAuthState());
+    const logged_in = computed(() => state.value.isAuthenticated.value);
+    const user_type = computed(() =>
+      logged_in.value ? state.value.user.value.displayName : "none"
+    );*/
 
-    onBeforeMount(() => {
+    const logged_in = ref(false);
+    const user_type = ref("none");
+
+    firebase.auth().onAuthStateChanged((user) => {
+      logged_in.value = !!user;
+      user_type.value = !!user
+        ? registered.value == "none"
+          ? user.displayName
+          : registered.value
+        : "none";
+      //if(registered.value == )
+      /*user_type.value = !!user ? user.displayName : "none";*/
+      //user_type.value = (await db.collection("customers").doc(user.uid).get()) ? "customer" : "firm"
+      /*firebase
+        .auth()
+        .updateCurrentUser()
+        .then(() => {
+          user_type.value = !!user ? user.displayName : "none";
+        });*/
+      //user_type.value = !!user ? user.displayName : "none";
+      /*if (logged_in.value) {
+        var doc = await db.collection("customers").doc(user.uid).get();
+        user_type.value = doc.exists ? "customer" : "firm";
+      } else {
+        user_type.value = "none";
+      }*/
+    });
+
+    /*watchEffect(async () => {
+      let user = useAuthState();
+      logged_in.value = (await getUserState()) ? true : false;
+      user_type.value = logged_in.value ? user.user.value.displayName : "none";
+      console.log(logged_in.value, user_type.value);
+      console.log(user.isAuthenticated.value);
+    });*/
+
+    //console.log(logged_in.value, user_type.value);
+
+    /*watch(state.user, () => {
+      logged_in.value = state.isAuthenticated.value;
+      user_type.value = logged_in.value ? state.user.value.displayName : "none";
+      console.log(logged_in.value, user_type.value);
+    });*/
+
+    /*onBeforeMount(() => {
+      console.log(logged_in.value, user_type.value);
+
       firebase.auth().onAuthStateChanged((user) => {
+        console.log(route.path);
         if (!user) {
           if (route.path != "/register") {
             router.replace("/login");
           }
           logged_in.value = false;
           user_type.value = "none";
-        } else if (route.path == "/login" || route.path == "/register") {
+          console.log("NO USER");
+        } else if (route.path == "/login") {
           router.replace("/");
           logged_in.value = true;
           user_type.value = user.displayName;
-          //console.log(user.displayName);
+          console.log("LOGIN");
+        } else if (route.path == "/register") {
+          setTimeout(() => {
+            router.replace("/");
+            console.log("REGISTER");
+            logged_in.value = true;
+            user_type.value = user.displayName;
+          }, 500);
         }
       });
-    });
+    });*/
 
     const logout = () => {
       firebase.auth().signOut();
+      router.replace("/login");
     };
 
     return {

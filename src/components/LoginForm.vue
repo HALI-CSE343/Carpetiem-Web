@@ -135,6 +135,7 @@ import { ref } from "@vue/reactivity";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import db from "../firebase";
+import { useRouter } from "vue-router";
 export default {
   name: "LoginForm",
   props: {
@@ -149,34 +150,9 @@ export default {
     const is_pwd_valid = ref("");
     const error = ref(false);
     const is_pwd = ref(true);
-
-    //console.log(firebase.auth.OAuthProvider.prototype.credential.toString());
+    const router = useRouter();
 
     const login = () => {
-      /*firebase
-        .auth()
-        .signInWithEmailAndPassword(email.value, password.value)
-        .then((cred) => {
-          return db
-            .collection(props.user_type + "s")
-            .doc(cred.user.uid)
-            .get();
-        })
-        .then((doc) => {
-          console.log(doc.exists, props.user_type);
-          if (!doc.exists) {
-            firebase.auth().signOut();
-            throw "not in the collection";
-          }
-        })
-        .catch((err) => {
-          console.log("error");
-          error.value = true;
-          email.value = "";
-          password.value = "";
-          is_email_valid.value = "";
-          is_pwd_valid.value = "";
-        });*/
       db.collection(props.user_type + "s")
         .where("email", "==", email.value)
         .get()
@@ -190,7 +166,7 @@ export default {
           }
         })
         .then((user) => {
-          console.log(user.user);
+          router.replace("/");
         })
         .catch((err) => {
           error.value = true;
