@@ -1,8 +1,7 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import "firebase/compat/auth";
-import { computed, ref } from "@vue/reactivity";
-import { onMounted, onBeforeMount, onUnmounted } from "@vue/runtime-core";
+import { ref } from "@vue/reactivity";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBiZ0W8druRY1pr5FPOoCFwlk3H2w_pL6o",
@@ -19,34 +18,6 @@ const firebaseConfig = {
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 const timestamp = firebase.firestore.FieldValue.serverTimestamp;
 const db = firebaseApp.firestore();
-
-export const useAuthState = () => {
-  const user = ref(null);
-  const error = ref(null);
-
-  let unsubscribe;
-
-  //onBeforeMount(() => {
-  unsubscribe = firebase.auth().onAuthStateChanged(
-    (u) => (user.value = u),
-    (e) => (error.value = e)
-  );
-  //});
-  //onUnmounted(() => unsubscribe());
-
-  const isAuthenticated = computed(() => user.value != null);
-
-  return {
-    user,
-    error,
-    isAuthenticated,
-  };
-};
-
-export const getUserState = () =>
-  new Promise((resolve, reject) =>
-    firebase.auth().onAuthStateChanged(resolve, reject)
-  );
 
 export { timestamp };
 export default db;

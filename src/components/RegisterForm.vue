@@ -267,7 +267,7 @@ import db from "../firebase";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { useRouter } from "vue-router";
-import { registeredType } from "../App.vue";
+import { registered } from "../App.vue";
 export default {
   name: "RegisterForm",
   props: ["header", "user_type"],
@@ -408,7 +408,7 @@ export default {
     };
 
     const register = () => {
-      registeredType(props.user_type);
+      registered(props.user_type);
       firebase
         .auth()
         .createUserWithEmailAndPassword(email.value, pwd.value)
@@ -429,14 +429,14 @@ export default {
           cred.user.updateProfile({
             displayName: props.user_type,
           });
-          registeredType("none");
+          registered("none");
           router.replace("/");
         })
         .catch((err) => {
           error.value = true;
           email.value = "";
           is_email_valid.value = "";
-          registeredType("none");
+          registered("none");
         });
     };
 

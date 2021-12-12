@@ -35,40 +35,18 @@
           <div :class="{ 'me-5': logged_in }" v-if="show_buttons">
             <ul class="navbar-nav list-group d-flex flex-row">
               <li class="nav-item dropdown mx-2" v-if="logged_in">
-                <button
-                  class="btn dropdown-toggle"
-                  id="user-dropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                  type="button"
-                >
-                  {{ user_type }}
-                </button>
-                <ul
-                  class="dropdown-menu dropdown-menu-dark position-absolute"
-                  aria-labelledby="user-dropdown"
-                >
-                  <li>
-                    <router-link class="dropdown-item" to="#">
-                      My Orders
-                    </router-link>
-                  </li>
-                  <li>
-                    <router-link class="dropdown-item" to="#">
-                      Profile Settings
-                    </router-link>
-                  </li>
-                  <li>
-                    <div
-                      class="dropdown-item"
-                      @click="logout"
-                      style="cursor: pointer"
-                    >
-                      Logout
-                    </div>
-                  </li>
-                </ul>
+                <Suspense>
+                  <template #default>
+                    <Dropdown
+                      :uid="user_uid"
+                      :user_type="user_type"
+                      :logout="logout"
+                    />
+                  </template>
+                  <template #fallback>
+                    <DropdownSkeleton />
+                  </template>
+                </Suspense>
               </li>
               <li class="nav-item mx-2 d-none d-sm-block" v-if="!logged_in">
                 <router-link class="btn" :to="{ name: 'Login' }">
@@ -90,102 +68,37 @@
 </template>
 
 <script>
-import { computed, ref } from "@vue/reactivity";
-import { useRouter, useRoute } from "vue-router";
-import { onBeforeMount, watch, watchEffect } from "@vue/runtime-core";
+import { ref } from "@vue/reactivity";
+import { useRouter } from "vue-router";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-import { getUserState, useAuthState } from "./firebase";
-import db from "./firebase";
-const registered = ref("none");
+import Dropdown from "./components/Dropdown.vue";
+import DropdownSkeleton from "./components/DropdownSkeleton.vue";
 
-export const registeredType = (type) => {
-  registered.value = type;
+const registered_type = ref("none");
+export const registered = (type) => {
+  registered_type.value = type;
 };
 
 export default {
   name: "App",
+  components: { Dropdown, DropdownSkeleton },
   setup() {
     const show_buttons = ref(true);
     const router = useRouter();
-    //const route = useRoute();
-    /*const state = computed(() => useAuthState());
-    const logged_in = computed(() => state.value.isAuthenticated.value);
-    const user_type = computed(() =>
-      logged_in.value ? state.value.user.value.displayName : "none"
-    );*/
-
     const logged_in = ref(false);
     const user_type = ref("none");
+    const user_uid = ref("");
 
     firebase.auth().onAuthStateChanged((user) => {
       logged_in.value = !!user;
       user_type.value = !!user
-        ? registered.value == "none"
+        ? registered_type.value == "none"
           ? user.displayName
-          : registered.value
+          : registered_type.value
         : "none";
-      //if(registered.value == )
-      /*user_type.value = !!user ? user.displayName : "none";*/
-      //user_type.value = (await db.collection("customers").doc(user.uid).get()) ? "customer" : "firm"
-      /*firebase
-        .auth()
-        .updateCurrentUser()
-        .then(() => {
-          user_type.value = !!user ? user.displayName : "none";
-        });*/
-      //user_type.value = !!user ? user.displayName : "none";
-      /*if (logged_in.value) {
-        var doc = await db.collection("customers").doc(user.uid).get();
-        user_type.value = doc.exists ? "customer" : "firm";
-      } else {
-        user_type.value = "none";
-      }*/
+      user_uid.value = !!user ? user.uid : "none";
     });
-
-    /*watchEffect(async () => {
-      let user = useAuthState();
-      logged_in.value = (await getUserState()) ? true : false;
-      user_type.value = logged_in.value ? user.user.value.displayName : "none";
-      console.log(logged_in.value, user_type.value);
-      console.log(user.isAuthenticated.value);
-    });*/
-
-    //console.log(logged_in.value, user_type.value);
-
-    /*watch(state.user, () => {
-      logged_in.value = state.isAuthenticated.value;
-      user_type.value = logged_in.value ? state.user.value.displayName : "none";
-      console.log(logged_in.value, user_type.value);
-    });*/
-
-    /*onBeforeMount(() => {
-      console.log(logged_in.value, user_type.value);
-
-      firebase.auth().onAuthStateChanged((user) => {
-        console.log(route.path);
-        if (!user) {
-          if (route.path != "/register") {
-            router.replace("/login");
-          }
-          logged_in.value = false;
-          user_type.value = "none";
-          console.log("NO USER");
-        } else if (route.path == "/login") {
-          router.replace("/");
-          logged_in.value = true;
-          user_type.value = user.displayName;
-          console.log("LOGIN");
-        } else if (route.path == "/register") {
-          setTimeout(() => {
-            router.replace("/");
-            console.log("REGISTER");
-            logged_in.value = true;
-            user_type.value = user.displayName;
-          }, 500);
-        }
-      });
-    });*/
 
     const logout = () => {
       firebase.auth().signOut();
@@ -197,12 +110,13 @@ export default {
       show_buttons,
       logout,
       user_type,
+      user_uid,
     };
   },
 };
 </script>
 
-<style scoped>
+<style>
 .button-container {
   flex-grow: 0.1;
 }
@@ -245,8 +159,4 @@ export default {
 .fade-leave-to {
   opacity: 0;
 }
-
-/*.navbar-dark .navbar-nav .btn:focus {
-  box-shadow: 0 0 0 0.25rem rgb(120 150 120 / 25%);
-}*/
 </style>

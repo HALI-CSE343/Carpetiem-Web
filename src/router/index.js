@@ -3,7 +3,6 @@ import Home from "../views/Home.vue";
 import About from "../views/About.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
-import { getUserState } from "../firebase";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 
@@ -39,7 +38,6 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  //const isAuth = await getUserState();
   const isAuth = firebase.auth().currentUser;
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const requiresUnauth = to.matched.some(
@@ -49,8 +47,6 @@ router.beforeEach(async (to, from, next) => {
   if (requiresAuth && !isAuth) next("/login");
   else if (requiresUnauth && isAuth) next("/");
   else next();
-
-  //console.log(isAuth);
 });
 
 export default router;
