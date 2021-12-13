@@ -55,7 +55,7 @@
                     </router-link>
                   </li>
                   <li>
-                    <router-link class="dropdown-item" to="#">
+                    <router-link class="dropdown-item" :to="{ name: 'Settings' }">
                       Profile Settings
                     </router-link>
                   </li>

@@ -4,6 +4,7 @@ import About from "../views/About.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import EmployeeSettings from "../views/EmployeeSettings.vue";
+import Settings from "../views/Settings.vue";
 
 const routes = [
   {
@@ -30,6 +31,11 @@ const routes = [
     path: "/employeesettings",
     name: "EmployeeSettings",
     component: EmployeeSettings,
+  },
+  {
+    path: "/settings",
+    name: "Settings",
+    component: Settings,
   },
 ];
 
