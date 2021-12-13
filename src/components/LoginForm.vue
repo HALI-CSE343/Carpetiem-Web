@@ -134,22 +134,44 @@
 import { ref } from "@vue/reactivity";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-//import db from "../firebase"
+import db from "../firebase";
+import { useRouter } from "vue-router";
+import { primaryApp } from "../firebase";
 export default {
   name: "LoginForm",
-  props: ["header", "placeholder", "user_type"],
-  setup() {
+  props: {
+    header: String,
+    placeholder: String,
+    user_type: String,
+  },
+  setup(props) {
     const email = ref("");
     const password = ref("");
     const is_email_valid = ref("");
     const is_pwd_valid = ref("");
     const error = ref(false);
     const is_pwd = ref(true);
+    const router = useRouter();
 
     const login = () => {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(email.value, password.value)
+      db.collection(props.user_type + "s")
+        .where("email", "==", email.value)
+        .get()
+        .then((snap) => {
+          if (snap.size == 0) {
+            throw "not in collection";
+          } else {
+            /*return firebase
+              .auth()
+              .signInWithEmailAndPassword(email.value, password.value);*/
+            return primaryApp
+              .auth()
+              .signInWithEmailAndPassword(email.value, password.value);
+          }
+        })
+        .then((user) => {
+          router.replace("/");
+        })
         .catch((err) => {
           error.value = true;
           email.value = "";

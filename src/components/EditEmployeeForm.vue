@@ -1,9 +1,8 @@
 <template>
-  <h4 class="text-center mb-3">{{ header }}</h4>
   <form novalidate>
     <div class="row g-2">
       <div class="col-md-12">
-        <label :for="user_type + '-name'" class="form-label">
+        <label :for="'employee-edit' + '-name'" class="form-label">
           <span style="color: red">*</span> Name
         </label>
         <div class="input-group has-validation">
@@ -11,11 +10,10 @@
             v-model="name"
             type="text"
             class="form-control"
-            :id="user_type + '-name'"
+            :id="'employee-edit' + '-name'"
             autocomplete="off"
             @keyup="is_name_valid = name.length != 0"
             :class="{
-              '': is_name_valid === '',
               'is-valid': is_name_valid,
               'is-invalid': is_name_valid === false,
             }"
@@ -24,7 +22,7 @@
         </div>
       </div>
       <div class="col-md-12">
-        <label :for="user_type + '-phone'" class="form-label">
+        <label :for="'employee-edit' + '-phone'" class="form-label">
           <span style="color: red">*</span> Phone Number
         </label>
         <div class="input-group has-validation">
@@ -34,14 +32,13 @@
             class="form-control"
             autocomplete="off"
             maxlength="14"
-            :id="user_type + '-phone'"
+            :id="'employee-edit' + '-phone'"
             @keydown="enforceFormat"
             @keyup="
               formatToPhone($event);
               is_phone_valid = phone.length == 14;
             "
             :class="{
-              '': is_phone_valid === '',
               'is-valid': is_phone_valid,
               'is-invalid': is_phone_valid === false,
             }"
@@ -50,7 +47,7 @@
         </div>
       </div>
       <div class="col-md-12">
-        <label :for="user_type + '-email'" class="form-label">
+        <label :for="'employee-edit' + '-email'" class="form-label">
           <span style="color: red">*</span> Email
         </label>
         <div class="input-group has-validation">
@@ -58,14 +55,13 @@
             v-model="email"
             type="email"
             class="form-control"
-            :id="user_type + '-email'"
+            :id="'employee-edit' + '-email'"
             autocomplete="off"
             placeholder="example@example.com"
             @keyup="
               is_email_valid = /^([a-z][a-z0-9_-]*@[a-z]+\.[a-z]+)$/.test(email)
             "
             :class="{
-              '': is_email_valid === '',
               'is-valid': is_email_valid,
               'is-invalid': is_email_valid === false,
             }"
@@ -74,7 +70,7 @@
         </div>
       </div>
       <div class="col-md-12">
-        <label :for="user_type + '-password'" class="form-label">
+        <label :for="'employee-edit' + '-password'" class="form-label">
           <span style="color: red">*</span> Password
         </label>
         <div class="input-group has-validation">
@@ -82,11 +78,10 @@
             v-model="pwd"
             :type="is_pwd ? 'password' : 'text'"
             class="form-control border-end-0"
-            :id="user_type + '-password'"
+            :id="'employee-edit' + '-password'"
             autocomplete="off"
             @keyup="is_pwd_valid = pwd.length >= 6"
             :class="{
-              '': is_pwd_valid === '',
               'is-valid': is_pwd_valid,
               'is-invalid': is_pwd_valid === false,
             }"
@@ -95,7 +90,6 @@
             class="input-group-text bg-transparent"
             @click="is_pwd = !is_pwd"
             :class="{
-              '': is_pwd_valid === '',
               'border-success': is_pwd_valid,
               'border-danger': is_pwd_valid === false,
             }"
@@ -111,7 +105,7 @@
         </div>
       </div>
       <div class="col-md-6">
-        <label :for="user_type + '-city-select'" class="form-label">
+        <label :for="'employee-edit' + '-city-select'" class="form-label">
           <span style="color: red">*</span> City
         </label>
         <div class="input-group has-validation">
@@ -119,9 +113,8 @@
             class="form-select"
             v-model="city"
             @change="onCityChange"
-            :id="user_type + '-city-select'"
+            :id="'employee-edit' + '-city-select'"
             :class="{
-              '': is_city_valid === '',
               'is-valid': is_city_valid,
               'is-invalid': is_city_valid === false,
             }"
@@ -135,7 +128,7 @@
         </div>
       </div>
       <div class="col-md-6">
-        <label :for="user_type + '-district-select'" class="form-label">
+        <label :for="'employee-edit' + '-district-select'" class="form-label">
           <span style="color: red">*</span> District
         </label>
         <div class="input-group has-validation">
@@ -144,9 +137,8 @@
             v-model="dist"
             @change="onDistrictChange"
             :disabled="!is_city_valid"
-            :id="user_type + '-district-select'"
+            :id="'employee-edit' + '-district-select'"
             :class="{
-              '': is_dist_valid === '',
               'is-valid': is_dist_valid,
               'is-invalid': is_dist_valid === false,
             }"
@@ -164,7 +156,10 @@
         </div>
       </div>
       <div class="col-md-12">
-        <label :for="user_type + '-neighborhood-select'" class="form-label">
+        <label
+          :for="'employee-edit' + '-neighborhood-select'"
+          class="form-label"
+        >
           <span style="color: red">*</span> Neighborhood
         </label>
         <div class="input-group has-validation">
@@ -172,10 +167,9 @@
             class="form-select"
             v-model="nbhd"
             :disabled="!is_dist_valid || !is_city_valid"
-            :id="user_type + '-neighborhood-select'"
+            :id="'employee-edit' + '-neighborhood-select'"
             @change="is_nbhd_valid = nbhd != 'default'"
             :class="{
-              '': is_nbhd_valid === '',
               'is-valid': is_nbhd_valid,
               'is-invalid': is_nbhd_valid === false,
             }"
@@ -193,20 +187,19 @@
         </div>
       </div>
       <div class="col-md-12">
-        <label :for="user_type + '-address'" class="form-label">
+        <label :for="'employee-edit' + '-address'" class="form-label">
           <span style="color: red">*</span> Address
         </label>
         <div class="input-group has-validation">
           <textarea
             v-model="addr"
             class="form-control"
-            :id="user_type + '-address'"
+            :id="'employee-edit' + '-address'"
             rows="2"
             style="resize: none"
             autocomplete="off"
             @keyup="is_addr_valid = addr.length != 0"
             :class="{
-              '': is_addr_valid === '',
               'is-valid': is_addr_valid,
               'is-invalid': is_addr_valid === false,
             }"
@@ -235,7 +228,7 @@
       <div class="d-grid col-md-12 mx-auto mb-4">
         <button
           class="btn btn-primary"
-          @click="user_type != 'employee' ? register() : employeeRegister()"
+          @click="edit"
           type="button"
           :disabled="
             !is_city_valid ||
@@ -248,14 +241,8 @@
             !is_addr_valid
           "
         >
-          {{ button_name }}
+          Save
         </button>
-      </div>
-      <div class="col-md-auto mx-auto" v-if="user_type != 'employee'">
-        Hesabınız var mı?
-        <router-link :to="{ name: 'Login' }" style="text-decoration: none">
-          Giriş yapın <i class="bi bi-box-arrow-up-right"></i>
-        </router-link>
       </div>
     </div>
   </form>
@@ -264,51 +251,39 @@
 <script>
 import { ref } from "@vue/reactivity";
 import db from "../firebase";
-import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-import { useRouter } from "vue-router";
-import { registered } from "../App.vue";
 import { secondaryApp } from "../firebase";
-import { primaryApp } from "../firebase";
+import { watch } from "@vue/runtime-core";
+
 export default {
-  name: "RegisterForm",
+  name: "EditEmployeeForm",
   props: {
-    header: String,
-    user_type: String,
     employee: Object,
   },
   emits: ["closePopUp"],
   setup(props, { emit }) {
-    const is_emp_undefined = ref(props.employee != undefined ? false : true);
-    const city = ref(!is_emp_undefined.value ? props.employee.city : "default");
-    const dist = ref(
-      !is_emp_undefined.value ? props.employee.district : "default"
-    );
-    const nbhd = ref(
-      !is_emp_undefined.value ? props.employee.neighborhood : "default"
-    );
-    const name = ref(!is_emp_undefined.value ? props.employee.name : "");
-    const phone = ref(!is_emp_undefined.value ? props.employee.phone : "");
-    const email = ref(!is_emp_undefined.value ? props.employee.email : "");
-    const pwd = ref(!is_emp_undefined.value ? props.employee.password : "");
-    const addr = ref(!is_emp_undefined.value ? props.employee.address : "");
+    //console.log(props.employee);
+    const city = ref(props.employee.city);
+    const dist = ref(props.employee.district);
+    const nbhd = ref(props.employee.neighborhood);
+    const name = ref(props.employee.name);
+    const phone = ref(props.employee.phone);
+    const email = ref(props.employee.email);
+    const pwd = ref(props.employee.password);
+    const addr = ref(props.employee.address);
     const cities = ref([]);
     const districts = ref([]);
     const neighborhoods = ref([]);
-    const is_city_valid = ref("");
-    const is_dist_valid = ref("");
-    const is_nbhd_valid = ref("");
-    const is_name_valid = ref("");
-    const is_phone_valid = ref("");
-    const is_email_valid = ref("");
-    const is_pwd_valid = ref("");
-    const is_addr_valid = ref("");
+    const is_city_valid = ref(true);
+    const is_dist_valid = ref(true);
+    const is_nbhd_valid = ref(true);
+    const is_name_valid = ref(true);
+    const is_phone_valid = ref(true);
+    const is_email_valid = ref(true);
+    const is_pwd_valid = ref(true);
+    const is_addr_valid = ref(true);
     const is_pwd = ref(true);
     const error = ref(false);
-    const router = useRouter();
-    const button_name = ref(!is_emp_undefined.value ? "Save" : "Register");
-
-    //console.log(props.employee_mode == undefined);
 
     db.collection("cities")
       .get()
@@ -318,6 +293,84 @@ export default {
         });
         cities.value.sort(new Intl.Collator("de").compare);
       });
+
+    db.collection("cities")
+      .where("name", "==", city.value)
+      .get()
+      .then((snap) => {
+        snap.forEach((doc) => {
+          doc.data().districts.forEach((district) => {
+            districts.value.push(district.name);
+          });
+        });
+        districts.value.sort(new Intl.Collator("de").compare);
+      });
+
+    db.collection("cities")
+      .where("name", "==", city.value)
+      .get()
+      .then((snap) => {
+        snap.forEach((doc) => {
+          doc.data().districts.some((district) => {
+            if (district.name === dist.value) {
+              district.neighborhoods.forEach((neighborhood) => {
+                neighborhoods.value.push(neighborhood);
+              });
+              return true;
+            }
+          });
+        });
+        districts.value.sort(new Intl.Collator("de").compare);
+      });
+
+    watch(props.employee, () => {
+      console.log("asd");
+      city.value = props.employee.city;
+      dist.value = props.employee.district;
+      nbhd.value = props.employee.neighborhood;
+      name.value = props.employee.name;
+      phone.value = props.employee.phone;
+      email.value = props.employee.email;
+      pwd.value = props.employee.password;
+      addr.value = props.employee.address;
+      db.collection("cities")
+        .get()
+        .then((snap) => {
+          snap.forEach((doc) => {
+            cities.value.push(doc.data().name);
+          });
+          cities.value.sort(new Intl.Collator("de").compare);
+        });
+
+      db.collection("cities")
+        .where("name", "==", city.value)
+        .get()
+        .then((snap) => {
+          snap.forEach((doc) => {
+            doc.data().districts.forEach((district) => {
+              districts.value.push(district.name);
+            });
+          });
+          districts.value.sort(new Intl.Collator("de").compare);
+        });
+
+      db.collection("cities")
+        .where("name", "==", city.value)
+        .get()
+        .then((snap) => {
+          snap.forEach((doc) => {
+            doc.data().districts.some((district) => {
+              if (district.name === dist.value) {
+                district.neighborhoods.forEach((neighborhood) => {
+                  neighborhoods.value.push(neighborhood);
+                });
+                return true;
+              }
+            });
+          });
+          districts.value.sort(new Intl.Collator("de").compare);
+        });
+    });
 
     const onCityChange = async () => {
       districts.value = [];
@@ -422,98 +475,7 @@ export default {
       }
     };
 
-    const register = () => {
-      registered(props.user_type);
-      /*firebase
-        .auth()
-        .createUserWithEmailAndPassword(email.value, pwd.value)
-        .then((cred) => {
-          db.collection(props.user_type + "s")
-            .doc(cred.user.uid)
-            .set({
-              name: name.value,
-              phone: phone.value,
-              address: addr.value,
-              city: city.value,
-              district: dist.value,
-              neighborhood: nbhd.value,
-            });
-
-          cred.user.updateProfile({
-            displayName: props.user_type,
-          });
-          registered("none");
-          router.replace("/");
-        })
-        .catch((err) => {
-          error.value = true;
-          email.value = "";
-          is_email_valid.value = "";
-          registered("none");
-        });*/
-      primaryApp
-        .auth()
-        .createUserWithEmailAndPassword(email.value, pwd.value)
-        .then((cred) => {
-          db.collection(props.user_type + "s")
-            .doc(cred.user.uid)
-            .set({
-              name: name.value,
-              phone: phone.value,
-              address: addr.value,
-              city: city.value,
-              district: dist.value,
-              neighborhood: nbhd.value,
-            });
-
-          cred.user.updateProfile({
-            displayName: props.user_type,
-          });
-          registered("none");
-          router.replace("/");
-        })
-        .catch((err) => {
-          error.value = true;
-          email.value = "";
-          is_email_valid.value = "";
-          registered("none");
-        });
-    };
-
-    const employeeRegister = async () => {
-      try {
-        var cred = await secondaryApp
-          .auth()
-          .createUserWithEmailAndPassword(email.value, pwd.value);
-
-        await db
-          .collection(props.user_type + "s")
-          .doc(cred.user.uid)
-          .set({
-            name: name.value,
-            phone: phone.value,
-            email: email.value,
-            password: pwd.value,
-            address: addr.value,
-            city: city.value,
-            district: dist.value,
-            neighborhood: nbhd.value,
-          });
-
-        cred.user.updateProfile({
-          displayName: props.user_type,
-        });
-
-        secondaryApp.auth().signOut();
-        emit("closePopUp");
-      } catch {
-        error.value = true;
-        email.value = "";
-        is_email_valid.value = "";
-      }
-    };
-
-    const employeeEdit = async () => {
+    const edit = async () => {
       try {
         var cred = await secondaryApp
           .auth()
@@ -539,19 +501,7 @@ export default {
         if (password.value != props.employee.password) {
           cred.user.updatePassword(password.value);
         }
-        /* await db.collection("employees").doc(props.employee.user.uid).update({
-          name: name.value,
-          phone: phone.value,
-          email: email.value,
-          password: pwd.value,
-          address: addr.value,
-          city: city.value,
-          district: dist.value,
-          neighborhood: nbhd.value,
-        });*/
-
-        //await props.employee.user.updateEmail(email.value);
-        //await props.employee.user.updatePassword(password.value);
+        emit("closePopUp");
       } catch (error) {
         console.log(error.message);
       }
@@ -582,12 +532,8 @@ export default {
       onDistrictChange,
       enforceFormat,
       formatToPhone,
-      register,
       error,
-      employeeRegister,
-      button_name,
-      is_emp_undefined,
-      employeeEdit,
+      edit,
     };
   },
 };
