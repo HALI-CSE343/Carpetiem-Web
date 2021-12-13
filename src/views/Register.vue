@@ -2,7 +2,7 @@
   <div class="container d-flex flex-column justify-content-center flex-grow-1">
     <div class="row mt-3 mt-md-0">
       <div class="col-md-5">
-        <RegisterForm header="Firm Register" user_type="firm" />
+        <RegisterForm header="Firma Kaydı" user_type="firm" />
       </div>
 
       <div class="col-md-2 text-center">
@@ -11,7 +11,7 @@
       </div>
 
       <div class="col-md-5">
-        <RegisterForm header="Customer Register" user_type="customer" />
+        <RegisterForm header="Kullanıcı Kaydı" user_type="customer" />
       </div>
     </div>
   </div>

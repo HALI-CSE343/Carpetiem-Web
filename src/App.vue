@@ -50,12 +50,12 @@
               </li>
               <li class="nav-item mx-2 d-none d-sm-block" v-if="!logged_in">
                 <router-link class="btn" :to="{ name: 'Login' }">
-                  Login
+                  Giriş Yap
                 </router-link>
               </li>
               <li class="nav-item mx-2 d-none d-sm-block" v-if="!logged_in">
                 <router-link class="btn" :to="{ name: 'Register' }">
-                  Register
+                  Kaydol
                 </router-link>
               </li>
             </ul>

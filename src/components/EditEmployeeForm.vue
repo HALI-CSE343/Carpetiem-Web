@@ -324,7 +324,6 @@ export default {
       });
 
     watch(props.employee, () => {
-      console.log("asd");
       city.value = props.employee.city;
       dist.value = props.employee.district;
       nbhd.value = props.employee.neighborhood;

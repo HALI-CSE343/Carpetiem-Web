@@ -25,13 +25,15 @@
             }"
             required
           />
-          <div class="invalid-feedback">Valid email is required</div>
+          <div class="invalid-feedback">
+            Lütfen geçerli bir email adresi giriniz
+          </div>
         </div>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-md-12">
-        <label for="password" class="form-label">Password</label>
+        <label for="password" class="form-label">Şifre</label>
         <div class="input-group has-validation">
           <span class="input-group-text">
             <i class="bi bi-lock-fill"></i>
@@ -65,7 +67,7 @@
             ></i>
           </span>
           <div class="invalid-feedback">
-            Password must be at least 6 characters long
+            Şifreniz en az 6 karakter olmalıdır
           </div>
         </div>
       </div>
@@ -93,7 +95,7 @@
           :disabled="!is_pwd_valid || !is_email_valid"
           @click="login"
         >
-          Login
+          Giriş
         </button>
       </div>
     </div>
@@ -107,7 +109,7 @@
             :id="user_type + 'always-login'"
           />
           <label class="form-check-label" :for="user_type + 'always-login'">
-            Always Login
+            Beni hatırla
           </label>
         </div>
       </div>
@@ -132,7 +134,6 @@
 
 <script>
 import { ref } from "@vue/reactivity";
-import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import db from "../firebase";
 import { useRouter } from "vue-router";
@@ -173,6 +174,7 @@ export default {
           router.replace("/");
         })
         .catch((err) => {
+          console.log(err, props.user_type);
           error.value = true;
           email.value = "";
           password.value = "";

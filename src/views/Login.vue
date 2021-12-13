@@ -3,7 +3,7 @@
     <div class="row mt-3 mt-md-0">
       <div class="col-md-5">
         <LoginForm
-          header="Admin Login"
+          header="Yönetici Girişi"
           placeholder="admin@admin.com"
           user_type="firm"
         />
@@ -16,7 +16,7 @@
 
       <div class="col-md-5">
         <LoginForm
-          header="Customer Login"
+          header="Kullanıcı Girişi"
           placeholder="example@example.com"
           user_type="customer"
         />

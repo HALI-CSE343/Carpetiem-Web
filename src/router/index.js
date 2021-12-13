@@ -13,7 +13,6 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
-    meta: { requiresAuth: true },
   },
   {
     path: "/about",
@@ -36,7 +35,7 @@ const routes = [
     path: "/employee-settings",
     name: "EmployeeSettings",
     component: EmployeeSettings,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, requiresAdmin: true },
   },
 ];
 
@@ -48,12 +47,19 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   //const isAuth = firebase.auth().currentUser;
   const isAuth = primaryApp.auth().currentUser;
+  const isAdmin = isAuth
+    ? isAuth.displayName == "firm"
+      ? true
+      : false
+    : false;
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const requiresUnauth = to.matched.some(
     (record) => record.meta.requiresUnauth
   );
+  const requiresAdmin = to.matched.some((record) => record.meta.requiresAdmin);
 
   if (requiresAuth && !isAuth) next("/login");
+  else if (requiresAdmin && !isAdmin) next("/");
   else if (requiresUnauth && isAuth) next("/");
   else next();
 });

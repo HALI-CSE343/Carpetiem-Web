@@ -4,7 +4,7 @@
     <div class="row g-2">
       <div class="col-md-12">
         <label :for="user_type + '-name'" class="form-label">
-          <span style="color: red">*</span> Name
+          <span style="color: red">*</span> İsim
         </label>
         <div class="input-group has-validation">
           <input
@@ -20,12 +20,12 @@
               'is-invalid': is_name_valid === false,
             }"
           />
-          <div class="invalid-feedback">Name is required</div>
+          <div class="invalid-feedback">Lütfen bir isim giriniz</div>
         </div>
       </div>
       <div class="col-md-12">
         <label :for="user_type + '-phone'" class="form-label">
-          <span style="color: red">*</span> Phone Number
+          <span style="color: red">*</span> Telefon Numarası
         </label>
         <div class="input-group has-validation">
           <input
@@ -46,7 +46,9 @@
               'is-invalid': is_phone_valid === false,
             }"
           />
-          <div class="invalid-feedback">Valid phone number is required</div>
+          <div class="invalid-feedback">
+            Lütfen geçerli bir telefon numarası giriniz
+          </div>
         </div>
       </div>
       <div class="col-md-12">
@@ -70,12 +72,14 @@
               'is-invalid': is_email_valid === false,
             }"
           />
-          <div class="invalid-feedback">Valid email is required</div>
+          <div class="invalid-feedback">
+            Lütfen geçerli bir email adresi giriniz
+          </div>
         </div>
       </div>
       <div class="col-md-12">
         <label :for="user_type + '-password'" class="form-label">
-          <span style="color: red">*</span> Password
+          <span style="color: red">*</span> Şifre
         </label>
         <div class="input-group has-validation">
           <input
@@ -106,13 +110,13 @@
             ></i>
           </span>
           <div class="invalid-feedback">
-            Password must be at least 6 characters long
+            Şifreniz en az 6 karakter olmalıdır
           </div>
         </div>
       </div>
       <div class="col-md-6">
         <label :for="user_type + '-city-select'" class="form-label">
-          <span style="color: red">*</span> City
+          <span style="color: red">*</span> İl
         </label>
         <div class="input-group has-validation">
           <select
@@ -126,17 +130,17 @@
               'is-invalid': is_city_valid === false,
             }"
           >
-            <option value="default">Select your city</option>
+            <option value="default">İlinizi seçiniz</option>
             <option v-for="city in cities" :key="city" :value="city">
               {{ city }}
             </option>
           </select>
-          <div class="invalid-feedback">City is required</div>
+          <div class="invalid-feedback">Lütfen bir il seçiniz</div>
         </div>
       </div>
       <div class="col-md-6">
         <label :for="user_type + '-district-select'" class="form-label">
-          <span style="color: red">*</span> District
+          <span style="color: red">*</span> İlçe
         </label>
         <div class="input-group has-validation">
           <select
@@ -151,7 +155,7 @@
               'is-invalid': is_dist_valid === false,
             }"
           >
-            <option value="default">Select your district</option>
+            <option value="default">İlçenizi seçiniz</option>
             <option
               v-for="district in districts"
               :key="district"
@@ -160,12 +164,12 @@
               {{ district }}
             </option>
           </select>
-          <div class="invalid-feedback">District is required</div>
+          <div class="invalid-feedback">Lütfen bir ilçe seçiniz</div>
         </div>
       </div>
       <div class="col-md-12">
         <label :for="user_type + '-neighborhood-select'" class="form-label">
-          <span style="color: red">*</span> Neighborhood
+          <span style="color: red">*</span> Semt
         </label>
         <div class="input-group has-validation">
           <select
@@ -180,7 +184,7 @@
               'is-invalid': is_nbhd_valid === false,
             }"
           >
-            <option value="default">Select your neighborhood</option>
+            <option value="default">Semtinizi seçiniz</option>
             <option
               v-for="neighborhood in neighborhoods"
               :key="neighborhood"
@@ -189,12 +193,12 @@
               {{ neighborhood }}
             </option>
           </select>
-          <div class="invalid-feedback">Neighborhood is required</div>
+          <div class="invalid-feedback">Lütfen bir semt seçiniz</div>
         </div>
       </div>
       <div class="col-md-12">
         <label :for="user_type + '-address'" class="form-label">
-          <span style="color: red">*</span> Address
+          <span style="color: red">*</span> Adres
         </label>
         <div class="input-group has-validation">
           <textarea
@@ -211,7 +215,7 @@
               'is-invalid': is_addr_valid === false,
             }"
           ></textarea>
-          <div class="invalid-feedback">Address is required</div>
+          <div class="invalid-feedback">Lütfen bir adres giriniz</div>
         </div>
       </div>
       <div
@@ -248,7 +252,7 @@
             !is_addr_valid
           "
         >
-          {{ button_name }}
+          Kaydol
         </button>
       </div>
       <div class="col-md-auto mx-auto" v-if="user_type != 'employee'">
@@ -275,23 +279,17 @@ export default {
   props: {
     header: String,
     user_type: String,
-    employee: Object,
   },
   emits: ["closePopUp"],
   setup(props, { emit }) {
-    const is_emp_undefined = ref(props.employee != undefined ? false : true);
-    const city = ref(!is_emp_undefined.value ? props.employee.city : "default");
-    const dist = ref(
-      !is_emp_undefined.value ? props.employee.district : "default"
-    );
-    const nbhd = ref(
-      !is_emp_undefined.value ? props.employee.neighborhood : "default"
-    );
-    const name = ref(!is_emp_undefined.value ? props.employee.name : "");
-    const phone = ref(!is_emp_undefined.value ? props.employee.phone : "");
-    const email = ref(!is_emp_undefined.value ? props.employee.email : "");
-    const pwd = ref(!is_emp_undefined.value ? props.employee.password : "");
-    const addr = ref(!is_emp_undefined.value ? props.employee.address : "");
+    const city = ref("default");
+    const dist = ref("default");
+    const nbhd = ref("default");
+    const name = ref("");
+    const phone = ref("");
+    const email = ref("");
+    const pwd = ref("");
+    const addr = ref("");
     const cities = ref([]);
     const districts = ref([]);
     const neighborhoods = ref([]);
@@ -306,9 +304,6 @@ export default {
     const is_pwd = ref(true);
     const error = ref(false);
     const router = useRouter();
-    const button_name = ref(!is_emp_undefined.value ? "Save" : "Register");
-
-    //console.log(props.employee_mode == undefined);
 
     db.collection("cities")
       .get()
@@ -513,50 +508,6 @@ export default {
       }
     };
 
-    const employeeEdit = async () => {
-      try {
-        var cred = await secondaryApp
-          .auth()
-          .signInWithEmailAndPassword(
-            props.employee.email,
-            props.employee.password
-          );
-        await db.collection("employees").doc(cred.user.uid).update({
-          name: name.value,
-          phone: phone.value,
-          email: email.value,
-          password: pwd.value,
-          address: addr.value,
-          city: city.value,
-          district: dist.value,
-          neighborhood: nbhd.value,
-        });
-
-        if (email.value != props.employee.email) {
-          cred.user.updateEmail(email.value);
-        }
-
-        if (password.value != props.employee.password) {
-          cred.user.updatePassword(password.value);
-        }
-        /* await db.collection("employees").doc(props.employee.user.uid).update({
-          name: name.value,
-          phone: phone.value,
-          email: email.value,
-          password: pwd.value,
-          address: addr.value,
-          city: city.value,
-          district: dist.value,
-          neighborhood: nbhd.value,
-        });*/
-
-        //await props.employee.user.updateEmail(email.value);
-        //await props.employee.user.updatePassword(password.value);
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
-
     return {
       city,
       dist,
@@ -585,9 +536,6 @@ export default {
       register,
       error,
       employeeRegister,
-      button_name,
-      is_emp_undefined,
-      employeeEdit,
     };
   },
 };
