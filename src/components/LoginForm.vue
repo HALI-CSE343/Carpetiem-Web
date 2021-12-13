@@ -136,6 +136,7 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import db from "../firebase";
 import { useRouter } from "vue-router";
+import { primaryApp } from "../firebase";
 export default {
   name: "LoginForm",
   props: {
@@ -160,7 +161,10 @@ export default {
           if (snap.size == 0) {
             throw "not in collection";
           } else {
-            return firebase
+            /*return firebase
+              .auth()
+              .signInWithEmailAndPassword(email.value, password.value);*/
+            return primaryApp
               .auth()
               .signInWithEmailAndPassword(email.value, password.value);
           }

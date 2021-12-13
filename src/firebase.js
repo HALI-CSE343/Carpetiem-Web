@@ -1,7 +1,6 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import "firebase/compat/auth";
-import { ref } from "@vue/reactivity";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBiZ0W8druRY1pr5FPOoCFwlk3H2w_pL6o",
@@ -15,9 +14,10 @@ const firebaseConfig = {
   measurementId: "G-EFLR7VGFMK",
 };
 
-const firebaseApp = firebase.initializeApp(firebaseConfig);
+//const firebaseApp = firebase.initializeApp(firebaseConfig);
+export const primaryApp = firebase.initializeApp(firebaseConfig);
 const timestamp = firebase.firestore.FieldValue.serverTimestamp;
-const db = firebaseApp.firestore();
-
+const db = primaryApp.firestore();
+export const secondaryApp = firebase.initializeApp(firebaseConfig, "Secondary");
 export { timestamp };
 export default db;

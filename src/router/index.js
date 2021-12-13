@@ -3,8 +3,10 @@ import Home from "../views/Home.vue";
 import About from "../views/About.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
+import EmployeeSettings from "../views/EmployeeSettings.vue";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
+import { primaryApp } from "../firebase";
 
 const routes = [
   {
@@ -30,6 +32,12 @@ const routes = [
     component: Register,
     meta: { requiresUnauth: true },
   },
+  {
+    path: "/employee-settings",
+    name: "EmployeeSettings",
+    component: EmployeeSettings,
+    meta: { requiresAuth: true },
+  },
 ];
 
 const router = createRouter({
@@ -38,7 +46,8 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  const isAuth = firebase.auth().currentUser;
+  //const isAuth = firebase.auth().currentUser;
+  const isAuth = primaryApp.auth().currentUser;
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const requiresUnauth = to.matched.some(
     (record) => record.meta.requiresUnauth

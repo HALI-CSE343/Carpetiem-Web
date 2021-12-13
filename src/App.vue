@@ -25,7 +25,7 @@
               </router-link>
             </li>
             <li class="nav-item">
-              <router-link :to="{ name: 'About' }" class="nav-link">
+              <router-link :to="{ name: 'EmployeeSettings' }" class="nav-link">
                 About
               </router-link>
             </li>
@@ -74,6 +74,7 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import Dropdown from "./components/Dropdown.vue";
 import DropdownSkeleton from "./components/DropdownSkeleton.vue";
+import { primaryApp } from "./firebase";
 
 const registered_type = ref("none");
 export const registered = (type) => {
@@ -90,7 +91,17 @@ export default {
     const user_type = ref("none");
     const user_uid = ref("");
 
-    firebase.auth().onAuthStateChanged((user) => {
+    /*firebase.auth().onAuthStateChanged((user) => {
+      logged_in.value = !!user;
+      user_type.value = !!user
+        ? registered_type.value == "none"
+          ? user.displayName
+          : registered_type.value
+        : "none";
+      user_uid.value = !!user ? user.uid : "none";
+    });*/
+
+    primaryApp.auth().onAuthStateChanged((user) => {
       logged_in.value = !!user;
       user_type.value = !!user
         ? registered_type.value == "none"
@@ -101,7 +112,8 @@ export default {
     });
 
     const logout = () => {
-      firebase.auth().signOut();
+      //firebase.auth().signOut();
+      primaryApp.auth().signOut();
       router.replace("/login");
     };
 
