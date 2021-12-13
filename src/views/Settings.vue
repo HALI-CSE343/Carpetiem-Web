@@ -138,6 +138,8 @@ export default {
                             "district" : district.value,
                             "neighborhood" : neighborhood.value,
                         });
+
+                        user.updateEmail(email.value);
                     }
                     else{
                         document.getElementById("error2").innerHTML = "Şifreler aynı değil";
