@@ -183,6 +183,16 @@ export default {
         });
     };
 
+    /*const addEmp = async () => {
+      employees.value = [];
+
+      snap = await db.collection("employees").get();
+      snap.forEach((doc) => {
+        employees.value.push(doc.data());
+      });
+      employees.value.sort(new Intl.Collator("de").compare);
+    };*/
+
     const removeEmployee = async (e) => {
       try {
         var snap = await db
@@ -236,13 +246,27 @@ export default {
       //e.isExist = false;
     };
 
-    const closeRegister = () => {
+    const closeRegister = async () => {
       document.getElementById("close-register-btn").click();
+      employees.value = [];
+
+      var snap = await db.collection("employees").get();
+      snap.forEach((doc) => {
+        employees.value.push(doc.data());
+      });
+      employees.value.sort(new Intl.Collator("de").compare);
     };
 
-    const closeEdit = () => {
+    const closeEdit = async () => {
       document.getElementById("close-edit-btn").click();
       willEditEmployee.value = "";
+      employees.value = [];
+
+      var snap = await db.collection("employees").get();
+      snap.forEach((doc) => {
+        employees.value.push(doc.data());
+      });
+      employees.value.sort(new Intl.Collator("de").compare);
     };
 
     return {

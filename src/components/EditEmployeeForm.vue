@@ -501,6 +501,7 @@ export default {
         if (password.value != props.employee.password) {
           cred.user.updatePassword(password.value);
         }
+        secondaryApp.auth().signOut();
         emit("closePopUp");
       } catch (error) {
         console.log(error.message);
