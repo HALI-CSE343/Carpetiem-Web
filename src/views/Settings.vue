@@ -118,32 +118,31 @@ export default {
                     return;
                 }
                 else{
-
                     if(re_pwd.value == new_pwd.value && re_pwd.value != ""){
                         password.value = re_pwd.value;
-
+                        
                         var user = firebase.auth().currentUser;
                         user.updatePassword(password.value).then(() => {
                         console.log("Password updated!");
                         }).catch((error) => { console.log(error); });
                     }
+                    else if(re_pwd.value == ""){
+                        db.collection("customers")
+                        .doc(firebase.auth().currentUser.uid)
+                        .update({
+                            "name": userName.value,
+                            "phone" : telNo.value,
+                            "email" : email.value,
+                            "address" : adress.value,
+                            "city" : city.value,
+                            "district" : district.value,
+                            "neighborhood" : neighborhood.value,
+                        });
+                    }
                     else{
                         document.getElementById("error2").innerHTML = "Şifreler aynı değil";
                     }
-
-                    db.collection("customers")
-                    .doc(firebase.auth().currentUser.uid)
-                    .update({
-                        "name": userName.value,
-                        "phone" : telNo.value,
-                        "email" : email.value,
-                        "address" : adress.value,
-                        "city" : city.value,
-                        "district" : district.value,
-                        "neighborhood" : neighborhood.value,
-                    });
-
-                    
+                 
                 }
 
                 document.getElementById("error").innerHTML = "";
