@@ -4,6 +4,7 @@ import About from "../views/About.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import EmployeeSettings from "../views/EmployeeSettings.vue";
+import Settings from "../views/Settings.vue";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { primaryApp } from "../firebase";
@@ -37,6 +38,12 @@ const routes = [
     component: EmployeeSettings,
     meta: { requiresAuth: true, requiresAdmin: true },
   },
+  {
+    path: "/settings",
+    name: "Settings",
+    component: Settings,
+    meta: { requiresAuth: true, requiresCustomer: true },
+  },
 ];
 
 const router = createRouter({
@@ -52,14 +59,23 @@ router.beforeEach(async (to, from, next) => {
       ? true
       : false
     : false;
+  const isCustomer = isAuth
+    ? isAuth.displayName == "customer"
+      ? true
+      : false
+    : false;
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const requiresUnauth = to.matched.some(
     (record) => record.meta.requiresUnauth
   );
   const requiresAdmin = to.matched.some((record) => record.meta.requiresAdmin);
+  const requiresCustomer = to.matched.some(
+    (record) => record.meta.requiresCustomer
+  );
 
   if (requiresAuth && !isAuth) next("/login");
   else if (requiresAdmin && !isAdmin) next("/");
+  else if (requiresCustomer && !isCustomer) next("/");
   else if (requiresUnauth && isAuth) next("/");
   else next();
 });
