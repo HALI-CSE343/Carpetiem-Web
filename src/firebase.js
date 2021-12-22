@@ -1,6 +1,7 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import "firebase/compat/auth";
+import "firebase/compat/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBiZ0W8druRY1pr5FPOoCFwlk3H2w_pL6o",
@@ -14,10 +15,8 @@ const firebaseConfig = {
   measurementId: "G-EFLR7VGFMK",
 };
 
-//const firebaseApp = firebase.initializeApp(firebaseConfig);
-export const primaryApp = firebase.initializeApp(firebaseConfig);
-const timestamp = firebase.firestore.FieldValue.serverTimestamp;
-const db = primaryApp.firestore();
-export const secondaryApp = firebase.initializeApp(firebaseConfig, "Secondary");
-export { timestamp };
+const firebaseApp = firebase.initializeApp(firebaseConfig);
+export const timestamp = firebase.firestore.FieldValue.serverTimestamp;
+export const storage = firebaseApp.storage();
+const db = firebaseApp.firestore();
 export default db;

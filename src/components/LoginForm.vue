@@ -53,7 +53,7 @@
             required
           />
           <span
-            class="input-group-text bg-transparent"
+            class="input-group-text bg-white"
             @click="is_pwd = !is_pwd"
             :class="{
               '': is_pwd_valid === '',
@@ -87,10 +87,31 @@
         @click="error = false"
       ></button>
     </div>
-    <div class="row mb-5">
-      <div class="d-grid col-md-12 mx-auto">
+    <div class="row justify-content-between mb-2">
+      <div class="col-md-auto">
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            value=""
+            :id="user_type + 'always-login'"
+            v-model="always_login"
+          />
+          <label class="form-check-label" :for="user_type + 'always-login'">
+            Beni hatırla
+          </label>
+        </div>
+      </div>
+      <div class="col-md-auto">
+        <router-link to="#" style="text-decoration: none">
+          Şifrenizi mi unuttunuz <i class="bi bi-box-arrow-up-right"></i>
+        </router-link>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="d-grid">
         <button
-          class="btn btn-primary"
+          class="btn"
           type="button"
           :disabled="!is_pwd_valid || !is_email_valid"
           @click="login"
@@ -99,33 +120,24 @@
         </button>
       </div>
     </div>
-    <div class="row mb-1">
-      <div class="col-auto mx-auto">
-        <div class="form-check">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            value=""
-            :id="user_type + 'always-login'"
-          />
-          <label class="form-check-label" :for="user_type + 'always-login'">
-            Beni hatırla
-          </label>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-auto mx-auto mb-1">
-        <router-link to="#" style="text-decoration: none">
-          Şifrenizi mi unuttunuz <i class="bi bi-box-arrow-up-right"></i>
-        </router-link>
-      </div>
-    </div>
+
     <div class="row">
       <div class="col-auto mx-auto">
         Hesabınız yok mu?
-        <router-link :to="{ name: 'Register' }" style="text-decoration: none">
+        <router-link
+          :to="{ name: user_type == 'firm' ? 'FirmRegister' : 'Register' }"
+          style="text-decoration: none"
+        >
           Şimdi oluşturun <i class="bi bi-box-arrow-up-right"></i>
+        </router-link>
+      </div>
+    </div>
+
+    <div class="row" v-if="user_type != 'firm'">
+      <div class="col-auto mx-auto">
+        Firmanız mı var?
+        <router-link :to="{ name: 'AdminLogin' }" style="text-decoration: none">
+          Buradan giriş yapın <i class="bi bi-box-arrow-up-right"></i>
         </router-link>
       </div>
     </div>
@@ -134,10 +146,10 @@
 
 <script>
 import { ref } from "@vue/reactivity";
+import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import db from "../firebase";
 import { useRouter } from "vue-router";
-import { primaryApp } from "../firebase";
 export default {
   name: "LoginForm",
   props: {
@@ -153,6 +165,7 @@ export default {
     const error = ref(false);
     const is_pwd = ref(true);
     const router = useRouter();
+    const always_login = ref(null);
 
     const login = () => {
       db.collection(props.user_type + "s")
@@ -162,15 +175,21 @@ export default {
           if (snap.size == 0) {
             throw "not in collection";
           } else {
-            /*return firebase
-              .auth()
-              .signInWithEmailAndPassword(email.value, password.value);*/
-            return primaryApp
+            return firebase
               .auth()
               .signInWithEmailAndPassword(email.value, password.value);
           }
         })
         .then((user) => {
+          if (always_login) {
+            firebase
+              .auth()
+              .setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+          } else {
+            firebase
+              .auth()
+              .setPersistence(firebase.auth.Auth.Persistence.SESSION);
+          }
           router.replace("/");
         })
         .catch((err) => {
@@ -191,7 +210,19 @@ export default {
       login,
       error,
       is_pwd,
+      always_login,
     };
   },
 };
 </script>
+
+<style>
+.form-check-input:checked {
+  background-color: rgb(120, 150, 120);
+  border-color: rgb(120, 150, 120);
+}
+
+.form-check-input:focus {
+  border-color: rgb(120, 150, 120);
+}
+</style>

@@ -236,9 +236,9 @@
           @click="error = false"
         ></button>
       </div>
-      <div class="d-grid col-md-12 mx-auto mb-4">
+      <div class="d-grid col-md-12 mx-auto mb-2">
         <button
-          class="btn btn-primary"
+          class="btn"
           @click="user_type != 'employee' ? register() : employeeRegister()"
           type="button"
           :disabled="
@@ -257,9 +257,23 @@
       </div>
       <div class="col-md-auto mx-auto" v-if="user_type != 'employee'">
         Hesabınız var mı?
-        <router-link :to="{ name: 'Login' }" style="text-decoration: none">
+        <router-link
+          :to="{ name: user_type == 'firm' ? 'AdminLogin' : 'Login' }"
+          style="text-decoration: none"
+        >
           Giriş yapın <i class="bi bi-box-arrow-up-right"></i>
         </router-link>
+      </div>
+      <div class="row">
+        <div class="col-md-auto mx-auto" v-if="user_type != 'firm'">
+          Firmanız mı var?
+          <router-link
+            :to="{ name: 'FirmRegister' }"
+            style="text-decoration: none"
+          >
+            Buradan kaydolun <i class="bi bi-box-arrow-up-right"></i>
+          </router-link>
+        </div>
       </div>
     </div>
   </form>
@@ -268,12 +282,11 @@
 <script>
 import { ref } from "@vue/reactivity";
 import db from "../firebase";
+import { storage } from "../firebase";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { useRouter } from "vue-router";
 import { registered } from "../App.vue";
-import { secondaryApp } from "../firebase";
-import { primaryApp } from "../firebase";
 export default {
   name: "RegisterForm",
   props: {
@@ -419,10 +432,10 @@ export default {
 
     const register = () => {
       registered(props.user_type);
-      /*firebase
+      firebase
         .auth()
         .createUserWithEmailAndPassword(email.value, pwd.value)
-        .then((cred) => {
+        .then(async (cred) => {
           db.collection(props.user_type + "s")
             .doc(cred.user.uid)
             .set({
@@ -437,33 +450,16 @@ export default {
           cred.user.updateProfile({
             displayName: props.user_type,
           });
-          registered("none");
-          router.replace("/");
-        })
-        .catch((err) => {
-          error.value = true;
-          email.value = "";
-          is_email_valid.value = "";
-          registered("none");
-        });*/
-      primaryApp
-        .auth()
-        .createUserWithEmailAndPassword(email.value, pwd.value)
-        .then((cred) => {
-          db.collection(props.user_type + "s")
-            .doc(cred.user.uid)
-            .set({
-              name: name.value,
-              phone: phone.value,
-              address: addr.value,
-              city: city.value,
-              district: dist.value,
-              neighborhood: nbhd.value,
-            });
 
-          cred.user.updateProfile({
-            displayName: props.user_type,
-          });
+          if (props.user_type == "firm") {
+            var notFoundImg = await storage
+              .ref()
+              .child("ImageNotFound")
+              .getDownloadURL();
+            cred.user.updateProfile({
+              photoURL: notFoundImg.toString(),
+            });
+          }
           registered("none");
           router.replace("/");
         })

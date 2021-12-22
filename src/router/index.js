@@ -5,9 +5,11 @@ import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import EmployeeSettings from "../views/EmployeeSettings.vue";
 import Settings from "../views/Settings.vue";
+import Firms from "../views/Firms.vue";
+import AdminLogin from "../views/AdminLogin.vue";
+import FirmRegister from "../views/FirmRegister.vue";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-import { primaryApp } from "../firebase";
 
 const routes = [
   {
@@ -27,9 +29,21 @@ const routes = [
     meta: { requiresUnauth: true },
   },
   {
+    path: "/admin-login",
+    name: "AdminLogin",
+    component: AdminLogin,
+    meta: { requiresUnauth: true },
+  },
+  {
     path: "/register",
     name: "Register",
     component: Register,
+    meta: { requiresUnauth: true },
+  },
+  {
+    path: "/firm-register",
+    name: "FirmRegister",
+    component: FirmRegister,
     meta: { requiresUnauth: true },
   },
   {
@@ -44,6 +58,11 @@ const routes = [
     component: Settings,
     meta: { requiresAuth: true, requiresCustomer: true },
   },
+  {
+    path: "/firms",
+    name: "Firms",
+    component: Firms,
+  },
 ];
 
 const router = createRouter({
@@ -52,8 +71,7 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  //const isAuth = firebase.auth().currentUser;
-  const isAuth = primaryApp.auth().currentUser;
+  const isAuth = firebase.auth().currentUser;
   const isAdmin = isAuth
     ? isAuth.displayName == "firm"
       ? true

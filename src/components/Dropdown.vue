@@ -17,7 +17,9 @@
       <router-link class="dropdown-item" to="#"> My Orders </router-link>
     </li>
     <li v-if="user_type == 'customer'">
-      <router-link class="dropdown-item" to="#"> Profile Settings </router-link>
+      <router-link class="dropdown-item" :to="{ name: 'Settings' }">
+        Profile Settings
+      </router-link>
     </li>
     <li v-if="user_type == 'firm'">
       <router-link class="dropdown-item" :to="{ name: 'EmployeeSettings' }"

@@ -25,7 +25,9 @@
               </router-link>
             </li>
             <li class="nav-item">
-              <router-link to="#" class="nav-link"> Firms </router-link>
+              <router-link :to="{ name: 'Firms' }" class="nav-link">
+                Firms
+              </router-link>
             </li>
           </ul>
         </div>
@@ -72,7 +74,6 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import Dropdown from "./components/Dropdown.vue";
 import DropdownSkeleton from "./components/DropdownSkeleton.vue";
-import { primaryApp } from "./firebase";
 
 const registered_type = ref("none");
 export const registered = (type) => {
@@ -89,17 +90,7 @@ export default {
     const user_type = ref("none");
     const user_uid = ref("");
 
-    /*firebase.auth().onAuthStateChanged((user) => {
-      logged_in.value = !!user;
-      user_type.value = !!user
-        ? registered_type.value == "none"
-          ? user.displayName
-          : registered_type.value
-        : "none";
-      user_uid.value = !!user ? user.uid : "none";
-    });*/
-
-    primaryApp.auth().onAuthStateChanged((user) => {
+    firebase.auth().onAuthStateChanged((user) => {
       logged_in.value = !!user;
       user_type.value = !!user
         ? registered_type.value == "none"
@@ -110,8 +101,7 @@ export default {
     });
 
     const logout = () => {
-      //firebase.auth().signOut();
-      primaryApp.auth().signOut();
+      firebase.auth().signOut();
       router.replace("/login");
     };
 
@@ -139,12 +129,22 @@ export default {
   color: rgb(120, 150, 120);
 }
 
-.navbar-dark .navbar-nav .btn {
+.btn {
   background-color: rgb(120, 150, 120);
+  border: rgb(120, 150, 120);
 }
 
-.navbar-dark .navbar-nav .btn:hover {
-  background-color: rgba(120, 150, 120, 0.7);
+.btn:hover {
+  /*background-color: rgba(120, 150, 120, 0.7);*/
+  filter: brightness(85%);
+}
+
+a:not(.btn) {
+  color: rgb(120, 150, 120);
+}
+
+a:not(.btn):hover {
+  filter: brightness(85%);
 }
 
 .navbar-dark .navbar-nav .btn:focus {
@@ -168,5 +168,25 @@ export default {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.btn:focus,
+.form-control:focus,
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.25rem rgb(120 150 120 / 25%);
+}
+
+/*.btn:focus,
+.form-control:focus {
+  box-shadow: none;
+}*/
+
+.form-control:focus,
+.form-control:focus + span {
+  border-color: rgb(120, 150, 120);
+}
+
+span {
+  transition: border-color 0.35s;
 }
 </style>
