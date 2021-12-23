@@ -20,13 +20,13 @@
         <div class="collapse navbar-collapse ms-5" id="navmenu">
           <ul class="navbar-nav mx-auto">
             <li class="nav-item">
-              <router-link :to="{ name: 'EmployeeSettings' }" class="nav-link">
-                Employee Settings
+              <router-link :to="{ name: 'About' }" class="nav-link">
+                About
               </router-link>
             </li>
             <li class="nav-item">
-              <router-link :to="{ name: 'About' }" class="nav-link">
-                About
+              <router-link :to="{ name: 'Firms' }" class="nav-link">
+                Firms
               </router-link>
             </li>
           </ul>
@@ -35,49 +35,27 @@
           <div :class="{ 'me-5': logged_in }" v-if="show_buttons">
             <ul class="navbar-nav list-group d-flex flex-row">
               <li class="nav-item dropdown mx-2" v-if="logged_in">
-                <button
-                  class="btn dropdown-toggle"
-                  id="user-dropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                  type="button"
-                >
-                  {{ user_type }}
-                </button>
-                <ul
-                  class="dropdown-menu dropdown-menu-dark position-absolute"
-                  aria-labelledby="user-dropdown"
-                >
-                  <li>
-                    <router-link class="dropdown-item" to="#">
-                      My Orders
-                    </router-link>
-                  </li>
-                  <li>
-                    <router-link class="dropdown-item" :to="{ name: 'Settings' }">
-                      Profile Settings
-                    </router-link>
-                  </li>
-                  <li>
-                    <div
-                      class="dropdown-item"
-                      @click="logout"
-                      style="cursor: pointer"
-                    >
-                      Logout
-                    </div>
-                  </li>
-                </ul>
+                <Suspense>
+                  <template #default>
+                    <Dropdown
+                      :uid="user_uid"
+                      :user_type="user_type"
+                      :logout="logout"
+                    />
+                  </template>
+                  <template #fallback>
+                    <DropdownSkeleton />
+                  </template>
+                </Suspense>
               </li>
               <li class="nav-item mx-2 d-none d-sm-block" v-if="!logged_in">
                 <router-link class="btn" :to="{ name: 'Login' }">
-                  Login
+                  Giriş Yap
                 </router-link>
               </li>
               <li class="nav-item mx-2 d-none d-sm-block" v-if="!logged_in">
                 <router-link class="btn" :to="{ name: 'Register' }">
-                  Register
+                  Kaydol
                 </router-link>
               </li>
             </ul>
@@ -91,42 +69,40 @@
 
 <script>
 import { ref } from "@vue/reactivity";
-import { useRouter, useRoute } from "vue-router";
-import { onBeforeMount } from "@vue/runtime-core";
+import { useRouter } from "vue-router";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
+import Dropdown from "./components/Dropdown.vue";
+import DropdownSkeleton from "./components/DropdownSkeleton.vue";
+
+const registered_type = ref("none");
+export const registered = (type) => {
+  registered_type.value = type;
+};
+
 export default {
   name: "App",
+  components: { Dropdown, DropdownSkeleton },
   setup() {
-    const logged_in = ref(firebase.auth().currentUser ? true : false);
     const show_buttons = ref(true);
     const router = useRouter();
-    const route = useRoute();
-    const user_type = ref(
-      firebase.auth().currentUser
-        ? firebase.auth().currentUser.displayName
-        : "none"
-    );
+    const logged_in = ref(false);
+    const user_type = ref("none");
+    const user_uid = ref("");
 
-    onBeforeMount(() => {
-      firebase.auth().onAuthStateChanged((user) => {
-        if (!user) {
-          if (route.path != "/register") {
-            router.replace("/login");
-          }
-          logged_in.value = false;
-          user_type.value = "none";
-        } else if (route.path == "/login" || route.path == "/register") {
-          router.replace("/");
-          logged_in.value = true;
-          user_type.value = user.displayName;
-          //console.log(user.displayName);
-        }
-      });
+    firebase.auth().onAuthStateChanged((user) => {
+      logged_in.value = !!user;
+      user_type.value = !!user
+        ? registered_type.value == "none"
+          ? user.displayName
+          : registered_type.value
+        : "none";
+      user_uid.value = !!user ? user.uid : "none";
     });
 
     const logout = () => {
       firebase.auth().signOut();
+      router.replace("/login");
     };
 
     return {
@@ -134,12 +110,13 @@ export default {
       show_buttons,
       logout,
       user_type,
+      user_uid,
     };
   },
 };
 </script>
 
-<style scoped>
+<style>
 .button-container {
   flex-grow: 0.1;
 }
@@ -152,12 +129,22 @@ export default {
   color: rgb(120, 150, 120);
 }
 
-.navbar-dark .navbar-nav .btn {
+.btn {
   background-color: rgb(120, 150, 120);
+  border: rgb(120, 150, 120);
 }
 
-.navbar-dark .navbar-nav .btn:hover {
-  background-color: rgba(120, 150, 120, 0.7);
+.btn:hover {
+  /*background-color: rgba(120, 150, 120, 0.7);*/
+  filter: brightness(85%);
+}
+
+a:not(.btn) {
+  color: rgb(120, 150, 120);
+}
+
+a:not(.btn):hover {
+  filter: brightness(85%);
 }
 
 .navbar-dark .navbar-nav .btn:focus {
@@ -183,7 +170,23 @@ export default {
   opacity: 0;
 }
 
-/*.navbar-dark .navbar-nav .btn:focus {
+.btn:focus,
+.form-control:focus,
+.form-check-input:focus {
   box-shadow: 0 0 0 0.25rem rgb(120 150 120 / 25%);
+}
+
+/*.btn:focus,
+.form-control:focus {
+  box-shadow: none;
 }*/
+
+.form-control:focus,
+.form-control:focus + span {
+  border-color: rgb(120, 150, 120);
+}
+
+span {
+  transition: border-color 0.35s;
+}
 </style>

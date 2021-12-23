@@ -25,13 +25,15 @@
             }"
             required
           />
-          <div class="invalid-feedback">Valid email is required</div>
+          <div class="invalid-feedback">
+            Lütfen geçerli bir email adresi giriniz
+          </div>
         </div>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-md-12">
-        <label for="password" class="form-label">Password</label>
+        <label for="password" class="form-label">Şifre</label>
         <div class="input-group has-validation">
           <span class="input-group-text">
             <i class="bi bi-lock-fill"></i>
@@ -51,7 +53,7 @@
             required
           />
           <span
-            class="input-group-text bg-transparent"
+            class="input-group-text bg-white"
             @click="is_pwd = !is_pwd"
             :class="{
               '': is_pwd_valid === '',
@@ -65,7 +67,7 @@
             ></i>
           </span>
           <div class="invalid-feedback">
-            Password must be at least 6 characters long
+            Şifreniz en az 6 karakter olmalıdır
           </div>
         </div>
       </div>
@@ -85,45 +87,57 @@
         @click="error = false"
       ></button>
     </div>
-    <div class="row mb-5">
-      <div class="d-grid col-md-12 mx-auto">
-        <button
-          class="btn btn-primary"
-          type="button"
-          :disabled="!is_pwd_valid || !is_email_valid"
-          @click="login"
-        >
-          Login
-        </button>
-      </div>
-    </div>
-    <div class="row mb-1">
-      <div class="col-auto mx-auto">
+    <div class="row justify-content-between mb-2">
+      <div class="col-md-auto">
         <div class="form-check">
           <input
             class="form-check-input"
             type="checkbox"
             value=""
             :id="user_type + 'always-login'"
+            v-model="always_login"
           />
           <label class="form-check-label" :for="user_type + 'always-login'">
-            Always Login
+            Beni hatırla
           </label>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-auto mx-auto mb-1">
+      <div class="col-md-auto">
         <router-link to="#" style="text-decoration: none">
           Şifrenizi mi unuttunuz <i class="bi bi-box-arrow-up-right"></i>
         </router-link>
       </div>
     </div>
+    <div class="row mb-2">
+      <div class="d-grid">
+        <button
+          class="btn"
+          type="button"
+          :disabled="!is_pwd_valid || !is_email_valid"
+          @click="login"
+        >
+          Giriş
+        </button>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col-auto mx-auto">
         Hesabınız yok mu?
-        <router-link :to="{ name: 'Register' }" style="text-decoration: none">
+        <router-link
+          :to="{ name: user_type == 'firm' ? 'FirmRegister' : 'Register' }"
+          style="text-decoration: none"
+        >
           Şimdi oluşturun <i class="bi bi-box-arrow-up-right"></i>
+        </router-link>
+      </div>
+    </div>
+
+    <div class="row" v-if="user_type != 'firm'">
+      <div class="col-auto mx-auto">
+        Firmanız mı var?
+        <router-link :to="{ name: 'AdminLogin' }" style="text-decoration: none">
+          Buradan giriş yapın <i class="bi bi-box-arrow-up-right"></i>
         </router-link>
       </div>
     </div>
@@ -135,6 +149,7 @@ import { ref } from "@vue/reactivity";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import db from "../firebase";
+import { useRouter } from "vue-router";
 export default {
   name: "LoginForm",
   props: {
@@ -149,34 +164,10 @@ export default {
     const is_pwd_valid = ref("");
     const error = ref(false);
     const is_pwd = ref(true);
-
-    //console.log(firebase.auth.OAuthProvider.prototype.credential.toString());
+    const router = useRouter();
+    const always_login = ref(null);
 
     const login = () => {
-      /*firebase
-        .auth()
-        .signInWithEmailAndPassword(email.value, password.value)
-        .then((cred) => {
-          return db
-            .collection(props.user_type + "s")
-            .doc(cred.user.uid)
-            .get();
-        })
-        .then((doc) => {
-          console.log(doc.exists, props.user_type);
-          if (!doc.exists) {
-            firebase.auth().signOut();
-            throw "not in the collection";
-          }
-        })
-        .catch((err) => {
-          console.log("error");
-          error.value = true;
-          email.value = "";
-          password.value = "";
-          is_email_valid.value = "";
-          is_pwd_valid.value = "";
-        });*/
       db.collection(props.user_type + "s")
         .where("email", "==", email.value)
         .get()
@@ -190,9 +181,19 @@ export default {
           }
         })
         .then((user) => {
-          console.log(user.user);
+          if (always_login) {
+            firebase
+              .auth()
+              .setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+          } else {
+            firebase
+              .auth()
+              .setPersistence(firebase.auth.Auth.Persistence.SESSION);
+          }
+          router.replace("/");
         })
         .catch((err) => {
+          console.log(err, props.user_type);
           error.value = true;
           email.value = "";
           password.value = "";
@@ -209,7 +210,19 @@ export default {
       login,
       error,
       is_pwd,
+      always_login,
     };
   },
 };
 </script>
+
+<style>
+.form-check-input:checked {
+  background-color: rgb(120, 150, 120);
+  border-color: rgb(120, 150, 120);
+}
+
+.form-check-input:focus {
+  border-color: rgb(120, 150, 120);
+}
+</style>

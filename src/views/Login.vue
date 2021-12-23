@@ -1,22 +1,9 @@
 <template>
   <div class="container d-flex flex-column justify-content-center flex-grow-1">
     <div class="row mt-3 mt-md-0">
-      <div class="col-md-5">
+      <div class="d-grid mx-auto col-md-5 rounded border py-3">
         <LoginForm
-          header="Admin Login"
-          placeholder="admin@admin.com"
-          user_type="firm"
-        />
-      </div>
-
-      <div class="col-md-2 text-center">
-        <div class="vr d-none d-md-inline-block" style="height: 100%"></div>
-        <hr class="d-block d-md-none" />
-      </div>
-
-      <div class="col-md-5">
-        <LoginForm
-          header="Customer Login"
+          header="Kullanıcı Girişi"
           placeholder="example@example.com"
           user_type="customer"
         />
@@ -32,5 +19,3 @@ export default {
   components: { LoginForm },
 };
 </script>
-
-<style></style>

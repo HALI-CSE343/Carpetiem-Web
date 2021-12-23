@@ -40,14 +40,17 @@
                   <p class="empText"></p>
                   <button
                     class="btn btn-warning"
-                    v-on:click="willEdit(employee)"
+                    @click="willEdit(employee)"
                     data-bs-toggle="modal"
                     data-bs-target="#exampleModal"
                     data-bs-whatever="@mdo"
                   >
                     Edit
                   </button>
-                  <button class="btn btn-danger" @click="removeRow(employee)">
+                  <button
+                    class="btn btn-danger"
+                    @click="removeEmployee(employee)"
+                  >
                     Remove
                   </button>
                 </td>
@@ -65,7 +68,7 @@
           </button>
         </div>
 
-        <!-- Moruk burası Pop-up tarafı -->
+        <!-- Pop-up tarafı -->
 
         <div
           class="modal fade"
@@ -73,6 +76,7 @@
           tabindex="-1"
           aria-labelledby="exampleModalLabel"
           aria-hidden="true"
+          v-if="willEditEmployee != ''"
         >
           <div class="modal-dialog">
             <div class="modal-content">
@@ -85,11 +89,15 @@
                   class="btn-close"
                   data-bs-dismiss="modal"
                   aria-label="Close"
+                  id="close-edit-btn"
                 ></button>
               </div>
 
               <div class="modal-body">
-                <RegisterForm user_type="employee" />
+                <EditEmployeeForm
+                  :employee="willEditEmployee"
+                  @closePopUp="closeEdit"
+                />
               </div>
             </div>
           </div>
@@ -113,11 +121,15 @@
                   class="btn-close"
                   data-bs-dismiss="modal"
                   aria-label="Close"
+                  id="close-register-btn"
                 ></button>
               </div>
 
               <div class="modal-body">
-                <RegisterForm user_type="employee" />
+                <RegisterForm
+                  user_type="employee"
+                  @closePopUp="closeRegister"
+                />
               </div>
             </div>
           </div>
@@ -132,11 +144,12 @@
 import { ref } from "@vue/reactivity";
 
 import RegisterForm from "../components/RegisterForm.vue";
-import db from "../firebase";
+import EditEmployeeForm from "../components/EditEmployeeForm.vue";
+import db, { secondaryApp } from "../firebase";
 
 export default {
   name: "EmployeeSettings",
-  components: { RegisterForm },
+  components: { RegisterForm, EditEmployeeForm },
   setup() {
     const userName = ref("");
     const telNo = ref("");
@@ -154,13 +167,8 @@ export default {
         employees.value.sort(new Intl.Collator("de").compare);
       });
 
-    const willEdit = (e) => {
-      (this.willEditEmployee = e),
-        (this.userName = e.name),
-        (this.telNo = e.tel_no),
-        (this.email = e.e_mail),
-        (this.adress = e.adress),
-        (this.password = e.password);
+    const willEdit = async (e) => {
+      willEditEmployee.value = e;
     };
 
     const refresh = () => {
@@ -175,32 +183,68 @@ export default {
         });
     };
 
-    const removeRow = (e) => {
-      db.collection("employees")
-        .where("email", "==", e.email)
-        .get()
-        .then((snap) => {
-          snap.forEach((doc) => {
-            db.collection("employees")
-              .doc(doc.id)
-              .delete()
-              .catch((err) => console.log(err.message));
-          });
+    const removeEmployee = async (e) => {
+      try {
+        var snap = await db
+          .collection("employees")
+          .where("email", "==", e.email)
+          .get();
+        /*.then((snap) => {
+            snap.forEach((doc) => {
+              db.collection("employees")
+                .doc(doc.id)
+                .delete()
+                .catch((err) => console.log(err.message));
+            });
+          });*/
+
+        snap.forEach(async (doc) => {
+          await db.collection("employees").doc(doc.id).delete();
         });
 
-      employees.value = [];
-
-      db.collection("employees")
-        .get()
-        .then((snap) => {
-          snap.forEach((doc) => {
-            employees.value.push(doc.data());
+        secondaryApp
+          .auth()
+          .signInWithEmailAndPassword(e.email, e.password)
+          .then((user) => {
+            user.user.delete();
+            secondaryApp.auth().signOut();
           });
-          employees.value.sort(new Intl.Collator("de").compare);
+        //emp.user.delete();
+        //secondaryApp.auth().signOut();
+
+        employees.value = [];
+
+        /*await db
+          .collection("employees")
+          .get()
+          .then((snap) => {
+            snap.forEach((doc) => {
+              employees.value.push(doc.data());
+            });
+            employees.value.sort(new Intl.Collator("de").compare);
+          });*/
+
+        snap = await db.collection("employees").get();
+        snap.forEach((doc) => {
+          employees.value.push(doc.data());
         });
+        employees.value.sort(new Intl.Collator("de").compare);
+      } catch (err) {
+        console.log(err.message);
+      }
 
       //e.isExist = false;
     };
+
+    const closeRegister = () => {
+      document.getElementById("close-register-btn").click();
+    };
+
+    const closeEdit = () => {
+      document.getElementById("close-edit-btn").click();
+      willEditEmployee.value = "";
+    };
+
     return {
       userName,
       telNo,
@@ -211,7 +255,9 @@ export default {
       employees,
       willEdit,
       refresh,
-      removeRow,
+      removeEmployee,
+      closeRegister,
+      closeEdit,
     };
   },
 };

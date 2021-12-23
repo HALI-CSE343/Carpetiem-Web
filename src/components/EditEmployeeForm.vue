@@ -1,31 +1,29 @@
 <template>
-  <h4 class="text-center mb-3">{{ header }}</h4>
   <form novalidate>
     <div class="row g-2">
       <div class="col-md-12">
-        <label :for="user_type + '-name'" class="form-label">
-          <span style="color: red">*</span> İsim
+        <label :for="'employee-edit' + '-name'" class="form-label">
+          <span style="color: red">*</span> Name
         </label>
         <div class="input-group has-validation">
           <input
             v-model="name"
             type="text"
             class="form-control"
-            :id="user_type + '-name'"
+            :id="'employee-edit' + '-name'"
             autocomplete="off"
             @keyup="is_name_valid = name.length != 0"
             :class="{
-              '': is_name_valid === '',
               'is-valid': is_name_valid,
               'is-invalid': is_name_valid === false,
             }"
           />
-          <div class="invalid-feedback">Lütfen bir isim giriniz</div>
+          <div class="invalid-feedback">Name is required</div>
         </div>
       </div>
       <div class="col-md-12">
-        <label :for="user_type + '-phone'" class="form-label">
-          <span style="color: red">*</span> Telefon Numarası
+        <label :for="'employee-edit' + '-phone'" class="form-label">
+          <span style="color: red">*</span> Phone Number
         </label>
         <div class="input-group has-validation">
           <input
@@ -34,25 +32,22 @@
             class="form-control"
             autocomplete="off"
             maxlength="14"
-            :id="user_type + '-phone'"
+            :id="'employee-edit' + '-phone'"
             @keydown="enforceFormat"
             @keyup="
               formatToPhone($event);
               is_phone_valid = phone.length == 14;
             "
             :class="{
-              '': is_phone_valid === '',
               'is-valid': is_phone_valid,
               'is-invalid': is_phone_valid === false,
             }"
           />
-          <div class="invalid-feedback">
-            Lütfen geçerli bir telefon numarası giriniz
-          </div>
+          <div class="invalid-feedback">Valid phone number is required</div>
         </div>
       </div>
       <div class="col-md-12">
-        <label :for="user_type + '-email'" class="form-label">
+        <label :for="'employee-edit' + '-email'" class="form-label">
           <span style="color: red">*</span> Email
         </label>
         <div class="input-group has-validation">
@@ -60,37 +55,33 @@
             v-model="email"
             type="email"
             class="form-control"
-            :id="user_type + '-email'"
+            :id="'employee-edit' + '-email'"
             autocomplete="off"
             placeholder="example@example.com"
             @keyup="
               is_email_valid = /^([a-z][a-z0-9_-]*@[a-z]+\.[a-z]+)$/.test(email)
             "
             :class="{
-              '': is_email_valid === '',
               'is-valid': is_email_valid,
               'is-invalid': is_email_valid === false,
             }"
           />
-          <div class="invalid-feedback">
-            Lütfen geçerli bir email adresi giriniz
-          </div>
+          <div class="invalid-feedback">Valid email is required</div>
         </div>
       </div>
       <div class="col-md-12">
-        <label :for="user_type + '-password'" class="form-label">
-          <span style="color: red">*</span> Şifre
+        <label :for="'employee-edit' + '-password'" class="form-label">
+          <span style="color: red">*</span> Password
         </label>
         <div class="input-group has-validation">
           <input
             v-model="pwd"
             :type="is_pwd ? 'password' : 'text'"
             class="form-control border-end-0"
-            :id="user_type + '-password'"
+            :id="'employee-edit' + '-password'"
             autocomplete="off"
             @keyup="is_pwd_valid = pwd.length >= 6"
             :class="{
-              '': is_pwd_valid === '',
               'is-valid': is_pwd_valid,
               'is-invalid': is_pwd_valid === false,
             }"
@@ -99,7 +90,6 @@
             class="input-group-text bg-transparent"
             @click="is_pwd = !is_pwd"
             :class="{
-              '': is_pwd_valid === '',
               'border-success': is_pwd_valid,
               'border-danger': is_pwd_valid === false,
             }"
@@ -110,37 +100,36 @@
             ></i>
           </span>
           <div class="invalid-feedback">
-            Şifreniz en az 6 karakter olmalıdır
+            Password must be at least 6 characters long
           </div>
         </div>
       </div>
       <div class="col-md-6">
-        <label :for="user_type + '-city-select'" class="form-label">
-          <span style="color: red">*</span> İl
+        <label :for="'employee-edit' + '-city-select'" class="form-label">
+          <span style="color: red">*</span> City
         </label>
         <div class="input-group has-validation">
           <select
             class="form-select"
             v-model="city"
             @change="onCityChange"
-            :id="user_type + '-city-select'"
+            :id="'employee-edit' + '-city-select'"
             :class="{
-              '': is_city_valid === '',
               'is-valid': is_city_valid,
               'is-invalid': is_city_valid === false,
             }"
           >
-            <option value="default">İlinizi seçiniz</option>
+            <option value="default">Select your city</option>
             <option v-for="city in cities" :key="city" :value="city">
               {{ city }}
             </option>
           </select>
-          <div class="invalid-feedback">Lütfen bir il seçiniz</div>
+          <div class="invalid-feedback">City is required</div>
         </div>
       </div>
       <div class="col-md-6">
-        <label :for="user_type + '-district-select'" class="form-label">
-          <span style="color: red">*</span> İlçe
+        <label :for="'employee-edit' + '-district-select'" class="form-label">
+          <span style="color: red">*</span> District
         </label>
         <div class="input-group has-validation">
           <select
@@ -148,14 +137,13 @@
             v-model="dist"
             @change="onDistrictChange"
             :disabled="!is_city_valid"
-            :id="user_type + '-district-select'"
+            :id="'employee-edit' + '-district-select'"
             :class="{
-              '': is_dist_valid === '',
               'is-valid': is_dist_valid,
               'is-invalid': is_dist_valid === false,
             }"
           >
-            <option value="default">İlçenizi seçiniz</option>
+            <option value="default">Select your district</option>
             <option
               v-for="district in districts"
               :key="district"
@@ -164,27 +152,29 @@
               {{ district }}
             </option>
           </select>
-          <div class="invalid-feedback">Lütfen bir ilçe seçiniz</div>
+          <div class="invalid-feedback">District is required</div>
         </div>
       </div>
       <div class="col-md-12">
-        <label :for="user_type + '-neighborhood-select'" class="form-label">
-          <span style="color: red">*</span> Semt
+        <label
+          :for="'employee-edit' + '-neighborhood-select'"
+          class="form-label"
+        >
+          <span style="color: red">*</span> Neighborhood
         </label>
         <div class="input-group has-validation">
           <select
             class="form-select"
             v-model="nbhd"
             :disabled="!is_dist_valid || !is_city_valid"
-            :id="user_type + '-neighborhood-select'"
+            :id="'employee-edit' + '-neighborhood-select'"
             @change="is_nbhd_valid = nbhd != 'default'"
             :class="{
-              '': is_nbhd_valid === '',
               'is-valid': is_nbhd_valid,
               'is-invalid': is_nbhd_valid === false,
             }"
           >
-            <option value="default">Semtinizi seçiniz</option>
+            <option value="default">Select your neighborhood</option>
             <option
               v-for="neighborhood in neighborhoods"
               :key="neighborhood"
@@ -193,29 +183,28 @@
               {{ neighborhood }}
             </option>
           </select>
-          <div class="invalid-feedback">Lütfen bir semt seçiniz</div>
+          <div class="invalid-feedback">Neighborhood is required</div>
         </div>
       </div>
       <div class="col-md-12">
-        <label :for="user_type + '-address'" class="form-label">
-          <span style="color: red">*</span> Adres
+        <label :for="'employee-edit' + '-address'" class="form-label">
+          <span style="color: red">*</span> Address
         </label>
         <div class="input-group has-validation">
           <textarea
             v-model="addr"
             class="form-control"
-            :id="user_type + '-address'"
+            :id="'employee-edit' + '-address'"
             rows="2"
             style="resize: none"
             autocomplete="off"
             @keyup="is_addr_valid = addr.length != 0"
             :class="{
-              '': is_addr_valid === '',
               'is-valid': is_addr_valid,
               'is-invalid': is_addr_valid === false,
             }"
           ></textarea>
-          <div class="invalid-feedback">Lütfen bir adres giriniz</div>
+          <div class="invalid-feedback">Address is required</div>
         </div>
       </div>
       <div
@@ -236,10 +225,10 @@
           @click="error = false"
         ></button>
       </div>
-      <div class="d-grid col-md-12 mx-auto mb-2">
+      <div class="d-grid col-md-12 mx-auto mb-4">
         <button
-          class="btn"
-          @click="user_type != 'employee' ? register() : employeeRegister()"
+          class="btn btn-primary"
+          @click="edit"
           type="button"
           :disabled="
             !is_city_valid ||
@@ -252,28 +241,8 @@
             !is_addr_valid
           "
         >
-          Kaydol
+          Save
         </button>
-      </div>
-      <div class="col-md-auto mx-auto" v-if="user_type != 'employee'">
-        Hesabınız var mı?
-        <router-link
-          :to="{ name: user_type == 'firm' ? 'AdminLogin' : 'Login' }"
-          style="text-decoration: none"
-        >
-          Giriş yapın <i class="bi bi-box-arrow-up-right"></i>
-        </router-link>
-      </div>
-      <div class="row">
-        <div class="col-md-auto mx-auto" v-if="user_type != 'firm'">
-          Firmanız mı var?
-          <router-link
-            :to="{ name: 'FirmRegister' }"
-            style="text-decoration: none"
-          >
-            Buradan kaydolun <i class="bi bi-box-arrow-up-right"></i>
-          </router-link>
-        </div>
       </div>
     </div>
   </form>
@@ -282,41 +251,39 @@
 <script>
 import { ref } from "@vue/reactivity";
 import db from "../firebase";
-import { storage } from "../firebase";
-import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-import { useRouter } from "vue-router";
-import { registered } from "../App.vue";
+import { secondaryApp } from "../firebase";
+import { watch } from "@vue/runtime-core";
+
 export default {
-  name: "RegisterForm",
+  name: "EditEmployeeForm",
   props: {
-    header: String,
-    user_type: String,
+    employee: Object,
   },
   emits: ["closePopUp"],
   setup(props, { emit }) {
-    const city = ref("default");
-    const dist = ref("default");
-    const nbhd = ref("default");
-    const name = ref("");
-    const phone = ref("");
-    const email = ref("");
-    const pwd = ref("");
-    const addr = ref("");
+    //console.log(props.employee);
+    const city = ref(props.employee.city);
+    const dist = ref(props.employee.district);
+    const nbhd = ref(props.employee.neighborhood);
+    const name = ref(props.employee.name);
+    const phone = ref(props.employee.phone);
+    const email = ref(props.employee.email);
+    const pwd = ref(props.employee.password);
+    const addr = ref(props.employee.address);
     const cities = ref([]);
     const districts = ref([]);
     const neighborhoods = ref([]);
-    const is_city_valid = ref("");
-    const is_dist_valid = ref("");
-    const is_nbhd_valid = ref("");
-    const is_name_valid = ref("");
-    const is_phone_valid = ref("");
-    const is_email_valid = ref("");
-    const is_pwd_valid = ref("");
-    const is_addr_valid = ref("");
+    const is_city_valid = ref(true);
+    const is_dist_valid = ref(true);
+    const is_nbhd_valid = ref(true);
+    const is_name_valid = ref(true);
+    const is_phone_valid = ref(true);
+    const is_email_valid = ref(true);
+    const is_pwd_valid = ref(true);
+    const is_addr_valid = ref(true);
     const is_pwd = ref(true);
     const error = ref(false);
-    const router = useRouter();
 
     db.collection("cities")
       .get()
@@ -326,6 +293,83 @@ export default {
         });
         cities.value.sort(new Intl.Collator("de").compare);
       });
+
+    db.collection("cities")
+      .where("name", "==", city.value)
+      .get()
+      .then((snap) => {
+        snap.forEach((doc) => {
+          doc.data().districts.forEach((district) => {
+            districts.value.push(district.name);
+          });
+        });
+        districts.value.sort(new Intl.Collator("de").compare);
+      });
+
+    db.collection("cities")
+      .where("name", "==", city.value)
+      .get()
+      .then((snap) => {
+        snap.forEach((doc) => {
+          doc.data().districts.some((district) => {
+            if (district.name === dist.value) {
+              district.neighborhoods.forEach((neighborhood) => {
+                neighborhoods.value.push(neighborhood);
+              });
+              return true;
+            }
+          });
+        });
+        districts.value.sort(new Intl.Collator("de").compare);
+      });
+
+    watch(props.employee, () => {
+      city.value = props.employee.city;
+      dist.value = props.employee.district;
+      nbhd.value = props.employee.neighborhood;
+      name.value = props.employee.name;
+      phone.value = props.employee.phone;
+      email.value = props.employee.email;
+      pwd.value = props.employee.password;
+      addr.value = props.employee.address;
+      db.collection("cities")
+        .get()
+        .then((snap) => {
+          snap.forEach((doc) => {
+            cities.value.push(doc.data().name);
+          });
+          cities.value.sort(new Intl.Collator("de").compare);
+        });
+
+      db.collection("cities")
+        .where("name", "==", city.value)
+        .get()
+        .then((snap) => {
+          snap.forEach((doc) => {
+            doc.data().districts.forEach((district) => {
+              districts.value.push(district.name);
+            });
+          });
+          districts.value.sort(new Intl.Collator("de").compare);
+        });
+
+      db.collection("cities")
+        .where("name", "==", city.value)
+        .get()
+        .then((snap) => {
+          snap.forEach((doc) => {
+            doc.data().districts.some((district) => {
+              if (district.name === dist.value) {
+                district.neighborhoods.forEach((neighborhood) => {
+                  neighborhoods.value.push(neighborhood);
+                });
+                return true;
+              }
+            });
+          });
+          districts.value.sort(new Intl.Collator("de").compare);
+        });
+    });
 
     const onCityChange = async () => {
       districts.value = [];
@@ -430,77 +474,35 @@ export default {
       }
     };
 
-    const register = () => {
-      registered(props.user_type);
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(email.value, pwd.value)
-        .then(async (cred) => {
-          db.collection(props.user_type + "s")
-            .doc(cred.user.uid)
-            .set({
-              name: name.value,
-              phone: phone.value,
-              address: addr.value,
-              city: city.value,
-              district: dist.value,
-              neighborhood: nbhd.value,
-            });
-
-          cred.user.updateProfile({
-            displayName: props.user_type,
-          });
-
-          if (props.user_type == "firm") {
-            var notFoundImg = await storage
-              .ref()
-              .child("ImageNotFound")
-              .getDownloadURL();
-            cred.user.updateProfile({
-              photoURL: notFoundImg.toString(),
-            });
-          }
-          registered("none");
-          router.replace("/");
-        })
-        .catch((err) => {
-          error.value = true;
-          email.value = "";
-          is_email_valid.value = "";
-          registered("none");
-        });
-    };
-
-    const employeeRegister = async () => {
+    const edit = async () => {
       try {
         var cred = await secondaryApp
           .auth()
-          .createUserWithEmailAndPassword(email.value, pwd.value);
-
-        await db
-          .collection(props.user_type + "s")
-          .doc(cred.user.uid)
-          .set({
-            name: name.value,
-            phone: phone.value,
-            email: email.value,
-            password: pwd.value,
-            address: addr.value,
-            city: city.value,
-            district: dist.value,
-            neighborhood: nbhd.value,
-          });
-
-        cred.user.updateProfile({
-          displayName: props.user_type,
+          .signInWithEmailAndPassword(
+            props.employee.email,
+            props.employee.password
+          );
+        await db.collection("employees").doc(cred.user.uid).update({
+          name: name.value,
+          phone: phone.value,
+          email: email.value,
+          password: pwd.value,
+          address: addr.value,
+          city: city.value,
+          district: dist.value,
+          neighborhood: nbhd.value,
         });
 
-        secondaryApp.auth().signOut();
+        if (email.value != props.employee.email) {
+          cred.user.updateEmail(email.value);
+        }
+
+        if (password.value != props.employee.password) {
+          cred.user.updatePassword(password.value);
+        }
         emit("closePopUp");
-      } catch {
-        error.value = true;
-        email.value = "";
-        is_email_valid.value = "";
+      } catch (error) {
+        console.log(error.message);
       }
     };
 
@@ -529,9 +531,8 @@ export default {
       onDistrictChange,
       enforceFormat,
       formatToPhone,
-      register,
       error,
-      employeeRegister,
+      edit,
     };
   },
 };
