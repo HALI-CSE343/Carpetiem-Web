@@ -45,11 +45,17 @@ export default {
       const res2 = await cred({ id: "DrXGn3nAw9WZPpDxDa4W6SQNY2K2" });
       console.log(res2.data);
       console.log({ ...res.data.at(0), ...res2.data });*/
-      const getAllUsers = firebase.functions().httpsCallable("getAllUsers");
+      /*const getAllUsers = firebase.functions().httpsCallable("getAllUsers");
       const res = await getAllUsers("");
       console.log(res.data);
       users.value = res.data;
-      show.value = true;
+      show.value = true;*/
+      const getUser = firebase.functions().httpsCallable("getUser");
+      const res = await getUser({
+        id: "DrXGn3nAw9WZPpDxDa4W6SQNY2K2",
+        collection: "employees",
+      });
+      console.log(res.data);
     };
 
     return {

@@ -29,6 +29,17 @@ exports.deleteUser = functions.https.onCall(async (data, context) => {
   await admin.auth().deleteUser(data.uid);
 });
 
+exports.getUser = functions.https.onCall(async (data, context) => {
+  const userCred = await admin.auth().getUser(data.id);
+  const userInfo = (
+    await db.collection(data.collection).doc(data.id).get()
+  ).data();
+  return {
+    ...userCred,
+    ...userInfo,
+  };
+});
+
 exports.getAllUsers = functions.https.onCall(async (data, context) => {
   try {
     const users = [];

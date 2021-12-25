@@ -14,7 +14,7 @@
         >
           <span class="navbar-toggler-icon"></span>
         </button>
-        <router-link :to="{ name: 'Home' }" class="navbar-brand">
+        <router-link :to="{ name: 'Home' }" class="navbar-brand me-0 me-sm-3">
           Carpetiem
         </router-link>
         <div class="collapse navbar-collapse ms-5" id="navmenu">
@@ -25,14 +25,17 @@
               </router-link>
             </li>
             <li class="nav-item">
-              <router-link :to="{ name: 'Firms' }" class="nav-link">
+              <router-link
+                :to="{ name: 'Firms', params: { page: 1 } }"
+                class="nav-link"
+              >
                 Firms
               </router-link>
             </li>
           </ul>
         </div>
         <transition name="fade">
-          <div :class="{ 'me-5': logged_in }" v-if="show_buttons">
+          <div :class="{ 'me-sm-5': logged_in }" v-if="show_buttons">
             <ul class="navbar-nav list-group d-flex flex-row">
               <li class="nav-item dropdown mx-2" v-if="logged_in">
                 <Suspense>
@@ -135,7 +138,6 @@ export default {
 }
 
 .btn:hover {
-  /*background-color: rgba(120, 150, 120, 0.7);*/
   filter: brightness(85%);
 }
 
@@ -171,16 +173,23 @@ a:not(.btn):hover {
 }
 
 .btn:focus,
+.form-select:focus,
 .form-control:focus,
-.form-check-input:focus {
+.form-check-input:focus,
+.page-link:focus,
+.page-link:hover {
   box-shadow: 0 0 0 0.25rem rgb(120 150 120 / 25%);
 }
 
-/*.btn:focus,
-.form-control:focus {
-  box-shadow: none;
-}*/
+.form-check-input:focus {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%28120, 150, 120, 0.70%29'/%3e%3c/svg%3e") !important;
+}
 
+.form-check-input:checked {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
+}
+
+.form-select:focus,
 .form-control:focus,
 .form-control:focus + span {
   border-color: rgb(120, 150, 120);
@@ -188,5 +197,21 @@ a:not(.btn):hover {
 
 span {
   transition: border-color 0.35s;
+}
+
+.page-link:focus,
+.page-link:hover {
+  color: hsl(120, 12.5%, 45%);
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: hsl(200, 20%, 45%);
+    color: hsl(200, 20%, 45%);
+  }
+  100% {
+    background-color: hsl(200, 20%, 95%);
+    color: hsl(200, 20%, 95%);
+  }
 }
 </style>
