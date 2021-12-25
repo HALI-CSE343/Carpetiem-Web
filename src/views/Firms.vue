@@ -4,7 +4,7 @@
     style="background-color: hsl(120, 12.5%, 70%)"
   >
     <div class="row d-flex justify-content-center">
-      <div class="col-10">
+      <div class="col-11">
         <div class="row rounded bar" style="background-color: #fff">
           <div class="col-sm-4 py-3">
             <div class="row row-cols-1">
@@ -12,8 +12,21 @@
                 <label for="city" class="form-label"> <b>İl:</b> </label>
               </div>
               <div class="col">
-                <select id="city" class="form-select" v-model="city">
+                <select
+                  class="skeleton form-select"
+                  v-if="skeletonSelect"
+                ></select>
+                <select
+                  id="city"
+                  class="form-select"
+                  v-model="city"
+                  @change="onCityChange"
+                  v-if="!skeletonSelect"
+                >
                   <option value="default">Herhangi</option>
+                  <option v-for="city in cities" :key="city" :value="city">
+                    {{ city }}
+                  </option>
                 </select>
               </div>
             </div>
@@ -24,8 +37,25 @@
                 <label for="dist" class="form-label"> <b>İlçe:</b> </label>
               </div>
               <div class="col">
-                <select id="dist" class="form-select" v-model="dist">
+                <select
+                  class="skeleton form-select"
+                  v-if="skeletonSelect"
+                ></select>
+                <select
+                  id="dist"
+                  class="form-select"
+                  v-model="dist"
+                  @change="onDistrictChange"
+                  v-if="!skeletonSelect"
+                >
                   <option value="default">Herhangi</option>
+                  <option
+                    v-for="district in districts"
+                    :key="district"
+                    :value="district"
+                  >
+                    {{ district }}
+                  </option>
                 </select>
               </div>
             </div>
@@ -36,8 +66,24 @@
                 <label for="nbhd" class="form-label"> <b>Mahalle:</b> </label>
               </div>
               <div class="col">
-                <select id="nbhd" class="form-select" v-model="nbhd">
+                <select
+                  class="skeleton form-select"
+                  v-if="skeletonSelect"
+                ></select>
+                <select
+                  id="nbhd"
+                  class="form-select"
+                  v-model="nbhd"
+                  v-if="!skeletonSelect"
+                >
                   <option value="default">Herhangi</option>
+                  <option
+                    v-for="neighborhood in neighborhoods"
+                    :key="neighborhood"
+                    :value="neighborhood"
+                  >
+                    {{ neighborhood }}
+                  </option>
                 </select>
               </div>
             </div>
@@ -45,21 +91,37 @@
         </div>
       </div>
       <div class="w-100"></div>
-      <div class="col-10 mt-3">
+      <div class="col-11 mt-3">
         <div class="row gap-2 gap-md-0">
-          <div class="col-sm-6 col-md-3 col-lg-4">
+          <div class="col-sm-6 col-md-3 col-lg-2 order-md-0 order-sm-3">
             <div class="row row-cols-1">
               <div class="col">
                 <label for="sort" class="form-label"> <b>Sırala:</b> </label>
               </div>
               <div class="col">
-                <select id="sort" class="form-select">
+                <select id="sort" class="form-select" v-model="sort">
                   <option value="default">Herhangi</option>
+                  <option value="name">İsim</option>
                 </select>
               </div>
             </div>
           </div>
-          <div class="col-sm-5 col-md-4 col-lg-3">
+          <div class="col-sm-6 col-md-3 col-lg-2 order-1">
+            <div class="row row-cols-1">
+              <div class="col">
+                <label for="sort" class="form-label"> <b>Halı Tipi:</b> </label>
+              </div>
+              <div class="col">
+                <select id="sort" class="form-select" v-model="carpetType">
+                  <option value="default">Herhangi</option>
+                  <option value="thick">Kalın</option>
+                  <option value="medium">Orta</option>
+                  <option value="thin">ince</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-5 col-md-4 col-lg-3 order-2">
             <div class="row row-cols-1">
               <div class="col">
                 <label for="price" class="form-label">
@@ -69,7 +131,13 @@
               <div class="col">
                 <div class="d-flex justify-content-between gap-2">
                   <div class="">
-                    <input type="text" class="form-control" placeholder="min" />
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="min"
+                      :disabled="carpetType == 'default'"
+                      v-model="min"
+                    />
                   </div>
                   <span
                     class="d-flex justify-content-center align-items-center"
@@ -77,26 +145,41 @@
                     -
                   </span>
                   <div class="">
-                    <input type="text" class="form-control" placeholder="max" />
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="max"
+                      :disabled="carpetType == 'default'"
+                      v-model="max"
+                    />
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-md-4 col-lg-4 d-flex align-items-end">
+          <div
+            class="
+              col-sm-5 col-md-4 col-lg-3
+              d-flex
+              align-items-end
+              order-sm-4 order-md-last order-lg-3
+              mt-md-2 mt-lg-0
+            "
+          >
             <div class="form-check form-switch form-switch-md mb-2">
               <input
                 class="form-check-input"
                 type="checkbox"
                 id="onlyOpenOnes"
+                v-model="onlyOpen"
               />
               <label class="form-check-label mt-1 ms-1" for="onlyOpenOnes"
                 >Sadece açık olanlar</label
               >
             </div>
           </div>
-          <div class="col-md-1 d-grid align-items-end ps-md-0">
-            <button class="btn mb-md-1" @click="find">Bul</button>
+          <div class="col-md-2 d-grid order-4">
+            <button class="btn mt-md-1" @click="find">Bul</button>
           </div>
         </div>
       </div>
@@ -191,16 +274,34 @@ export default {
     const cities = ref([]);
     const districts = ref([]);
     const neighborhoods = ref([]);
+    const carpetType = ref("default");
+    const skeletonSelect = ref(true);
+    const min = ref("");
+    const max = ref("");
+    const sort = ref("default");
+    const onlyOpen = ref(false);
+
+    db.collection("cities")
+      .get()
+      .then((snap) => {
+        snap.forEach((doc) => {
+          cities.value.push(doc.data().name);
+        });
+        cities.value.sort(new Intl.Collator("de").compare);
+      });
 
     onBeforeMount(async () => {
       if (firebase.auth().currentUser) {
-        const getUser = firebase.functions().httpsCallable("getUser");
+        /*const getUser = firebase.functions().httpsCallable("getUser");
         const res = await getUser({
           id: firebase.auth().currentUser.uid,
           collection: firebase.auth().currentUser.displayName + "s",
-        });
-        const user = res.data;
-        console.log(user);
+        });*/
+        const res = await db
+          .collection(firebase.auth().currentUser.displayName + "s")
+          .doc(firebase.auth().currentUser.uid)
+          .get();
+        const user = res.data();
         city.value = user.city;
         dist.value = user.district;
         nbhd.value = user.neighborhood;
@@ -208,37 +309,13 @@ export default {
           .collection("cities")
           .where("name", "==", city.value)
           .get();
-        /*.then((snap) => {
-            snap.forEach((doc) => {
-              doc.data().districts.forEach((district) => {
-                districts.value.push(district.name);
-              });
-            });
-            districts.value.sort(new Intl.Collator("de").compare);
-          });*/
+
         cityDoc.forEach((doc) => {
           doc.data().districts.forEach((district) => {
             districts.value.push(district.name);
           });
         });
         districts.value.sort(new Intl.Collator("de").compare);
-
-        /*db.collection("cities")
-          .where("name", "==", city.value)
-          .get()
-          .then((snap) => {
-            snap.forEach((doc) => {
-              doc.data().districts.some((district) => {
-                if (district.name === dist.value) {
-                  district.neighborhoods.forEach((neighborhood) => {
-                    neighborhoods.value.push(neighborhood);
-                  });
-                  return true;
-                }
-              });
-            });
-            districts.value.sort(new Intl.Collator("de").compare);
-          });*/
         cityDoc.forEach((doc) => {
           doc.data().districts.some((district) => {
             if (district.name === dist.value) {
@@ -250,10 +327,12 @@ export default {
           });
         });
         neighborhoods.value.sort(new Intl.Collator("de").compare);
+        skeletonSelect.value = false;
       } else {
         city.value = "default";
         dist.value = "default";
         nbhd.value = "default";
+        skeletonSelect.value = false;
       }
     });
     /*var file;
@@ -263,14 +342,6 @@ export default {
       let res = await ref.put(file);
       console.log(res);
     };*/
-    db.collection("cities")
-      .get()
-      .then((snap) => {
-        snap.forEach((doc) => {
-          cities.value.push(doc.data().name);
-        });
-        cities.value.sort(new Intl.Collator("de").compare);
-      });
 
     const onCityChange = async () => {
       districts.value = [];
@@ -289,9 +360,6 @@ export default {
       districts.value.sort(new Intl.Collator("de").compare);
       dist.value = "default";
       nbhd.value = "default";
-      is_dist_valid.value = null;
-      is_nbhd_valid.value = null;
-      is_city_valid.value = city.value != "default";
     };
 
     const onDistrictChange = async () => {
@@ -315,10 +383,60 @@ export default {
 
       neighborhoods.value.sort(new Intl.Collator("de").compare);
       nbhd.value = "default";
-      is_nbhd_valid.value = null;
-      is_dist_valid.value = dist.value != "default";
     };
-    const find = () => {};
+    const find = async () => {
+      var result;
+      //var resultArray = [];
+      if (city.value != "default") {
+        var cityRes = db.collection("firms").where("city", "==", city.value);
+        if (dist.value != "default") {
+          var distRes = cityRes.where("district", "==", dist.value);
+          if (nbhd.value != "default") {
+            result = await distRes
+              .where("neighborhood", "==", nbhd.value)
+              .get();
+          } else {
+            result = await distRes.get();
+          }
+        } else {
+          result = await cityRes.get();
+        }
+      } else {
+        result = await db.collection("firms").get();
+      }
+
+      /*result.forEach((doc) => {
+        resultArray.push(doc.data());
+      });*/
+
+      if (sort.value != "default") {
+        if (sort.value == "name") {
+          //resultArray.sort(new Intl.Collator("de").compare);
+          result.query.orderBy("name");
+        }
+      }
+
+      if (carpetType.value != "default") {
+        let minVal = min.value == "" ? 0 : parseInt(min.value);
+        let maxVal = max.value == "" ? Number.MAX_VALUE : parseInt(max.value);
+        result = await result.query
+          .where(`prices[${carpetType.value}]`, ">=", minVal)
+          .where(`prices[${carpetType.value}]`, "<=", maxVal)
+          .get();
+        /*let temp = [];
+          result.forEach(doc => {
+          let price = doc.data().prices[carpetType.value]
+          if(price > minVal && price < maxVal) {
+            temp.push(doc);
+          }
+        })*/
+      }
+
+      if (onlyOpen.value) {
+        let date = new Date();
+        let today = date.toLocaleString("en-US", { weekday: "long" });
+      }
+    };
 
     return {
       //getFile,
@@ -329,6 +447,15 @@ export default {
       nbhd,
       onCityChange,
       onDistrictChange,
+      carpetType,
+      cities,
+      districts,
+      neighborhoods,
+      skeletonSelect,
+      min,
+      max,
+      sort,
+      onlyOpen,
     };
   },
 };
@@ -370,5 +497,13 @@ export default {
   border-radius: 0.125rem;
   opacity: 0.8;
   animation: skeleton-loading 1s linear infinite alternate;
+}
+
+.form-check-input:focus {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%28120, 150, 120, 0.70%29'/%3e%3c/svg%3e") !important;
+}
+
+.form-check-input:checked {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
 }
 </style>

@@ -24,7 +24,7 @@
                 About
               </router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="user_type != 'firm'">
               <router-link
                 :to="{ name: 'Firms', params: { page: 1 } }"
                 class="nav-link"
@@ -181,14 +181,6 @@ a:not(.btn):hover {
   box-shadow: 0 0 0 0.25rem rgb(120 150 120 / 25%);
 }
 
-.form-check-input:focus {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%28120, 150, 120, 0.70%29'/%3e%3c/svg%3e") !important;
-}
-
-.form-check-input:checked {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
-}
-
 .form-select:focus,
 .form-control:focus,
 .form-control:focus + span {
@@ -202,6 +194,11 @@ span {
 .page-link:focus,
 .page-link:hover {
   color: hsl(120, 12.5%, 45%);
+}
+
+.skeleton {
+  opacity: 0.8;
+  animation: skeleton-loading 1s linear infinite alternate;
 }
 
 @keyframes skeleton-loading {

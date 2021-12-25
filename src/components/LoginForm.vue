@@ -15,8 +15,10 @@
             :placeholder="placeholder"
             autocomplete="off"
             v-model="email"
-            @keyup="
-              is_email_valid = /^([a-z][a-z0-9_-]*@[a-z]+\.[a-z]+)$/.test(email)
+            @keydown="
+              is_email_valid = isModifierKey($event)
+                ? ''
+                : /^([a-z][a-z0-9_-]*@[a-z]+\.[a-z]+)$/.test(email)
             "
             :class="{
               '': is_email_valid === '',
@@ -44,7 +46,9 @@
             class="form-control border-end-0"
             autocomplete="off"
             v-model="password"
-            @keyup="is_pwd_valid = password.length >= 6"
+            @keydown="
+              is_pwd_valid = isModifierKey($event) ? '' : password.length >= 6
+            "
             :class="{
               '': is_pwd_valid === '',
               'is-valid': is_pwd_valid,
@@ -148,7 +152,6 @@
 import { ref } from "@vue/reactivity";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-import db from "../firebase";
 import { useRouter } from "vue-router";
 export default {
   name: "LoginForm",
@@ -165,10 +168,62 @@ export default {
     const error = ref(false);
     const is_pwd = ref(true);
     const router = useRouter();
-    const always_login = ref(null);
+    const always_login = ref(false);
 
-    const login = () => {
-      db.collection(props.user_type + "s")
+    const isModifierKey = (event) => {
+      console.log(event);
+      const key = event.keyCode;
+      return (
+        event.shiftKey === true ||
+        key === 35 ||
+        key === 36 || // Allow Shift, Home, End
+        key === 8 ||
+        key === 9 ||
+        key === 13 ||
+        key === 46 || // Allow Backspace, Tab, Enter, Delete
+        (key > 36 && key < 41) || // Allow left, up, right, down
+        // Allow Ctrl/Command + A,C,V,X,Z
+        ((event.ctrlKey === true || event.metaKey === true) &&
+          (key === 65 || key === 67 || key === 86 || key === 88 || key === 90))
+      );
+    };
+
+    const login = async () => {
+      try {
+        const getUserByEmail = firebase
+          .functions()
+          .httpsCallable("getUserByEmail");
+        const userInfo = (await getUserByEmail({ email: email.value })).data;
+        if (props.user_type == userInfo.displayName) {
+          try {
+            await firebase
+              .auth()
+              .signInWithEmailAndPassword(email.value, password.value);
+            if (always_login.value) {
+              firebase
+                .auth()
+                .setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+            } else {
+              firebase
+                .auth()
+                .setPersistence(firebase.auth.Auth.Persistence.SESSION);
+            }
+            router.replace("/");
+          } catch (error) {
+            throw error;
+          }
+        } else {
+          throw { message: "not in collection " + props.user_type };
+        }
+      } catch (err) {
+        console.log(err.message);
+        error.value = true;
+        email.value = "";
+        password.value = "";
+        is_email_valid.value = "";
+        is_pwd_valid.value = "";
+      }
+      /*db.collection(props.user_type + "s")
         .where("email", "==", email.value)
         .get()
         .then((snap) => {
@@ -181,7 +236,7 @@ export default {
           }
         })
         .then((user) => {
-          if (always_login) {
+          if (always_login.value) {
             firebase
               .auth()
               .setPersistence(firebase.auth.Auth.Persistence.LOCAL);
@@ -199,7 +254,7 @@ export default {
           password.value = "";
           is_email_valid.value = "";
           is_pwd_valid.value = "";
-        });
+        });*/
     };
 
     return {
@@ -211,6 +266,7 @@ export default {
       error,
       is_pwd,
       always_login,
+      isModifierKey,
     };
   },
 };

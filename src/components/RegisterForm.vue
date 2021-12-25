@@ -13,7 +13,9 @@
             class="form-control"
             :id="user_type + '-name'"
             autocomplete="off"
-            @keyup="is_name_valid = name.length != 0"
+            @keydown="
+              is_name_valid = isModifierKey($event) ? '' : name.length != 0
+            "
             :class="{
               '': is_name_valid === '',
               'is-valid': is_name_valid,
@@ -35,11 +37,11 @@
             autocomplete="off"
             maxlength="14"
             :id="user_type + '-phone'"
-            @keydown="enforceFormat"
-            @keyup="
-              formatToPhone($event);
-              is_phone_valid = phone.length == 14;
+            @keydown="
+              enforceFormat($event);
+              is_phone_valid = isModifierKey($event) ? '' : phone.length == 14;
             "
+            @keyup="formatToPhone($event)"
             :class="{
               '': is_phone_valid === '',
               'is-valid': is_phone_valid,
@@ -63,8 +65,10 @@
             :id="user_type + '-email'"
             autocomplete="off"
             placeholder="example@example.com"
-            @keyup="
-              is_email_valid = /^([a-z][a-z0-9_-]*@[a-z]+\.[a-z]+)$/.test(email)
+            @keydown="
+              is_email_valid = isModifierKey($event)
+                ? ''
+                : /^([a-z][a-z0-9_-]*@[a-z]+\.[a-z]+)$/.test(email)
             "
             :class="{
               '': is_email_valid === '',
@@ -88,7 +92,9 @@
             class="form-control border-end-0"
             :id="user_type + '-password'"
             autocomplete="off"
-            @keyup="is_pwd_valid = pwd.length >= 6"
+            @keydown="
+              is_pwd_valid = isModifierKey($event) ? '' : pwd.length >= 6
+            "
             :class="{
               '': is_pwd_valid === '',
               'is-valid': is_pwd_valid,
@@ -208,7 +214,9 @@
             rows="2"
             style="resize: none"
             autocomplete="off"
-            @keyup="is_addr_valid = addr.length != 0"
+            @keydown="
+              is_addr_valid = isModifierKey($event) ? '' : addr.length != 0
+            "
             :class="{
               '': is_addr_valid === '',
               'is-valid': is_addr_valid,
@@ -532,6 +540,7 @@ export default {
       register,
       error,
       employeeRegister,
+      isModifierKey,
     };
   },
 };

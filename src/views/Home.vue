@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import db from "../firebase";
+import db, { functions } from "../firebase";
 import { ref } from "@vue/reactivity";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
@@ -20,6 +20,12 @@ export default {
   setup() {
     const users = ref([]);
     const show = ref(false);
+
+    var today = new Date();
+    console.log(today.toLocaleString("tr-TR", { weekday: "long" }));
+    console.log(today.getHours(), today.getMinutes());
+    console.log(today.getTime());
+
     const showUsers = async () => {
       /*const authList = firebase.functions().httpsCallable("getAuthList");
       console.log(authList);
@@ -50,7 +56,7 @@ export default {
       console.log(res.data);
       users.value = res.data;
       show.value = true;*/
-      const getUser = firebase.functions().httpsCallable("getUser");
+      const getUser = functions.httpsCallable("getUser");
       const res = await getUser({
         id: "DrXGn3nAw9WZPpDxDa4W6SQNY2K2",
         collection: "employees",

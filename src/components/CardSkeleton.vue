@@ -26,11 +26,6 @@ export default {
 </script>
 
 <style scoped>
-.skeleton {
-  opacity: 0.8;
-  animation: skeleton-loading 1s linear infinite alternate;
-}
-
 .card-title {
   width: 100%;
   height: 1.25rem;
