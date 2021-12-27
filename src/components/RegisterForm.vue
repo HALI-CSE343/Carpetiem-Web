@@ -13,9 +13,7 @@
             class="form-control"
             :id="user_type + '-name'"
             autocomplete="off"
-            @keydown="
-              is_name_valid = isModifierKey($event) ? '' : name.length != 0
-            "
+            @keyup="is_name_valid = name.length != 0"
             :class="{
               '': is_name_valid === '',
               'is-valid': is_name_valid,
@@ -37,11 +35,11 @@
             autocomplete="off"
             maxlength="14"
             :id="user_type + '-phone'"
-            @keydown="
-              enforceFormat($event);
-              is_phone_valid = isModifierKey($event) ? '' : phone.length == 14;
+            @keydown="enforceFormat"
+            @keyup="
+              formatToPhone($event);
+              is_phone_valid = phone.length == 14;
             "
-            @keyup="formatToPhone($event)"
             :class="{
               '': is_phone_valid === '',
               'is-valid': is_phone_valid,
@@ -65,10 +63,8 @@
             :id="user_type + '-email'"
             autocomplete="off"
             placeholder="example@example.com"
-            @keydown="
-              is_email_valid = isModifierKey($event)
-                ? ''
-                : /^([a-z][a-z0-9_-]*@[a-z]+\.[a-z]+)$/.test(email)
+            @keyup="
+              is_email_valid = /^([a-z][a-z0-9_-]*@[a-z]+\.[a-z]+)$/.test(email)
             "
             :class="{
               '': is_email_valid === '',
@@ -92,9 +88,7 @@
             class="form-control border-end-0"
             :id="user_type + '-password'"
             autocomplete="off"
-            @keydown="
-              is_pwd_valid = isModifierKey($event) ? '' : pwd.length >= 6
-            "
+            @keyup="is_pwd_valid = pwd.length >= 6"
             :class="{
               '': is_pwd_valid === '',
               'is-valid': is_pwd_valid,
@@ -214,9 +208,7 @@
             rows="2"
             style="resize: none"
             autocomplete="off"
-            @keydown="
-              is_addr_valid = isModifierKey($event) ? '' : addr.length != 0
-            "
+            @keyup="is_addr_valid = addr.length != 0"
             :class="{
               '': is_addr_valid === '',
               'is-valid': is_addr_valid,
@@ -273,7 +265,7 @@
         </router-link>
       </div>
       <div class="row">
-        <div class="col-md-auto mx-auto" v-if="user_type != 'firm'">
+        <div class="col-md-auto mx-auto" v-if="user_type == 'customer'">
           Firmanız mı var?
           <router-link
             :to="{ name: 'FirmRegister' }"
@@ -289,10 +281,7 @@
 
 <script>
 import { ref } from "@vue/reactivity";
-import db from "../firebase";
-import { storage } from "../firebase";
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
+import db, { storage, auth, functions } from "../firebase";
 import { useRouter } from "vue-router";
 import { registered } from "../App.vue";
 export default {
@@ -440,8 +429,7 @@ export default {
 
     const register = () => {
       registered(props.user_type);
-      firebase
-        .auth()
+      auth
         .createUserWithEmailAndPassword(email.value, pwd.value)
         .then(async (cred) => {
           db.collection(props.user_type + "s")
@@ -481,29 +469,17 @@ export default {
 
     const employeeRegister = async () => {
       try {
-        var cred = await secondaryApp
-          .auth()
-          .createUserWithEmailAndPassword(email.value, pwd.value);
-
-        await db
-          .collection(props.user_type + "s")
-          .doc(cred.user.uid)
-          .set({
-            name: name.value,
-            phone: phone.value,
-            email: email.value,
-            password: pwd.value,
-            address: addr.value,
-            city: city.value,
-            district: dist.value,
-            neighborhood: nbhd.value,
-          });
-
-        cred.user.updateProfile({
-          displayName: props.user_type,
+        const createUser = functions.httpsCallable("createUser");
+        createUser({
+          name: name.value,
+          phone: phone.value,
+          email: email.value,
+          password: pwd.value,
+          address: addr.value,
+          city: city.value,
+          district: dist.value,
+          neighborhood: nbhd.value,
         });
-
-        secondaryApp.auth().signOut();
         emit("closePopUp");
       } catch {
         error.value = true;
@@ -540,10 +516,18 @@ export default {
       register,
       error,
       employeeRegister,
-      isModifierKey,
     };
   },
 };
 </script>
 
-<style></style>
+<style scoped>
+.btn {
+  background-color: rgb(120, 150, 120);
+  border: rgb(120, 150, 120);
+}
+
+.btn:hover {
+  filter: brightness(85%);
+}
+</style>

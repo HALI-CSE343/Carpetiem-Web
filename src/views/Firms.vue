@@ -217,14 +217,111 @@
             </div>
           </div>
         </div>-->
-    <p class="ms-3 mt-3" v-if="true"><b>8 sonuç bulundu</b></p>
-    <div class="ms-3 mt-3 result-skeleton"></div>
+    <div class="ms-3 mt-3 result-skeleton" v-if="skeleton"></div>
+    <p class="ms-3 mt-3" v-if="!skeleton">
+      <b>{{ resultNum }} sonuç bulundu</b>
+    </p>
     <div class="row justify-content-center" v-if="skeleton">
       <div class="col-10 col-sm-6 d-flex d-sm-block flex-column">
         <CardSkeleton v-for="index in 4" :key="index" />
       </div>
       <div class="col-10 col-sm-6 d-flex d-sm-block flex-column">
         <CardSkeleton v-for="index in 4" :key="index" />
+      </div>
+    </div>
+    <div
+      class="row"
+      :class="{
+        'justify-content-center':
+          resultFirstHalf.length != 0 && resultSecondHalf.length != 0,
+      }"
+      v-if="!skeleton"
+    >
+      <div
+        class="col-10 col-sm-6 d-flex d-sm-block flex-column"
+        v-if="resultFirstHalf.length != 0"
+      >
+        <router-link
+          class="card mx-3 my-3"
+          style="max-width: 540px"
+          v-for="firm in resultFirstHalf"
+          :key="firm"
+          to="#"
+        >
+          <div class="row g-0">
+            <div class="col-sm-4">
+              <img :src="firm.photoURL" class="img-fluid rounded-start w-100" />
+            </div>
+            <div class="col-sm-8">
+              <div class="card-body">
+                <h5 class="card-title">{{ firm.name }}</h5>
+                <p class="card-text">
+                  {{ new Date().toLocaleString("tr-TR", { weekday: "long" }) }}
+                  :
+                  {{
+                    firm.workingHours[
+                      new Date().toLocaleString("en-US", { weekday: "long" })
+                    ].opening
+                  }}
+                  -
+                  {{
+                    firm.workingHours[
+                      new Date().toLocaleString("en-US", { weekday: "long" })
+                    ].closing
+                  }}
+                </p>
+                <p class="card-text">
+                  <small class="text-muted">{{ firm.address }}</small>
+                </p>
+              </div>
+            </div>
+          </div>
+        </router-link>
+      </div>
+      <div
+        class="col-10 col-sm-6 d-flex d-sm-block flex-column"
+        v-if="resultSecondHalf.length != 0"
+      >
+        <router-link
+          class="card mx-3 my-3"
+          style="max-width: 540px"
+          v-for="firm in resultSecondHalf"
+          :key="firm"
+          to="#"
+        >
+          <div class="row g-0">
+            <div class="col-sm-4">
+              <img :src="firm.photoURL" class="img-fluid rounded-start w-100" />
+            </div>
+            <div class="col-sm-8">
+              <div class="card-body">
+                <h5 class="card-title">{{ firm.name }}</h5>
+                <p class="card-text">
+                  {{
+                    new Date()
+                      .toLocaleString("tr-TR", { weekday: "long" })
+                      .toString()
+                  }}
+                  :
+                  {{
+                    firm.workingHours[
+                      new Date().toLocaleString("en-US", { weekday: "long" })
+                    ].opening
+                  }}
+                  -
+                  {{
+                    firm.workingHours[
+                      new Date().toLocaleString("en-US", { weekday: "long" })
+                    ].closing
+                  }}
+                </p>
+                <p class="card-text">
+                  <small class="text-muted">{{ firm.address }}</small>
+                </p>
+              </div>
+            </div>
+          </div>
+        </router-link>
       </div>
     </div>
     <nav aria-label="Page navigation example">
@@ -237,10 +334,16 @@
         <li class="page-item">
           <router-link class="page-link" to="#">1</router-link>
         </li>
-        <li class="page-item">
+        <li
+          class="page-item"
+          v-if="resultFirstHalf.length + resultSecondHalf.length > 8"
+        >
           <router-link class="page-link" to="#">2</router-link>
         </li>
-        <li class="page-item">
+        <li
+          class="page-item"
+          v-if="resultFirstHalf.length + resultSecondHalf.length > 16"
+        >
           <router-link class="page-link" to="#">3</router-link>
         </li>
         <li class="page-item">
@@ -254,15 +357,11 @@
 </template>
 
 <script>
-import { storage } from "../firebase";
+import db, { auth, functions } from "../firebase";
 import ImageSkeleton from "../components/ImageSkeleton.vue";
 import Image from "../components/Image.vue";
 import CardSkeleton from "../components/CardSkeleton.vue";
 import { ref } from "@vue/reactivity";
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
-import "firebase/compat/functions";
-import db from "../firebase";
 import { onBeforeMount } from "@vue/runtime-core";
 export default {
   components: { ImageSkeleton, Image, CardSkeleton },
@@ -280,6 +379,10 @@ export default {
     const max = ref("");
     const sort = ref("default");
     const onlyOpen = ref(false);
+    const resultNum = ref("");
+    const resultFirstHalf = ref([]);
+    const resultSecondHalf = ref([]);
+    var result = [];
 
     db.collection("cities")
       .get()
@@ -291,20 +394,16 @@ export default {
       });
 
     onBeforeMount(async () => {
-      if (firebase.auth().currentUser) {
-        /*const getUser = firebase.functions().httpsCallable("getUser");
-        const res = await getUser({
-          id: firebase.auth().currentUser.uid,
-          collection: firebase.auth().currentUser.displayName + "s",
-        });*/
+      if (auth.currentUser) {
         const res = await db
-          .collection(firebase.auth().currentUser.displayName + "s")
-          .doc(firebase.auth().currentUser.uid)
+          .collection(auth.currentUser.displayName + "s")
+          .doc(auth.currentUser.uid)
           .get();
         const user = res.data();
         city.value = user.city;
         dist.value = user.district;
         nbhd.value = user.neighborhood;
+        find();
         const cityDoc = await db
           .collection("cities")
           .where("name", "==", city.value)
@@ -332,6 +431,7 @@ export default {
         city.value = "default";
         dist.value = "default";
         nbhd.value = "default";
+        find();
         skeletonSelect.value = false;
       }
     });
@@ -385,61 +485,103 @@ export default {
       nbhd.value = "default";
     };
     const find = async () => {
-      var result;
-      //var resultArray = [];
+      skeleton.value = true;
+      result = [];
+      resultFirstHalf.value = [];
+      resultSecondHalf.value = [];
+      var queryRes;
+      //var queryResArray = [];
       if (city.value != "default") {
         var cityRes = db.collection("firms").where("city", "==", city.value);
         if (dist.value != "default") {
           var distRes = cityRes.where("district", "==", dist.value);
           if (nbhd.value != "default") {
-            result = await distRes
+            queryRes = await distRes
               .where("neighborhood", "==", nbhd.value)
               .get();
           } else {
-            result = await distRes.get();
+            queryRes = await distRes.get();
           }
         } else {
-          result = await cityRes.get();
+          queryRes = await cityRes.get();
         }
       } else {
-        result = await db.collection("firms").get();
+        queryRes = await db.collection("firms").get();
       }
-
-      /*result.forEach((doc) => {
-        resultArray.push(doc.data());
-      });*/
 
       if (sort.value != "default") {
         if (sort.value == "name") {
-          //resultArray.sort(new Intl.Collator("de").compare);
-          result.query.orderBy("name");
+          queryRes = await queryRes.query.orderBy("name", "asc").get();
         }
       }
 
       if (carpetType.value != "default") {
         let minVal = min.value == "" ? 0 : parseInt(min.value);
         let maxVal = max.value == "" ? Number.MAX_VALUE : parseInt(max.value);
-        result = await result.query
-          .where(`prices[${carpetType.value}]`, ">=", minVal)
-          .where(`prices[${carpetType.value}]`, "<=", maxVal)
+        queryRes = await queryRes.query
+          .where(`prices.${carpetType.value}`, ">=", minVal)
+          .where(`prices.${carpetType.value}`, "<=", maxVal)
           .get();
-        /*let temp = [];
-          result.forEach(doc => {
-          let price = doc.data().prices[carpetType.value]
-          if(price > minVal && price < maxVal) {
-            temp.push(doc);
-          }
-        })*/
       }
 
       if (onlyOpen.value) {
         let date = new Date();
         let today = date.toLocaleString("en-US", { weekday: "long" });
+        let temp = [];
+        queryRes.forEach((doc) => {
+          let opening = doc.data().workingHours[today].opening;
+          let closing = doc.data().workingHours[today].closing;
+          if (opening != "closed") {
+            let split = opening.split(":");
+            let openingDate = new Date(
+              date.getFullYear(),
+              date.getMonth(),
+              date.getDay(),
+              parseInt(split[0]),
+              parseInt(split[1]),
+              0,
+              0
+            );
+            split = closing.split(":");
+            let closingDate = new Date(
+              date.getFullYear(),
+              date.getMonth(),
+              date.getDay(),
+              parseInt(split[0]),
+              parseInt(split[1]),
+              0,
+              0
+            );
+            if (
+              openingDate.getTime() < date.getTime() &&
+              date.getTime() < closingDate.getDate()
+            ) {
+              temp.push(doc);
+            }
+          }
+        });
+        queryRes = temp;
       }
+
+      let temp = [];
+      queryRes.forEach((doc) => {
+        temp.push(doc);
+      });
+
+      for (const doc of temp) {
+        const getUser = functions.httpsCallable("getUser");
+        result.push((await getUser({ id: doc.id, collection: "firms" })).data);
+        result.at(-1).photoURL =
+          "https://firebasestorage.googleapis.com/v0/b/hali-4cdae.appspot.com/o/ImageNotFound.png?alt=media&token=0627042d-9979-481a-ace2-75bfd10a2fbf";
+      }
+
+      resultNum.value = result.length;
+      resultFirstHalf.value = result.splice(0, result.length / 2);
+      resultSecondHalf.value = result;
+      skeleton.value = false;
     };
 
     return {
-      //getFile,
       skeleton,
       find,
       city,
@@ -456,6 +598,9 @@ export default {
       max,
       sort,
       onlyOpen,
+      resultFirstHalf,
+      resultSecondHalf,
+      resultNum,
     };
   },
 };
@@ -470,9 +615,23 @@ export default {
   }
 }
 
+.btn {
+  background-color: rgb(120, 150, 120);
+  border: rgb(120, 150, 120);
+}
+
+.btn:hover {
+  filter: brightness(85%);
+}
+
+.card:not(.skeleton-card) {
+  transition: transform 350ms ease-in-out;
+}
+
 .card:not(.skeleton-card):hover {
-  box-shadow: 0 10px 25px 5px hsl(120, 12.5%, 52.9%);
-  background-color: hsl(120, 12.5%, 52.9%);
+  box-shadow: 0 10px 25px 5px hsl(120, 12.5%, 60%);
+  background-color: hsl(120, 12.5%, 60%);
+  transform: scale(1.025);
 }
 
 .bar {
@@ -505,5 +664,10 @@ export default {
 
 .form-check-input:checked {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
+}
+
+a.card {
+  text-decoration: none;
+  color: #212529;
 }
 </style>

@@ -119,6 +119,17 @@ export default {
 };
 </script>
 
+<style scoped>
+.btn {
+  background-color: rgb(120, 150, 120);
+  border: rgb(120, 150, 120);
+}
+
+.btn:hover {
+  filter: brightness(85%);
+}
+</style>
+
 <style>
 .button-container {
   flex-grow: 0.1;
@@ -130,15 +141,6 @@ export default {
 
 .navbar-dark .navbar-toggler {
   color: rgb(120, 150, 120);
-}
-
-.btn {
-  background-color: rgb(120, 150, 120);
-  border: rgb(120, 150, 120);
-}
-
-.btn:hover {
-  filter: brightness(85%);
 }
 
 a:not(.btn) {
@@ -210,5 +212,9 @@ span {
     background-color: hsl(200, 20%, 95%);
     color: hsl(200, 20%, 95%);
   }
+}
+
+html {
+  scroll-behavior: smooth;
 }
 </style>

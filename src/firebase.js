@@ -21,5 +21,6 @@ export const timestamp = firebase.firestore.FieldValue.serverTimestamp;
 export const storage = firebaseApp.storage();
 export const functions = firebaseApp.functions("europe-west1");
 export const auth = firebase.auth();
+export const persistence = firebase.auth.Auth.Persistence;
 const db = firebaseApp.firestore();
 export default db;

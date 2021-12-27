@@ -33,6 +33,24 @@ exports.deleteUser = functions
     await admin.auth().deleteUser(data.uid);
   });
 
+exports.createUser = functions
+  .region("europe-west1")
+  .https.onCall(async (data, context) => {
+    const user = await admin.auth().createUser({
+      email: data.email,
+      password: data.password,
+      displayName: "employee",
+    });
+    db.collection("employees").doc(user.uid).set({
+      name: data.name,
+      phone: data.phone,
+      address: data.addr,
+      city: data.city,
+      district: data.dist,
+      neighborhood: data.nbhd,
+    });
+  });
+
 exports.getUser = functions
   .region("europe-west1")
   .https.onCall(async (data, context) => {
