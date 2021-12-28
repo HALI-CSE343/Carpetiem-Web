@@ -5,6 +5,7 @@ import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import EmployeeSettings from "../views/EmployeeSettings.vue";
 import Settings from "../views/Settings.vue";
+import MyOrders from "../views/MyOrders.vue";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { primaryApp } from "../firebase";
@@ -43,6 +44,11 @@ const routes = [
     path: "/settings",
     name: "Settings",
     component: Settings,
+  },
+  {
+    path: "/myorders",
+    name: "MyOrders",
+    component: MyOrders,
   },
 ];
 

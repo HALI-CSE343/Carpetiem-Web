@@ -150,10 +150,6 @@ export default {
                 document.getElementById("error").innerHTML = "";
             });
         }
-        const save_credential = () => {
-
-        }
-
         function verify (providedPassword){
 
             const user = firebase.auth().currentUser;

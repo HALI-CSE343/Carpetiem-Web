@@ -14,7 +14,7 @@
     aria-labelledby="user-dropdown"
   >
     <li>
-      <router-link class="dropdown-item" to="#"> My Orders </router-link>
+      <router-link class="dropdown-item" :to="{ name: 'MyOrders' }"> My Orders </router-link>
     </li>
     <li>
       <router-link class="dropdown-item" :to="{ name: 'Settings' }">
