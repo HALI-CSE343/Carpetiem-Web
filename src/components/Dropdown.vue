@@ -26,6 +26,11 @@
         >Employee Settings</router-link
       >
     </li>
+    <li v-if="user_type == 'firm'">
+      <router-link class="dropdown-item" :to="{ name: 'OrderList' }"
+        >Order List</router-link
+      >
+    </li>
     <li>
       <div class="dropdown-item" @click="logout" style="cursor: pointer">
         Logout

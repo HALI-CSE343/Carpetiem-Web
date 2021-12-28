@@ -4,6 +4,7 @@ import About from "../views/About.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import EmployeeSettings from "../views/EmployeeSettings.vue";
+import OrderList from "../views/OrderList.vue";
 import Settings from "../views/Settings.vue";
 import Firms from "../views/Firms.vue";
 import AdminLogin from "../views/AdminLogin.vue";
@@ -50,6 +51,12 @@ const routes = [
     path: "/employee-settings",
     name: "EmployeeSettings",
     component: EmployeeSettings,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: "/order-list",
+    name: "OrderList",
+    component: OrderList,
     meta: { requiresAuth: true, requiresAdmin: true },
   },
   {

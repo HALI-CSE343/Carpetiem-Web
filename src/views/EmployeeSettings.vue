@@ -15,7 +15,6 @@
                 <th>Tel_no</th>
                 <th>Email</th>
                 <th>Adres</th>
-                <th>Şifre</th>
                 <th>Edit</th>
               </tr>
             </thead>
@@ -34,11 +33,9 @@
                   <p class="empText">{{ employee.address }}</p>
                 </td>
                 <td class="listElement">
-                  <p class="empText">{{ employee.password }}</p>
-                </td>
-                <td class="listElement">
                   <p class="empText"></p>
                   <button
+                    id="edtbtn"
                     class="btn btn-warning"
                     @click="willEdit(employee)"
                     data-bs-toggle="modal"
@@ -48,6 +45,7 @@
                     Edit
                   </button>
                   <button
+                    id="rmwbtn"
                     class="btn btn-danger"
                     @click="removeEmployee(employee)"
                   >
@@ -59,6 +57,7 @@
           </table>
 
           <button
+            id="addbtn"
             class="btn btn-primary"
             data-bs-toggle="modal"
             data-bs-target="#exampleModal2"
@@ -146,6 +145,15 @@ import { ref } from "@vue/reactivity";
 import RegisterForm from "../components/RegisterForm.vue";
 import EditEmployeeForm from "../components/EditEmployeeForm.vue";
 import db, { secondaryApp } from "../firebase";
+//import admin from "../../functions/node_modules/index";
+
+/*
+const functions = require("../../node_modules/firebase-functions");
+const admin = require("../../node_modules/firebase-admin");
+admin.initializeApp({
+  credential: admin.credential.applicationDefault(),
+});
+const db1 = admin.firestore();*/
 
 export default {
   name: "EmployeeSettings",
@@ -162,7 +170,10 @@ export default {
       .get()
       .then((snap) => {
         snap.forEach((doc) => {
-          employees.value.push(doc.data());
+          var empval = doc.data();
+
+          empval.email = "TEMPMAIL@gmail.com";
+          employees.value.push(empval);
         });
         employees.value.sort(new Intl.Collator("de").compare);
       });
@@ -269,157 +280,29 @@ export default {
 
 <style scoped>
 body {
-  margin: 0 0;
-  padding: 0em;
-  min-height: 100vh;
-  max-width: 100vw;
-  display: flex;
-  flex-direction: column;
-}
-article {
-  flex: 1;
-  border: 1px solid orange;
-}
-header,
-footer,
-article {
-  padding: 1em;
-}
-header,
-footer {
-  display: flex;
-  height: 100px;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-}
-article {
-  font-size: 18px;
-}
-table,
-thead,
-tbody,
-tr,
-th,
-td {
-  border-collapse: collapse;
+  margin: 2em;
 }
 table {
-  width: 100%;
+  min-height: 5vh;
+  max-width: 100vw;
 }
-header,
-footer,
-thead {
-  color: white;
-  background-color: orange;
+#addbtn {
+  background: seagreen;
+  max-width: 6em;
+  min-width: 6em;
+  border: 3px solid green;
+  padding: 0em;
 }
-th,
-td {
-  padding: 0.5em 0.2em;
+#rmwbtn {
+  background: red;
+  margin: 0.1em;
+  max-width: 6em;
+  min-width: 6em;
 }
-
-tr:nth-child(odd) {
-  background-color: orange;
+#edtbtn {
+  background: orange;
+  margin: 0.1em;
+  max-width: 6em;
+  min-width: 6em;
 }
-.cell-small {
-  width: 5%;
-}
-.cell-medium {
-  width: 20%;
-}
-.cell-large {
-  width: 25%;
-}
-.text-right {
-  text-align: right;
-}
-.text-center {
-  text-align: center;
-}
-.text-left {
-  text-align: left;
-}
-
-input[id="dltBttn"] {
-  margin-right: 1em;
-}
-
-@media screen and (max-width: 750px) {
-  article,
-  body {
-    padding: 0;
-  }
-  table,
-  thead,
-  tbody,
-  tr,
-  th,
-  td {
-    display: block;
-  }
-
-  td {
-    /* Behave  like a "row" */
-    border: none;
-    border-bottom: 1px solid #eee;
-    position: relative;
-    padding-left: 50%;
-  }
-  td:before {
-    /* Now like a table header */
-    position: absolute;
-    /* Top/left values mimic padding */
-    top: 6px;
-    left: 6px;
-    width: 45%;
-    padding-right: 10px;
-    white-space: nowrap;
-    text-align: left;
-  }
-
-  td:nth-of-type(1):before {
-    content: "Name: ";
-  }
-  td:nth-of-type(2):before {
-    content: "Tel-no: ";
-  }
-  td:nth-of-type(3):before {
-    content: "E-posta: ";
-  }
-  td:nth-of-type(4):before {
-    content: "Adres: ";
-  }
-  td:nth-of-type(5):before {
-    content: "Şifre: ";
-  }
-}
-
-/*pop up içi form sonu*/
-
-form {
-  padding: 5%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-label {
-  width: 100px;
-  display: inline-block;
-  text-align: center;
-}
-.for-pwd label,
-input {
-  vertical-align: middle;
-}
-.for-pwd {
-  border-style: groove;
-}
-.bi-eye-slash {
-  margin-left: 40px;
-}
-.bi-eye {
-  margin-left: 40px;
-}
-
-/*pop up içi form sonu*/
 </style>

@@ -29,6 +29,25 @@ exports.deleteUser = functions.https.onCall(async (data, context) => {
   await admin.auth().deleteUser(data.uid);
 });
 
+export const getEmail = functions.firestore
+  .document()
+  .onCreate((snapshot, context) => {
+    const rewdata = snapshot.data();
+  });
+
+exports.getEmail = functions.https.onCall(async (data, context) => {
+  await admin
+    .getAuth()
+    .getUser(uid)
+    .then((userRecord) => {
+      // See the UserRecord reference doc for the contents of userRecord.
+      console.log(`Successfully fetched user data: ${userRecord.toJSON()}`);
+    })
+    .catch((error) => {
+      console.log("Error fetching user data:", error);
+    });
+});
+
 exports.getAllUsers = functions.https.onCall(async (data, context) => {
   try {
     const users = [];
