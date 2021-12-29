@@ -265,7 +265,7 @@
         </router-link>
       </div>
       <div class="row">
-        <div class="col-md-auto mx-auto" v-if="user_type != 'firm'">
+        <div class="col-md-auto mx-auto" v-if="user_type == 'customer'">
           Firmanız mı var?
           <router-link
             :to="{ name: 'FirmRegister' }"
@@ -281,10 +281,7 @@
 
 <script>
 import { ref } from "@vue/reactivity";
-import db from "../firebase";
-import { storage } from "../firebase";
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
+import db, { storage, auth, functions } from "../firebase";
 import { useRouter } from "vue-router";
 import { registered } from "../App.vue";
 export default {
@@ -432,8 +429,7 @@ export default {
 
     const register = () => {
       registered(props.user_type);
-      firebase
-        .auth()
+      auth
         .createUserWithEmailAndPassword(email.value, pwd.value)
         .then(async (cred) => {
           db.collection(props.user_type + "s")
@@ -473,29 +469,17 @@ export default {
 
     const employeeRegister = async () => {
       try {
-        var cred = await secondaryApp
-          .auth()
-          .createUserWithEmailAndPassword(email.value, pwd.value);
-
-        await db
-          .collection(props.user_type + "s")
-          .doc(cred.user.uid)
-          .set({
-            name: name.value,
-            phone: phone.value,
-            email: email.value,
-            password: pwd.value,
-            address: addr.value,
-            city: city.value,
-            district: dist.value,
-            neighborhood: nbhd.value,
-          });
-
-        cred.user.updateProfile({
-          displayName: props.user_type,
+        const createUser = functions.httpsCallable("createUser");
+        createUser({
+          name: name.value,
+          phone: phone.value,
+          email: email.value,
+          password: pwd.value,
+          address: addr.value,
+          city: city.value,
+          district: dist.value,
+          neighborhood: nbhd.value,
         });
-
-        secondaryApp.auth().signOut();
         emit("closePopUp");
       } catch {
         error.value = true;
@@ -537,4 +521,13 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.btn {
+  background-color: rgb(120, 150, 120);
+  border: rgb(120, 150, 120);
+}
+
+.btn:hover {
+  filter: brightness(85%);
+}
+</style>

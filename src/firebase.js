@@ -2,6 +2,7 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import "firebase/compat/auth";
 import "firebase/compat/storage";
+import "firebase/compat/functions";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBiZ0W8druRY1pr5FPOoCFwlk3H2w_pL6o",
@@ -18,5 +19,8 @@ const firebaseConfig = {
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 export const timestamp = firebase.firestore.FieldValue.serverTimestamp;
 export const storage = firebaseApp.storage();
+export const functions = firebaseApp.functions("europe-west1");
+export const auth = firebase.auth();
+export const persistence = firebase.auth.Auth.Persistence;
 const db = firebaseApp.firestore();
 export default db;

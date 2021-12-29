@@ -146,10 +146,8 @@
 
 <script>
 import { ref } from "@vue/reactivity";
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
-import db from "../firebase";
 import { useRouter } from "vue-router";
+import { functions, auth, persistence } from "../firebase";
 export default {
   name: "LoginForm",
   props: {
@@ -165,30 +163,53 @@ export default {
     const error = ref(false);
     const is_pwd = ref(true);
     const router = useRouter();
-    const always_login = ref(null);
+    const always_login = ref(false);
 
-    const login = () => {
-      db.collection(props.user_type + "s")
+    const login = async () => {
+      try {
+        const getUserByEmail = functions.httpsCallable("getUserByEmail");
+        const userInfo = (await getUserByEmail({ email: email.value })).data;
+        if (props.user_type == userInfo.displayName) {
+          try {
+            await auth.signInWithEmailAndPassword(email.value, password.value);
+            if (always_login.value) {
+              auth.setPersistence(persistence.LOCAL);
+            } else {
+              auth.setPersistence(persistence.SESSION);
+            }
+            router.replace("/");
+          } catch (error) {
+            throw error;
+          }
+        } else {
+          throw { message: "not in collection " + props.user_type };
+        }
+      } catch (err) {
+        console.log(err.message);
+        error.value = true;
+        email.value = "";
+        password.value = "";
+        is_email_valid.value = "";
+        is_pwd_valid.value = "";
+      }
+      /*db.collection(props.user_type + "s")
         .where("email", "==", email.value)
         .get()
         .then((snap) => {
           if (snap.size == 0) {
             throw "not in collection";
           } else {
-            return firebase
-              .auth()
+            return auth
               .signInWithEmailAndPassword(email.value, password.value);
           }
         })
         .then((user) => {
-          if (always_login) {
-            firebase
-              .auth()
-              .setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+          if (always_login.value) {
+            auth
+              .setPersistence(persistence.LOCAL);
           } else {
-            firebase
-              .auth()
-              .setPersistence(firebase.auth.Auth.Persistence.SESSION);
+            auth
+              .setPersistence(persistence.SESSION);
           }
           router.replace("/");
         })
@@ -199,7 +220,7 @@ export default {
           password.value = "";
           is_email_valid.value = "";
           is_pwd_valid.value = "";
-        });
+        });*/
     };
 
     return {
@@ -215,6 +236,17 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.btn {
+  background-color: rgb(120, 150, 120);
+  border: rgb(120, 150, 120);
+}
+
+.btn:hover {
+  filter: brightness(85%);
+}
+</style>
 
 <style>
 .form-check-input:checked {

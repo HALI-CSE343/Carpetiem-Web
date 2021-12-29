@@ -9,6 +9,7 @@ import Settings from "../views/Settings.vue";
 import Firms from "../views/Firms.vue";
 import AdminLogin from "../views/AdminLogin.vue";
 import FirmRegister from "../views/FirmRegister.vue";
+import NotFound from "../views/NotFound.vue";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 
@@ -66,9 +67,18 @@ const routes = [
     meta: { requiresAuth: true, requiresCustomer: true },
   },
   {
-    path: "/firms",
+    path: "/firms/page=:page",
     name: "Firms",
     component: Firms,
+  },
+  {
+    path: "/firms",
+    redirect: { name: "Firms", params: { page: 1 } },
+  },
+  {
+    path: "/:catchAll(.*)",
+    name: "NotFound",
+    component: NotFound,
   },
 ];
 

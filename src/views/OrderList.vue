@@ -7,48 +7,90 @@
           <table class="table table-dark table-striped">
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Tel_no</th>
-                <th>Email</th>
-                <th>Adres</th>
-                <th>Şifre</th>
-                <th>Edit</th>
+                <th>Customer Name</th>
+                <th>Customer Tel_no</th>
+                <th>Customer Email</th>
+                <th>Carpet Area</th>
+                <th>Carpet Cost</th>
+                <th>Carpet Type</th>
+                <th>Carpet Status</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="employee in employees" :key="employee">
+              <tr v-for="carpet in carpets" :key="carpet">
                 <td class="listElement">
-                  <p class="empText">{{ employee.name }}</p>
+                  <p class="empText">{{ carpet.name }}</p>
                 </td>
                 <td class="listElement">
-                  <p class="empText">{{ employee.phone }}</p>
+                  <p class="empText">aaa</p>
                 </td>
                 <td class="listElement">
-                  <p class="empText">{{ employee.email }}</p>
+                  <p class="empText">aaa</p>
                 </td>
                 <td class="listElement">
-                  <p class="empText">{{ employee.address }}</p>
+                  <p class="empText">{{ carpet.area }}</p>
                 </td>
                 <td class="listElement">
-                  <p class="empText">{{ employee.password }}</p>
+                  <p class="empText">{{ carpet.cost }}</p>
                 </td>
                 <td class="listElement">
-                  <p class="empText"></p>
-                  <button
-                    id="edtbtn"
-                    class="btn btn-warning"
-                    data-bs-toggle="modal"
-                    data-bs-target="#exampleModal"
-                    data-bs-whatever="@mdo"
-                  >
-                    Edit
-                  </button>
-                  <button id="rmwbtn">Remove</button>
+                  <p class="empText">{{ carpet.type }}</p>
+                </td>
+                <td class="listElement">
+                  <!-- <p class="empText">{{ carpet.status }}</p> -->
+                  <div v-if="carpet.status == status1" class="progress">
+                    <div
+                      class="progress-bar"
+                      role="progressbar"
+                      style="width: 25%"
+                      aria-valuenow="0"
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                    >
+                      {{ carpet.status }}
+                    </div>
+                  </div>
+                  <div v-if="carpet.status == status2" class="progress">
+                    <div
+                      class="progress-bar"
+                      role="progressbar"
+                      style="width: 50%"
+                      aria-valuenow="0"
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                    >
+                      {{ carpet.status }}
+                    </div>
+                  </div>
+                  <div v-if="carpet.status == status3" class="progress">
+                    <div
+                      class="progress-bar"
+                      role="progressbar"
+                      style="width: 75%"
+                      aria-valuenow="0"
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                    >
+                      {{ carpet.status }}
+                    </div>
+                  </div>
+                  <div v-if="carpet.status == status4" class="progress">
+                    <div
+                      class="progress-bar bg-success"
+                      role="progressbar"
+                      style="width: 100%"
+                      aria-valuenow="0"
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                    >
+                      {{ carpet.status }}
+                    </div>
+                  </div>
                 </td>
               </tr>
             </tbody>
           </table>
-
+          <!--
           <button
             id="addbtn"
             class="btn btn-primary"
@@ -57,7 +99,7 @@
             data-bs-whatever="@mdo"
           >
             Add Employee
-          </button>
+          </button> -->
         </div>
 
         <!-- Pop-up tarafı -->
@@ -68,7 +110,6 @@
           tabindex="-1"
           aria-labelledby="exampleModalLabel"
           aria-hidden="true"
-          v-if="willEditEmployee != ''"
         >
           <div class="modal-dialog">
             <div class="modal-content">
@@ -127,11 +168,45 @@
 </template>
 
 <script>
+import { ref } from "@vue/reactivity";
+import db from "../firebase";
 export default {
   name: "OrderList",
   components: {},
   setup() {
-    return {};
+    const customers = ref([]);
+    const carpets = ref([]);
+    const status1 = ref("Alındı");
+    const status2 = ref("Yıkanıyor");
+    const status3 = ref("Kuruyor");
+    const status4 = ref("Getiriliyor");
+
+    db.collection("carpets")
+      .get()
+      .then((snap) => {
+        snap.forEach((doc) => {
+          var tempdata = doc.data();
+          /*db.collection("customers")
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc1) => {
+                console.log(tempdata.customer_id, " => ", doc1.data());
+              });
+            });*/
+
+          //tempdata.name = "BBB";
+          carpets.value.push(tempdata);
+        });
+        carpets.value.sort(new Intl.Collator("de").compare);
+      });
+    return {
+      customers,
+      carpets,
+      status1,
+      status2,
+      status3,
+      status4,
+    };
   },
 };
 

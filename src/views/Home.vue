@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import db from "../firebase";
+import db, { functions } from "../firebase";
 import { ref } from "@vue/reactivity";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
@@ -20,6 +20,12 @@ export default {
   setup() {
     const users = ref([]);
     const show = ref(false);
+
+    var today = new Date();
+    console.log(today.toLocaleString("tr-TR", { weekday: "long" }));
+    console.log(today.getHours(), today.getMinutes());
+    console.log(today.getTime());
+
     const showUsers = async () => {
       /*const authList = firebase.functions().httpsCallable("getAuthList");
       console.log(authList);
@@ -45,11 +51,17 @@ export default {
       const res2 = await cred({ id: "DrXGn3nAw9WZPpDxDa4W6SQNY2K2" });
       console.log(res2.data);
       console.log({ ...res.data.at(0), ...res2.data });*/
-      const getAllUsers = firebase.functions().httpsCallable("getAllUsers");
+      /*const getAllUsers = firebase.functions().httpsCallable("getAllUsers");
       const res = await getAllUsers("");
       console.log(res.data);
       users.value = res.data;
-      show.value = true;
+      show.value = true;*/
+      const getUser = functions.httpsCallable("getUser");
+      const res = await getUser({
+        id: "DrXGn3nAw9WZPpDxDa4W6SQNY2K2",
+        collection: "employees",
+      });
+      console.log(res.data);
     };
 
     return {
@@ -60,3 +72,14 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.btn {
+  background-color: rgb(120, 150, 120);
+  border: rgb(120, 150, 120);
+}
+
+.btn:hover {
+  filter: brightness(85%);
+}
+</style>

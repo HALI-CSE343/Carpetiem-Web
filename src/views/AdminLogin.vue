@@ -1,7 +1,16 @@
 <template>
   <div class="container d-flex flex-column justify-content-center flex-grow-1">
     <div class="row mt-3 mt-md-0">
-      <div class="d-grid mx-auto col-md-5 rounded border py-3">
+      <div
+        class="
+          d-grid
+          mx-auto
+          col-11 col-md-8 col-lg-6 col-xl-5
+          rounded
+          border
+          py-3
+        "
+      >
         <LoginForm
           header="Yönetici Girişi"
           placeholder="admin@admin.com"
