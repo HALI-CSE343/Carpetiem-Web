@@ -58,14 +58,18 @@ exports.getUser = functions
   const userInfo = (
     await db.collection(data.collection).doc(data.id).get()
   ).data();*/
-    const [userCred, userInfo] = await Promise.all([
-      admin.auth().getUser(data.id),
-      db.collection(data.collection).doc(data.id).get(),
-    ]);
-    return {
-      ...userCred,
-      ...userInfo.data(),
-    };
+    try {
+      const [userCred, userInfo] = await Promise.all([
+        admin.auth().getUser(data.id),
+        db.collection(data.collection).doc(data.id).get(),
+      ]);
+      return {
+        ...userCred,
+        ...userInfo.data(),
+      };
+    } catch (err) {
+      throw err;
+    }
   });
 
 exports.getUserByEmail = functions

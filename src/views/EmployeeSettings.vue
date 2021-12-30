@@ -132,7 +132,9 @@ import { ref } from "@vue/reactivity";
 import RegisterForm from "../components/RegisterForm.vue";
 import EditEmployeeForm from "../components/EditEmployeeForm.vue";
 import db, { secondaryApp } from "../firebase";
+import { functions } from "../firebase";
 
+//export const functions = firebaseApp.functions("europe-west1");
 export default {
   name: "EmployeeSettings",
   components: { RegisterForm, EditEmployeeForm },

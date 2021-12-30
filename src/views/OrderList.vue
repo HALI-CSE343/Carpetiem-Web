@@ -19,10 +19,10 @@
             <p class="empText">{{ carpet.name }}</p>
           </td>
           <td class="listElement">
-            <p class="empText">aaa</p>
+            <p class="empText">{{ carpet.phone }}</p>
           </td>
           <td class="listElement">
-            <p class="empText">aaa</p>
+            <p class="empText">{{ carpet.email }}</p>
           </td>
           <td class="listElement">
             <p class="empText">{{ carpet.area }}</p>
@@ -92,7 +92,9 @@
 
 <script>
 import { ref } from "@vue/reactivity";
-import db from "../firebase";
+import firebase from "firebase/compat/app";
+import db, { functions } from "../firebase";
+
 export default {
   name: "OrderList",
   components: {},
@@ -109,7 +111,30 @@ export default {
       .then((snap) => {
         snap.forEach((doc) => {
           var tempdata = doc.data();
+
+          var returned;
           //Customer ID sini al ve bilgilerini getir
+          try {
+            var getUser = functions.httpsCallable("getUser");
+
+            getUser({ id: tempdata.customer_id, collection: "customers" }).then(
+              (result) => {
+                var sanitizedMessage = result.data;
+                returned = result.data;
+                console.log(result.data);
+                tempdata.name = result.data.name;
+                tempdata.phone = result.data.phone;
+                tempdata.email = result.data.email;
+              }
+            );
+          } catch (err) {
+            console.log(err.message);
+          }
+
+          /*tempdata.name = returned.name;
+          tempdata.phone = returned.phone;
+          tempdata.email = returned.email;*/
+
           carpets.value.push(tempdata);
         });
         carpets.value.sort(new Intl.Collator("de").compare);
