@@ -44,20 +44,16 @@ exports.createUser = functions
     db.collection("employees").doc(user.uid).set({
       name: data.name,
       phone: data.phone,
-      address: data.addr,
+      address: data.address,
       city: data.city,
-      district: data.dist,
-      neighborhood: data.nbhd,
+      district: data.district,
+      neighborhood: data.neighborhood,
     });
   });
 
 exports.getUser = functions
   .region("europe-west1")
   .https.onCall(async (data, context) => {
-    /*const userCred = await admin.auth().getUser(data.id);
-  const userInfo = (
-    await db.collection(data.collection).doc(data.id).get()
-  ).data();*/
     try {
       const [userCred, userInfo] = await Promise.all([
         admin.auth().getUser(data.id),
@@ -76,6 +72,22 @@ exports.getUserByEmail = functions
   .region("europe-west1")
   .https.onCall(async (data, context) => {
     return await admin.auth().getUserByEmail(data.email);
+  });
+
+exports.updateEmail = functions
+  .region("europe-west1")
+  .https.onCall(async (data, context) => {
+    admin.auth().updateUser(data.uid, {
+      email: data.email,
+    });
+  });
+
+exports.updatePassword = functions
+  .region("europe-west1")
+  .https.onCall(async (data, context) => {
+    admin.auth().updateUser(data.uid, {
+      password: data.password,
+    });
   });
 
 exports.getAllUsers = functions

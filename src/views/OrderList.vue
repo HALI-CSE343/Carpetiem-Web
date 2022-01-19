@@ -121,21 +121,25 @@ export default {
               (result) => {
                 var sanitizedMessage = result.data;
                 returned = result.data;
-                console.log(result.data);
+                //console.log(result.data);
+                //console.log(result.data.name);
                 tempdata.name = result.data.name;
                 tempdata.phone = result.data.phone;
                 tempdata.email = result.data.email;
+                carpets.value.push(tempdata);
               }
             );
           } catch (err) {
             console.log(err.message);
           }
+          /*
+          tempdata.name = "result.data.name";
+          tempdata.phone = "result.data.phone";
+          tempdata.email = "result.data.email";*/
 
           /*tempdata.name = returned.name;
           tempdata.phone = returned.phone;
           tempdata.email = returned.email;*/
-
-          carpets.value.push(tempdata);
         });
         carpets.value.sort(new Intl.Collator("de").compare);
       });

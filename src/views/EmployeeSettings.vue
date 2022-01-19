@@ -133,6 +133,7 @@ import RegisterForm from "../components/RegisterForm.vue";
 import EditEmployeeForm from "../components/EditEmployeeForm.vue";
 import db, { secondaryApp } from "../firebase";
 import { functions } from "../firebase";
+import { onBeforeMount } from "@vue/runtime-core";
 
 //export const functions = firebaseApp.functions("europe-west1");
 export default {
@@ -146,17 +147,24 @@ export default {
     const password = ref("");
     const willEditEmployee = ref("");
     const employees = ref([]);
-    db.collection("employees")
-      .get()
-      .then((snap) => {
-        snap.forEach((doc) => {
-          var empval = doc.data();
+    onBeforeMount(async () => {
+      var empCol = await db.collection("employees").get();
+      empCol.forEach(async (doc) => {
+        var empId = doc.id;
+        try {
+          var getUser = functions.httpsCallable("getUser");
 
-          empval.email = "TEMPMAIL@gmail.com";
-          employees.value.push(empval);
-        });
-        employees.value.sort(new Intl.Collator("de").compare);
+          var emp = await getUser({
+            id: empId,
+            collection: "employees",
+          });
+          employees.value.push(emp.data);
+        } catch (err) {
+          console.log(err.message);
+        }
       });
+      employees.value.sort(new Intl.Collator("de").compare);
+    });
 
     const willEdit = async (e) => {
       willEditEmployee.value = e;
@@ -175,31 +183,65 @@ export default {
     };
 
     const removeEmployee = async (e) => {
+      console.log(e.uid);
       try {
-        var snap = await db
-          .collection("employees")
-          .where("email", "==", e.email)
-          .get();
+        db.collection("employees").doc(e.uid).delete();
+        var deleteUser = functions.httpsCallable("deleteUser");
 
-        snap.forEach(async (doc) => {
-          await db.collection("employees").doc(doc.id).delete();
+        var emp = await deleteUser({
+          uid: e.uid,
         });
 
+        /*
         secondaryApp
           .auth()
           .signInWithEmailAndPassword(e.email, e.password)
           .then((user) => {
             user.user.delete();
             secondaryApp.auth().signOut();
-          });
+          });*/
 
         employees.value = [];
-
-        snap = await db.collection("employees").get();
+        /*
+        var snap = await db.collection("employees").get();
         snap.forEach((doc) => {
           employees.value.push(doc.data());
         });
+        employees.value.sort(new Intl.Collator("de").compare);*/
+        var empCol = await db.collection("employees").get();
+        empCol.forEach(async (doc) => {
+          var empId = doc.id;
+          try {
+            var getUser = functions.httpsCallable("getUser");
+
+            var emp = await getUser({
+              id: empId,
+              collection: "employees",
+            });
+            employees.value.push(emp.data);
+          } catch (err) {
+            console.log(err.message);
+          }
+        });
         employees.value.sort(new Intl.Collator("de").compare);
+        /*
+          then((snap) => {
+            snap.forEach(async (doc) => {
+              var empId = doc.id;
+              try {
+                var getUser = functions.httpsCallable("getUser");
+
+                var emp = await getUser({
+                  id: empId,
+                  collection: "employees",
+                });
+                employees.value.push(emp.data);
+              } catch (err) {
+                console.log(err.message);
+              }
+            });
+            employees.value.sort(new Intl.Collator("de").compare);
+          });*/
       } catch (err) {
         console.log(err.message);
       }
