@@ -83,6 +83,8 @@ export const registered = (type) => {
   registered_type.value = type;
 };
 
+export const admin_uid = ref("");
+
 export default {
   name: "App",
   components: { Dropdown, DropdownSkeleton },
@@ -101,6 +103,7 @@ export default {
           : registered_type.value
         : "none";
       user_uid.value = !!user ? user.uid : "none";
+      admin_uid.value = user_type.value == "firm" ? user.uid : "";
     });
 
     const logout = () => {
