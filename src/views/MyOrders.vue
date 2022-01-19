@@ -73,7 +73,7 @@ export default {
             card.setAttribute("class" , "card");
             card_body.setAttribute("class" , "card-body");
             card_title.setAttribute("class" , "card-title");
-            card_title.innerText = "qq";
+            card_title.innerText = "";
 
             card.appendChild(card_title);  
             card.appendChild(document.createTextNode(str));
