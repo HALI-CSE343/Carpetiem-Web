@@ -129,6 +129,7 @@
                 <RegisterForm
                   user_type="employee"
                   @closePopUp="closeRegister"
+                  :admin_id="admin_uid"
                 />
               </div>
             </div>
@@ -145,12 +146,14 @@ import { ref } from "@vue/reactivity";
 
 import RegisterForm from "../components/RegisterForm.vue";
 import EditEmployeeForm from "../components/EditEmployeeForm.vue";
-import db, { secondaryApp } from "../firebase";
+import db from "../firebase";
+import { admin_uid } from "../App.vue";
 
 export default {
   name: "EmployeeSettings",
   components: { RegisterForm, EditEmployeeForm },
   setup() {
+    console.log(admin_uid.value);
     const userName = ref("");
     const telNo = ref("");
     const email = ref("");

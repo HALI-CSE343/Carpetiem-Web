@@ -289,9 +289,11 @@ export default {
   props: {
     header: String,
     user_type: String,
+    admin_id: String,
   },
   emits: ["closePopUp"],
   setup(props, { emit }) {
+    console.log(props.admin_id);
     const city = ref("default");
     const dist = ref("default");
     const nbhd = ref("default");
@@ -479,6 +481,7 @@ export default {
           city: city.value,
           district: dist.value,
           neighborhood: nbhd.value,
+          firmID: props.admin_id,
         });
         emit("closePopUp");
       } catch {

@@ -1,9 +1,14 @@
+require("dotenv").config();
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
 });
 const db = admin.firestore();
+/*const express = require("express");
+const app = express;
+app.request(express.json());
+const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);*/
 
 exports.getUsersByCollection = functions
   .region("europe-west1")
@@ -54,10 +59,6 @@ exports.createUser = functions
 exports.getUser = functions
   .region("europe-west1")
   .https.onCall(async (data, context) => {
-    /*const userCred = await admin.auth().getUser(data.id);
-  const userInfo = (
-    await db.collection(data.collection).doc(data.id).get()
-  ).data();*/
     const [userCred, userInfo] = await Promise.all([
       admin.auth().getUser(data.id),
       db.collection(data.collection).doc(data.id).get(),
@@ -96,4 +97,20 @@ exports.getAllUsers = functions
     } catch (err) {
       throw err;
     }
+  });
+
+exports.updateEmail = functions
+  .region("europe-west1")
+  .https.onCall(async (data, context) => {
+    admin.auth().updateUser(data.uid, {
+      email: data.email,
+    });
+  });
+
+exports.updatePassword = functions
+  .region("europe-west1")
+  .https.onCall(async (data, context) => {
+    admin.auth().updateUser(data.uid, {
+      password: data.password,
+    });
   });

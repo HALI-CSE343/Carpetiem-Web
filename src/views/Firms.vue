@@ -629,8 +629,8 @@ export default {
 }
 
 .card:not(.skeleton-card):hover {
-  box-shadow: 0 10px 25px 5px hsl(120, 12.5%, 60%);
-  background-color: hsl(120, 12.5%, 60%);
+  box-shadow: 0 10px 25px 5px hsl(120, 12.5%, 70%);
+  background-color: hsl(120, 12.5%, 67%);
   transform: scale(1.025);
 }
 
