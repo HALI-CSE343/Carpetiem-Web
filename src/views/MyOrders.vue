@@ -6,15 +6,19 @@
                 <li v-for="item in carpets" :key='item.area' class = "card mx-3 my-3">  
                         <div class="row g-0">
                             <div class="col-sm-4">
+                                <img src="https://firebasestorage.googleapis.com/v0/b/hali-4cdae.appspot.com/o/LOGO.png?alt=media&token=c37f9ffd-49d2-429b-b246-4048053c8764" class="img-fluid rounded-start w-100" />
                             </div>
                             <div class="col-sm-8">
                             <div class="card-body">
                                 <h5 class="card-title"> {{  }} </h5>
                                 <p class="card-text">
-                                {{ item.area }} {{ item.type }} {{ item.status }} 
+                                Alanı: {{ item.area }} m2
                                 </p>
                                 <p class="card-text">
-                                <small class="text-muted">xx</small>
+                                Tipi: {{ item.type }}
+                                </p>
+                                <p class="card-text">
+                                Durumu: {{ item.status }} 
                                 </p>
                             </div>
                         </div>
