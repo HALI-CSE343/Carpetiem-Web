@@ -11,6 +11,7 @@ import FirmRegister from "../views/FirmRegister.vue";
 import NotFound from "../views/NotFound.vue";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
+import OrderList from "../views/OrderList.vue";
 
 const routes = [
   {
@@ -67,6 +68,12 @@ const routes = [
   {
     path: "/firms",
     redirect: { name: "Firms", params: { page: 1 } },
+  },
+  {
+    path: "/orderlist",
+    name: "OrderList",
+    component: OrderList,
+    meta: { requiresAuth: true, requiresAdmin: true },
   },
   {
     path: "/:catchAll(.*)",

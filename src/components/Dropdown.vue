@@ -26,6 +26,7 @@
         >Employee Settings</router-link
       >
     </li>
+    
     <li>
       <div class="dropdown-item" @click="logout" style="cursor: pointer">
         Logout
