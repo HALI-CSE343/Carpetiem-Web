@@ -250,9 +250,9 @@
 
 <script>
 import { ref } from "@vue/reactivity";
-import db from "../firebase";
+import db, { functions } from "../firebase";
 import "firebase/compat/auth";
-import { secondaryApp } from "../firebase";
+//import { secondaryApp } from "../firebase";
 import { watch } from "@vue/runtime-core";
 
 export default {
@@ -476,30 +476,40 @@ export default {
 
     const edit = async () => {
       try {
-        var cred = await secondaryApp
+        /*var cred = await secondaryApp
           .auth()
           .signInWithEmailAndPassword(
             props.employee.email,
             props.employee.password
-          );
-        await db.collection("employees").doc(cred.user.uid).update({
+          );*/
+        await db.collection("employees").doc(props.employee.uid).update({
           name: name.value,
           phone: phone.value,
-          email: email.value,
-          password: pwd.value,
           address: addr.value,
           city: city.value,
           district: dist.value,
           neighborhood: nbhd.value,
         });
 
+        var getUserByEmail = functions.httpsCallable("getUserByEmail");
+        var user = (await getUserByEmail({ email: props.employee.email })).data;
+        console.log(user);
         if (email.value != props.employee.email) {
-          cred.user.updateEmail(email.value);
+          var updateEmail = functions.httpsCallable("updateEmail");
+          updateEmail({
+            email: email.value,
+            uid: props.employee.uid,
+          });
         }
 
-        if (password.value != props.employee.password) {
-          cred.user.updatePassword(password.value);
+        if (pwd.value.length != 0) {
+          var updatePassword = functions.httpsCallable("updatePassword");
+          updatePassword({
+            password: pwd.value,
+            uid: props.employee.uid,
+          });
         }
+
         emit("closePopUp");
       } catch (error) {
         console.log(error.message);

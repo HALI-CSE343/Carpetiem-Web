@@ -289,7 +289,6 @@ export default {
   props: {
     header: String,
     user_type: String,
-    admin_id: String,
   },
   emits: ["closePopUp"],
   setup(props, { emit }) {
@@ -300,6 +299,7 @@ export default {
     const phone = ref("");
     const email = ref("");
     const pwd = ref("");
+    const firmId = ref("");
     const addr = ref("");
     const cities = ref([]);
     const districts = ref([]);
@@ -470,6 +470,7 @@ export default {
 
     const employeeRegister = async () => {
       try {
+        console.log(addr.value);
         const createUser = functions.httpsCallable("createUser");
         createUser({
           name: name.value,
@@ -480,7 +481,9 @@ export default {
           city: city.value,
           district: dist.value,
           neighborhood: nbhd.value,
-          firmID: props.admin_id,
+          //firmId:
+        }).then((user) => {
+          console.log(user.data);
         });
         emit("closePopUp");
       } catch {
@@ -518,6 +521,7 @@ export default {
       register,
       error,
       employeeRegister,
+      firmId,
     };
   },
 };
