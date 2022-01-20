@@ -188,35 +188,6 @@
   <div
     class="container-xl d-flex flex-column justify-content-start flex-grow-1"
   >
-    <!--<div class="card mx-3 mt-3" style="max-width: 540px">
-          <div class="row g-0">
-            <div class="col-sm-4">
-              <Suspense>
-                <template #default>
-                  <Image />
-                </template>
-                <template #fallback>
-                  <ImageSkeleton />
-                </template>
-              </Suspense>
-            </div>
-            <div class="col-sm-8">
-              <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">
-                  This is a wider card with supporting text below as a natural
-                  lead-in to additional content. This content is a little bit
-                  longer.
-                </p>
-                <p class="card-text">
-                  <small class="text-muted"
-                    >Gebze Teknik Üniversitesi, Kocaeli</small
-                  >
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>-->
     <div class="ms-3 mt-3 result-skeleton" v-if="skeleton"></div>
     <p class="ms-3 mt-3" v-if="!skeleton">
       <b>{{ resultNum }} sonuç bulundu</b>
@@ -358,13 +329,11 @@
 
 <script>
 import db, { auth, functions } from "../firebase";
-import ImageSkeleton from "../components/ImageSkeleton.vue";
-//import Image from "../components/Image.vue";
 import CardSkeleton from "../components/CardSkeleton.vue";
 import { ref } from "@vue/reactivity";
 import { onBeforeMount } from "@vue/runtime-core";
 export default {
-  components: { ImageSkeleton, /*Image,*/ CardSkeleton },
+  components: { CardSkeleton },
   setup() {
     const skeleton = ref(true);
     const city = ref("");
