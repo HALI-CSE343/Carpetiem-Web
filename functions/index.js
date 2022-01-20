@@ -1,14 +1,9 @@
-require("dotenv").config();
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
 });
 const db = admin.firestore();
-/*const express = require("express");
-const app = express;
-app.request(express.json());
-const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);*/
 
 exports.getUsersByCollection = functions
   .region("europe-west1")
@@ -49,30 +44,50 @@ exports.createUser = functions
     db.collection("employees").doc(user.uid).set({
       name: data.name,
       phone: data.phone,
-      address: data.addr,
+      address: data.address,
       city: data.city,
-      district: data.dist,
-      neighborhood: data.nbhd,
+      district: data.district,
+      neighborhood: data.neighborhood,
     });
   });
 
 exports.getUser = functions
   .region("europe-west1")
   .https.onCall(async (data, context) => {
-    const [userCred, userInfo] = await Promise.all([
-      admin.auth().getUser(data.id),
-      db.collection(data.collection).doc(data.id).get(),
-    ]);
-    return {
-      ...userCred,
-      ...userInfo.data(),
-    };
+    try {
+      const [userCred, userInfo] = await Promise.all([
+        admin.auth().getUser(data.id),
+        db.collection(data.collection).doc(data.id).get(),
+      ]);
+      return {
+        ...userCred,
+        ...userInfo.data(),
+      };
+    } catch (err) {
+      throw err;
+    }
   });
 
 exports.getUserByEmail = functions
   .region("europe-west1")
   .https.onCall(async (data, context) => {
     return await admin.auth().getUserByEmail(data.email);
+  });
+
+exports.updateEmail = functions
+  .region("europe-west1")
+  .https.onCall(async (data, context) => {
+    admin.auth().updateUser(data.uid, {
+      email: data.email,
+    });
+  });
+
+exports.updatePassword = functions
+  .region("europe-west1")
+  .https.onCall(async (data, context) => {
+    admin.auth().updateUser(data.uid, {
+      password: data.password,
+    });
   });
 
 exports.getAllUsers = functions
@@ -97,20 +112,4 @@ exports.getAllUsers = functions
     } catch (err) {
       throw err;
     }
-  });
-
-exports.updateEmail = functions
-  .region("europe-west1")
-  .https.onCall(async (data, context) => {
-    admin.auth().updateUser(data.uid, {
-      email: data.email,
-    });
-  });
-
-exports.updatePassword = functions
-  .region("europe-west1")
-  .https.onCall(async (data, context) => {
-    admin.auth().updateUser(data.uid, {
-      password: data.password,
-    });
   });
