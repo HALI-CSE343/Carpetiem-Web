@@ -12,13 +12,13 @@
                             <div class="card-body">
                                 <h5 class="card-title"> {{  }} </h5>
                                 <p class="card-text">
-                                Alanı: {{ item.area }} m2
+                                <b>Alanı: </b> {{ item.area }} m2
                                 </p>
                                 <p class="card-text">
-                                Tipi: {{ item.type }}
+                                <b>Tipi: </b>{{ item.type }}
                                 </p>
                                 <p class="card-text">
-                                Durumu: {{ item.status }} 
+                                <b>Durumu: </b>{{ item.status }} 
                                 </p>
                             </div>
                         </div>
