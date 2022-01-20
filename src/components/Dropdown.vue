@@ -14,7 +14,7 @@
     aria-labelledby="user-dropdown"
   >
     <li v-if="user_type == 'customer'">
-      <router-link class="dropdown-item" to="#"> My Orders </router-link>
+      <router-link class="dropdown-item" :to=" { name: 'MyOrders' }"> My Orders </router-link>
     </li>
     <li v-if="user_type == 'customer'">
       <router-link class="dropdown-item" :to="{ name: 'Settings' }">

@@ -12,6 +12,7 @@ import NotFound from "../views/NotFound.vue";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import OrderList from "../views/OrderList.vue";
+import MyOrders from "../views/MyOrders.vue";
 
 const routes = [
   {
@@ -64,6 +65,11 @@ const routes = [
     path: "/firms/page=:page",
     name: "Firms",
     component: Firms,
+  },
+  {
+    path: "/myorders",
+    name: "MyOrders",
+    component: MyOrders,
   },
   {
     path: "/firms",
