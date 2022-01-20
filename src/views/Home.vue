@@ -1,6 +1,7 @@
 <template>
-  <h1>Home page</h1>
-  <button class="btn" type="button" @click="showUsers">click</button>
+<div class="container d-flex flex-column flex-grow-1 justify-content-center">
+  <h1 class="row justify-content-center "> Carpetiem</h1>
+</div>
   <ul class="list-group" v-if="show">
     <li v-for="user in users" :key="user" class="list-group-item">
       {{ user }}

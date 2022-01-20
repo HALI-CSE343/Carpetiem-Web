@@ -41,7 +41,7 @@ exports.createUser = functions
       password: data.password,
       displayName: "employee",
     });
-    db.collection("employees").doc(user.uid).set({
+    await db.collection("employees").doc(user.uid).set({
       name: data.name,
       phone: data.phone,
       address: data.address,

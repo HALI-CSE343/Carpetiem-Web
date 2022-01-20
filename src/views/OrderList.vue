@@ -4,13 +4,13 @@
     <table class="table table-dark table-striped">
       <thead>
         <tr>
-          <th>Customer Name</th>
-          <th>Customer Tel_no</th>
-          <th>Customer Email</th>
-          <th>Carpet Area</th>
-          <th>Carpet Cost</th>
-          <th>Carpet Type</th>
-          <th>Carpet Status</th>
+          <th>Müşteri İsmi</th>
+          <th>Müşteri Tel_no</th>
+          <th>Müşteri Email</th>
+          <th>Halı Alanı</th>
+          <th>Halı Fiyatı</th>
+          <th>Halı Tipi</th>
+          <th>Halı Durumu</th>
         </tr>
       </thead>
       <tbody>

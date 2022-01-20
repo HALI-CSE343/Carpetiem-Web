@@ -21,7 +21,7 @@
           <ul class="navbar-nav mx-auto">
             <li class="nav-item">
               <router-link :to="{ name: 'About' }" class="nav-link">
-                About
+                Hakkımızda
               </router-link>
             </li>
             <li class="nav-item" v-if="user_type != 'firm'">
@@ -29,7 +29,7 @@
                 :to="{ name: 'Firms', params: { page: 1 } }"
                 class="nav-link"
               >
-                Firms
+                Firmalar
               </router-link>
             </li>
           </ul>

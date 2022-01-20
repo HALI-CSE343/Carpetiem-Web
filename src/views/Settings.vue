@@ -95,7 +95,7 @@
           class="btn btn-secondary"
           style="background-color: #24252a"
         >
-          Save
+          Kaydet
         </button>
       </form>
     </div>
@@ -221,7 +221,7 @@ export default {
 
 <style scoped>
 form {
-  background-color: grey;
+ 
   padding: 9.5%;
   display: flex;
   flex-direction: column;
