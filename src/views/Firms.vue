@@ -359,12 +359,12 @@
 <script>
 import db, { auth, functions } from "../firebase";
 import ImageSkeleton from "../components/ImageSkeleton.vue";
-import Image from "../components/Image.vue";
+//import Image from "../components/Image.vue";
 import CardSkeleton from "../components/CardSkeleton.vue";
 import { ref } from "@vue/reactivity";
 import { onBeforeMount } from "@vue/runtime-core";
 export default {
-  components: { ImageSkeleton, Image, CardSkeleton },
+  components: { ImageSkeleton, /*Image,*/ CardSkeleton },
   setup() {
     const skeleton = ref(true);
     const city = ref("");
@@ -445,6 +445,7 @@ export default {
 
     const onCityChange = async () => {
       districts.value = [];
+      neighborhoods.value = [];
 
       let snap = await db
         .collection("cities")

@@ -293,7 +293,6 @@ export default {
   },
   emits: ["closePopUp"],
   setup(props, { emit }) {
-    console.log(props.admin_id);
     const city = ref("default");
     const dist = ref("default");
     const nbhd = ref("default");
