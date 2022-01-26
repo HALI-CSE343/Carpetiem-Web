@@ -1,141 +1,135 @@
 <template>
-  <div class="table-responsive" id="general_table">
-    <h3 class="p-3 text-center">Tüm Elemanlarınız Aşağıda Listelenmiştir</h3>
-    <table class="table table-dark table-striped">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Tel_no</th>
-          <th>Email</th>
-          <th>Adres</th>
-          <th>Edit</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="employee in employees" :key="employee">
-          <td class="listElement">
-            <p class="empText">{{ employee.name }}</p>
-          </td>
-          <td class="listElement">
-            <p class="empText">{{ employee.phone }}</p>
-          </td>
-          <td class="listElement">
-            <p class="empText">{{ employee.email }}</p>
-          </td>
-          <td class="listElement">
-            <p class="empText">{{ employee.address }}</p>
-          </td>
-          <td class="listElement">
-            <p class="empText"></p>
-            <button
-              id="edtbtn"
-              class="btn btn-warning"
-              @click="willEdit(employee)"
-              data-bs-toggle="modal"
-              data-bs-target="#exampleModal"
-              data-bs-whatever="@mdo"
-            >
-              Edit
-            </button>
-            <button
-              id="rmwbtn"
-              class="btn btn-danger"
-              @click="removeEmployee(employee)"
-            >
-              Remove
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <button
-      id="addbtn"
-      class="btn btn-primary"
-      data-bs-toggle="modal"
-      data-bs-target="#exampleModal2"
-      data-bs-whatever="@mdo"
+  <div class="container d-flex flex-column flex-grow-1">
+    <div class="table-responsive" id="general_table">
+      <h3 class="p-3 text-center">Tüm Elemanlarınız Aşağıda Listelenmiştir</h3>
+      <div class="d-flex justify-content-center">
+        <div
+          class="spinner-border"
+          style="width: 3rem; height: 3rem"
+          role="status"
+          v-show="loading"
+        >
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+      <table class="table table-dark table-striped" v-show="!loading">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Tel_no</th>
+            <th>Email</th>
+            <th>Adres</th>
+            <th>Edit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="employee in employees" :key="employee.uid">
+            <td class="listElement">
+              <p class="empText">{{ employee.name }}</p>
+            </td>
+            <td class="listElement">
+              <p class="empText">{{ employee.phone }}</p>
+            </td>
+            <td class="listElement">
+              <p class="empText">{{ employee.email }}</p>
+            </td>
+            <td class="listElement">
+              <p class="empText">{{ employee.address }}</p>
+            </td>
+            <td class="listElement">
+              <p class="empText"></p>
+              <button
+                id="edtbtn"
+                class="btn btn-warning"
+                @click="employeeToEdit = employee"
+                data-bs-toggle="modal"
+                data-bs-target="#editEmployee"
+              >
+                Edit
+              </button>
+              <button
+                id="rmwbtn"
+                class="btn btn-danger"
+                @click="removeEmployee(employee)"
+              >
+                Remove
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <button
+        id="addbtn"
+        class="btn"
+        data-bs-toggle="modal"
+        data-bs-target="#addEmployee"
+        v-show="!loading"
+      >
+        Add Employee
+      </button>
+    </div>
+    <div
+      class="modal fade"
+      id="editEmployee"
+      data-bs-backdrop="static"
+      v-if="employeeToEdit != ''"
     >
-      Add Employee
-    </button>
-  </div>
-
-  <!-- Pop-up tarafı -->
-
-  <div
-    class="modal fade"
-    id="exampleModal"
-    tabindex="-1"
-    aria-labelledby="exampleModalLabel"
-    aria-hidden="true"
-    v-if="willEditEmployee != ''"
-  >
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">
-            Eleman bilgilerini düzenle
-          </h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            id="close-edit-btn"
-          ></button>
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Eleman bilgilerini düzenle</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              id="close-edit-btn"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <EditEmployeeForm
+              :employee="employeeToEdit"
+              @closePopUp="closeEdit"
+            />
+          </div>
         </div>
+      </div>
+    </div>
+    <div
+      class="modal fade"
+      id="addEmployee"
+      tabindex="-1"
+      data-bs-backdrop="static"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Eleman Ekle</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              id="close-register-btn"
+            ></button>
+          </div>
 
-        <div class="modal-body">
-          <EditEmployeeForm
-            :employee="willEditEmployee"
-            @closePopUp="closeEdit"
-          />
+          <div class="modal-body">
+            <RegisterForm user_type="employee" @closePopUp="closeRegister" />
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <!-- Pop-up sonu -->
-
-  <!-- ikinci Pop-up -->
-  <div
-    class="modal fade"
-    id="exampleModal2"
-    tabindex="-1"
-    aria-labelledby="exampleModalLabel"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Eleman Ekle</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            id="close-register-btn"
-          ></button>
-        </div>
-
-        <div class="modal-body">
-          <RegisterForm user_type="employee" @closePopUp="closeRegister" />
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- ikinci Pop-up sonu -->
 </template>
 
 <script>
 import { ref } from "@vue/reactivity";
-
 import RegisterForm from "../components/RegisterForm.vue";
 import EditEmployeeForm from "../components/EditEmployeeForm.vue";
-import db, { secondaryApp } from "../firebase";
+import db from "../firebase";
 import { functions } from "../firebase";
 import { onBeforeMount } from "@vue/runtime-core";
-
-//export const functions = firebaseApp.functions("europe-west1");
 export default {
   name: "EmployeeSettings",
   components: { RegisterForm, EditEmployeeForm },
@@ -145,13 +139,15 @@ export default {
     const email = ref("");
     const adress = ref("");
     const password = ref("");
-    const willEditEmployee = ref("");
+    const employeeToEdit = ref("");
     const employees = ref([]);
+    const loading = ref(true);
+
     onBeforeMount(async () => {
-      var empCol = await db.collection("employees").get();
-      empCol.forEach(async (doc) => {
-        var empId = doc.id;
-        try {
+      try {
+        var empCol = await db.collection("employees").get();
+        empCol.forEach(async (doc) => {
+          var empId = doc.id;
           var getUser = functions.httpsCallable("getUser");
 
           var emp = await getUser({
@@ -159,16 +155,13 @@ export default {
             collection: "employees",
           });
           employees.value.push(emp.data);
-        } catch (err) {
-          console.log(err.message);
-        }
-      });
-      employees.value.sort(new Intl.Collator("de").compare);
+        });
+        employees.value.sort(new Intl.Collator("de").compare);
+        loading.value = false;
+      } catch (err) {
+        console.log(err.message);
+      }
     });
-
-    const willEdit = async (e) => {
-      willEditEmployee.value = e;
-    };
 
     const refresh = () => {
       employees.value = [];
@@ -188,26 +181,11 @@ export default {
         db.collection("employees").doc(e.uid).delete();
         var deleteUser = functions.httpsCallable("deleteUser");
 
-        var emp = await deleteUser({
+        await deleteUser({
           uid: e.uid,
         });
 
-        /*
-        secondaryApp
-          .auth()
-          .signInWithEmailAndPassword(e.email, e.password)
-          .then((user) => {
-            user.user.delete();
-            secondaryApp.auth().signOut();
-          });*/
-
         employees.value = [];
-        /*
-        var snap = await db.collection("employees").get();
-        snap.forEach((doc) => {
-          employees.value.push(doc.data());
-        });
-        employees.value.sort(new Intl.Collator("de").compare);*/
         var empCol = await db.collection("employees").get();
         empCol.forEach(async (doc) => {
           var empId = doc.id;
@@ -224,24 +202,6 @@ export default {
           }
         });
         employees.value.sort(new Intl.Collator("de").compare);
-        /*
-          then((snap) => {
-            snap.forEach(async (doc) => {
-              var empId = doc.id;
-              try {
-                var getUser = functions.httpsCallable("getUser");
-
-                var emp = await getUser({
-                  id: empId,
-                  collection: "employees",
-                });
-                employees.value.push(emp.data);
-              } catch (err) {
-                console.log(err.message);
-              }
-            });
-            employees.value.sort(new Intl.Collator("de").compare);
-          });*/
       } catch (err) {
         console.log(err.message);
       }
@@ -253,8 +213,15 @@ export default {
 
     const closeEdit = () => {
       document.getElementById("close-edit-btn").click();
-      willEditEmployee.value = "";
+      employeeToEdit.value = "";
     };
+
+    /*if (employeeToEdit.value != "") {
+      const editEmployee = document.getElementById("editEmployee");
+      editEmployee.addEventListener("show.bs.modal", (e) => {
+        console.log(e);
+      });
+    }*/
 
     return {
       userName,
@@ -262,13 +229,13 @@ export default {
       email,
       adress,
       password,
-      willEditEmployee,
+      employeeToEdit,
       employees,
-      willEdit,
       refresh,
       removeEmployee,
       closeRegister,
       closeEdit,
+      loading,
     };
   },
 };

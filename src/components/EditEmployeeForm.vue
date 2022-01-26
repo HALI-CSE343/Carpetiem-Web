@@ -252,7 +252,6 @@
 import { ref } from "@vue/reactivity";
 import db, { functions } from "../firebase";
 import "firebase/compat/auth";
-//import { secondaryApp } from "../firebase";
 import { watch } from "@vue/runtime-core";
 
 export default {
@@ -262,7 +261,6 @@ export default {
   },
   emits: ["closePopUp"],
   setup(props, { emit }) {
-    //console.log(props.employee);
     const city = ref(props.employee.city);
     const dist = ref(props.employee.district);
     const nbhd = ref(props.employee.neighborhood);
@@ -323,53 +321,55 @@ export default {
         districts.value.sort(new Intl.Collator("de").compare);
       });
 
-    watch(props.employee, () => {
-      city.value = props.employee.city;
-      dist.value = props.employee.district;
-      nbhd.value = props.employee.neighborhood;
-      name.value = props.employee.name;
-      phone.value = props.employee.phone;
-      email.value = props.employee.email;
-      pwd.value = props.employee.password;
-      addr.value = props.employee.address;
-      db.collection("cities")
-        .get()
-        .then((snap) => {
-          snap.forEach((doc) => {
-            cities.value.push(doc.data().name);
-          });
-          cities.value.sort(new Intl.Collator("de").compare);
-        });
-
-      db.collection("cities")
-        .where("name", "==", city.value)
-        .get()
-        .then((snap) => {
-          snap.forEach((doc) => {
-            doc.data().districts.forEach((district) => {
-              districts.value.push(district.name);
+    watch(
+      () => props.employee,
+      (newEmployee) => {
+        city.value = newEmployee.city;
+        dist.value = newEmployee.district;
+        nbhd.value = newEmployee.neighborhood;
+        name.value = newEmployee.name;
+        phone.value = newEmployee.phone;
+        email.value = newEmployee.email;
+        addr.value = newEmployee.address;
+        db.collection("cities")
+          .get()
+          .then((snap) => {
+            snap.forEach((doc) => {
+              cities.value.push(doc.data().name);
             });
+            cities.value.sort(new Intl.Collator("de").compare);
           });
-          districts.value.sort(new Intl.Collator("de").compare);
-        });
 
-      db.collection("cities")
-        .where("name", "==", city.value)
-        .get()
-        .then((snap) => {
-          snap.forEach((doc) => {
-            doc.data().districts.some((district) => {
-              if (district.name === dist.value) {
-                district.neighborhoods.forEach((neighborhood) => {
-                  neighborhoods.value.push(neighborhood);
-                });
-                return true;
-              }
+        db.collection("cities")
+          .where("name", "==", city.value)
+          .get()
+          .then((snap) => {
+            snap.forEach((doc) => {
+              doc.data().districts.forEach((district) => {
+                districts.value.push(district.name);
+              });
             });
+            districts.value.sort(new Intl.Collator("de").compare);
           });
-          districts.value.sort(new Intl.Collator("de").compare);
-        });
-    });
+
+        db.collection("cities")
+          .where("name", "==", city.value)
+          .get()
+          .then((snap) => {
+            snap.forEach((doc) => {
+              doc.data().districts.some((district) => {
+                if (district.name === dist.value) {
+                  district.neighborhoods.forEach((neighborhood) => {
+                    neighborhoods.value.push(neighborhood);
+                  });
+                  return true;
+                }
+              });
+            });
+            districts.value.sort(new Intl.Collator("de").compare);
+          });
+      }
+    );
 
     const onCityChange = async () => {
       districts.value = [];

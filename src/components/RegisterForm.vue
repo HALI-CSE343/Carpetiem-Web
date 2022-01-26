@@ -290,7 +290,7 @@ export default {
     header: String,
     user_type: String,
   },
-  emits: ["closePopUp"],
+  emits: ["closePopUp", "openAdditional"],
   setup(props, { emit }) {
     const city = ref("default");
     const dist = ref("default");
@@ -458,7 +458,11 @@ export default {
             });
           }
           registered("none");
-          router.replace("/");
+          if (props.user_type == "firm") {
+            emit("openAdditional");
+          } else {
+            router.replace("/");
+          }
         })
         .catch((err) => {
           error.value = true;

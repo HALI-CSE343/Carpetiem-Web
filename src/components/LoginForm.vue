@@ -41,7 +41,7 @@
           <input
             :id="user_type + '-password'"
             :type="is_pwd ? 'password' : 'text'"
-            class="form-control border-end-0"
+            class="form-control shadow-end-0 border-end-0"
             autocomplete="off"
             v-model="password"
             @keyup="is_pwd_valid = password.length >= 6"

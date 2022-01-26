@@ -120,6 +120,11 @@ export default {
     };
   },
 };
+
+/*.form-control:has(+ span):focus {
+  box-shadow: 0 0 0 0.25rem red !important;
+  clip-path: inset(-0.25rem 0rem -0.25rem -0.25rem);
+}*/
 </script>
 
 <style scoped>
@@ -192,7 +197,7 @@ a:not(.btn):hover {
   border-color: rgb(120, 150, 120);
 }
 
-span {
+.form-control + span {
   transition: border-color 0.35s;
 }
 
