@@ -136,6 +136,10 @@ export default {
 .btn:hover {
   filter: brightness(85%);
 }
+
+.btn:focus {
+  box-shadow: 0 0 0 0.25rem rgb(120 150 120 / 25%);
+}
 </style>
 
 <style>
@@ -182,7 +186,7 @@ a:not(.btn):hover {
   opacity: 0;
 }
 
-.btn:focus,
+.btn-close:focus,
 .form-select:focus,
 .form-control:focus,
 .form-check-input:focus,

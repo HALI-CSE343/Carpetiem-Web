@@ -451,7 +451,7 @@ export default {
           if (props.user_type == "firm") {
             var notFoundImg = await storage
               .ref()
-              .child("ImageNotFound")
+              .child("ImageNotFound.png")
               .getDownloadURL();
             cred.user.updateProfile({
               photoURL: notFoundImg.toString(),
@@ -539,5 +539,9 @@ export default {
 
 .btn:hover {
   filter: brightness(85%);
+}
+
+.btn:focus {
+  box-shadow: 0 0 0 0.25rem rgb(120 150 120 / 25%);
 }
 </style>

@@ -538,11 +538,15 @@ export default {
         temp.push(doc);
       });
 
+      const getUser = functions.httpsCallable("getUser");
       for (const doc of temp) {
-        const getUser = functions.httpsCallable("getUser");
-        result.push((await getUser({ id: doc.id, collection: "firms" })).data);
-        result.at(-1).photoURL =
-          "https://firebasestorage.googleapis.com/v0/b/hali-4cdae.appspot.com/o/ImageNotFound.png?alt=media&token=0627042d-9979-481a-ace2-75bfd10a2fbf";
+        if (doc.id != "index") {
+          result.push(
+            (await getUser({ id: doc.id, collection: "firms" })).data
+          );
+          result.at(-1).photoURL =
+            "https://firebasestorage.googleapis.com/v0/b/hali-4cdae.appspot.com/o/ImageNotFound.png?alt=media&token=0627042d-9979-481a-ace2-75bfd10a2fbf";
+        }
       }
 
       resultNum.value = result.length;
