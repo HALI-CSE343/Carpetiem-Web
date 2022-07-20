@@ -1,85 +1,56 @@
 <template>
-  <h1>Home page</h1>
-  <button class="btn" type="button" @click="showUsers">click</button>
-  <ul class="list-group" v-if="show">
-    <li v-for="user in users" :key="user" class="list-group-item">
-      {{ user }}
-    </li>
-  </ul>
+    <section>
+        <div class="container">
+            <h1 class="mt-3 text-center">Carpet Cleaning Tracker</h1>
+            <div
+                class="row justify-content-center mt-3"
+                style="overflow-x: hidden; overflow-y: auto"
+            >
+                <p class="col-10 col-sm-6 d-flex d-sm-block flex-column">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut
+                    omnis, numquam maxime ratione id reiciendis et eaque
+                    consectetur laboriosam sunt iste assumenda quidem ab est
+                    enim aliquid quibusdam culpa similique suscipit repellendus
+                    officia aut mollitia quos? Minima pariatur, ad enim numquam
+                    iure quaerat quos magnam accusantium laudantium, commodi
+                    vitae! In vel consequatur ipsam vitae corporis! Magni velit
+                    earum facere veritatis sed delectus commodi, ad vitae
+                    dolores explicabo similique modi nulla excepturi,
+                    consequuntur accusamus. Iste vitae, doloribus excepturi
+                    perferendis repudiandae accusamus mollitia voluptatum quas
+                    cumque consequatur maxime magni, est, qui ullam!
+                </p>
+                <p class="col-10 col-sm-6 d-flex d-sm-block flex-column">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Veniam, fuga? Dolores et officia distinctio nesciunt aperiam
+                    recusandae laboriosam totam quaerat illum atque ex ducimus a
+                    quia quae adipisci nulla natus culpa iusto ullam,
+                    repellendus cumque voluptas praesentium sint autem. Nostrum
+                    accusamus blanditiis voluptatem, quisquam tenetur ad. Sunt
+                    cumque quis dolorum iure tempore quod, expedita magni
+                    consectetur amet beatae numquam doloremque nobis neque
+                    saepe, optio sed qui eum. Itaque, voluptatum dolores
+                    laudantium id sint vero omnis tempora ut odit ea ab illo eum
+                    facere doloribus eaque! Fuga similique atque quos ab magnam
+                    illum aliquam quod ex in dolores? Necessitatibus,
+                    consequuntur nemo.
+                </p>
+            </div>
+        </div>
+    </section>
 </template>
 
 <script>
-import db, { functions } from "../firebase";
-import { ref } from "@vue/reactivity";
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
-import "firebase/compat/functions";
+import { onMounted } from "@vue/runtime-core";
 export default {
-  name: "Home",
-  components: {},
-  setup() {
-    const users = ref([]);
-    const show = ref(false);
-
-    var today = new Date();
-    console.log(today.toLocaleString("tr-TR", { weekday: "long" }));
-    console.log(today.getHours(), today.getMinutes());
-    console.log(today.getTime());
-
-    const showUsers = async () => {
-      /*const authList = firebase.functions().httpsCallable("getAuthList");
-      console.log(authList);
-      authList("customer")
-        .then((res) => {
-          console.log(res.data);
-        })
-        .catch((err) => {
-          console.log(err.code, err.message, err.details);
-        });
-      show.value = true;*/
-      /*const userIDs = [];
-      await db
-        .collection("employees")
-        .get()
-        .then((docs) => {
-          docs.forEach((doc) => userIDs.push({ uid: doc.id }));
-        });*/
-      /*const deneme = firebase.functions().httpsCallable("deneme");
-      const res = await deneme({ collection: "employees" });
-      console.log(res.data);
-      const cred = firebase.functions().httpsCallable("getUserCred");
-      const res2 = await cred({ id: "DrXGn3nAw9WZPpDxDa4W6SQNY2K2" });
-      console.log(res2.data);
-      console.log({ ...res.data.at(0), ...res2.data });*/
-      /*const getAllUsers = firebase.functions().httpsCallable("getAllUsers");
-      const res = await getAllUsers("");
-      console.log(res.data);
-      users.value = res.data;
-      show.value = true;*/
-      const getUser = functions.httpsCallable("getUser");
-      const res = await getUser({
-        id: "DrXGn3nAw9WZPpDxDa4W6SQNY2K2",
-        collection: "employees",
-      });
-      console.log(res.data);
-    };
-
-    return {
-      showUsers,
-      users,
-      show,
-    };
-  },
+    name: "Home",
+    components: {},
+    setup() {},
 };
 </script>
 
 <style scoped>
-.btn {
-  background-color: rgb(120, 150, 120);
-  border: rgb(120, 150, 120);
-}
-
-.btn:hover {
-  filter: brightness(85%);
+p {
+    line-height: 2.2rem;
 }
 </style>
